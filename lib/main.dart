@@ -1232,6 +1232,36 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
       ProfileRow(
+        icon: Icons.payments_outlined,
+        title: 'Registrar información de pago',
+        onTap: () => push(context, const PaymentPage()),
+      ),
+      ProfileRow(
+        icon: Icons.dashboard_outlined,
+        title: 'Panel de operación',
+        onTap: () => push(context, const ProviderDashboardPage()),
+      ),
+      ProfileRow(
+        icon: Icons.search,
+        title: 'Buscar pedidos',
+        onTap: () => push(context, const SearchOrdersPage()),
+      ),
+      ProfileRow(
+        icon: Icons.notifications_none,
+        title: 'Notificaciones',
+        onTap: () => push(context, const NotificationsPage()),
+      ),
+      ProfileRow(
+        icon: Icons.support_agent_outlined,
+        title: 'Soporte y contacto',
+        onTap: () => push(context, const SupportPage()),
+      ),
+      ProfileRow(
+        icon: Icons.bar_chart_outlined,
+        title: 'Reportes de ventas',
+        onTap: () => push(context, const ReportsPage()),
+      ),
+      ProfileRow(
         icon: Icons.translate,
         title: 'Cambiar idioma',
         trailing: language,
@@ -1301,6 +1331,22 @@ class InfoPage extends StatelessWidget {
           title: 'Operación simple',
           body: 'Menos llamadas. Más control.',
         ),
+        const SizedBox(height: 14),
+        Text(
+          'Lo que dicen nuestros clientes',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 10),
+        const Testimonial(
+          name: 'Carlos Ramírez',
+          company: 'PetroAndes S.A.',
+          quote: 'Ahora sabemos exactamente cuándo llega cada pedido.',
+        ),
+        const Testimonial(
+          name: 'María López',
+          company: 'Callao Combustibles',
+          quote: 'La operación dejó de depender de mensajes dispersos.',
+        ),
       ],
     ),
   );
@@ -1340,3 +1386,738 @@ class Benefit extends StatelessWidget {
     ),
   );
 }
+
+class Testimonial extends StatelessWidget {
+  const Testimonial({
+    required this.name,
+    required this.company,
+    required this.quote,
+    super.key,
+  });
+  final String name;
+  final String company;
+  final String quote;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '“',
+            style: TextStyle(fontSize: 30, color: AppColors.orange, height: .8),
+          ),
+          Text(quote, style: Theme.of(context).textTheme.bodyLarge),
+          const SizedBox(height: 12),
+          Text(name, style: Theme.of(context).textTheme.titleMedium),
+          Text(company, style: Theme.of(context).textTheme.bodyMedium),
+        ],
+      ),
+    ),
+  );
+}
+
+class PaymentPage extends StatefulWidget {
+  const PaymentPage({super.key});
+  @override
+  State<PaymentPage> createState() => _PaymentPageState();
+}
+
+class _PaymentPageState extends State<PaymentPage> {
+  var bank = 'BBVA Continental';
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Registrar pago')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        const OrderSummary(order: demoOrders[0]),
+        const SizedBox(height: 18),
+        Text(
+          'Información del pago',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 12),
+        const TextField(
+          decoration: InputDecoration(
+            labelText: 'Número de operación',
+            prefixIcon: Icon(Icons.tag),
+          ),
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<String>(
+          value: bank,
+          decoration: const InputDecoration(labelText: 'Banco'),
+          items: const ['BBVA Continental', 'Interbank', 'BCP']
+              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+              .toList(),
+          onChanged: (value) => setState(() => bank = value!),
+        ),
+        const SizedBox(height: 12),
+        const TextField(
+          decoration: InputDecoration(
+            labelText: 'Fecha de depósito',
+            prefixIcon: Icon(Icons.calendar_today),
+          ),
+        ),
+        const SizedBox(height: 12),
+        const TextField(
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            labelText: 'Monto depositado',
+            prefixText: 'S/ ',
+          ),
+        ),
+        const SizedBox(height: 20),
+        const StatusBanner(
+          icon: Icons.check_circle,
+          title: 'Monto coincidente',
+          body: 'El monto coincide con el total del pedido.',
+        ),
+        const SizedBox(height: 24),
+        FilledButton(
+          onPressed: () => showSuccess(
+            context,
+            'Pago registrado correctamente',
+            'El proveedor recibirá la validación de tu operación.',
+          ),
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.orange,
+            foregroundColor: AppColors.ink,
+            minimumSize: const Size.fromHeight(52),
+          ),
+          child: const Text('Registrar pago'),
+        ),
+      ],
+    ),
+  );
+}
+
+class ProviderDashboardPage extends StatelessWidget {
+  const ProviderDashboardPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Panel de operación')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Text(
+          'Pedidos pendientes',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        Text(
+          '4 solicitudes · revisa y responde a tiempo',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Metric(label: 'PENDIENTES', value: '04', color: AppColors.orange),
+            const SizedBox(width: 8),
+            Metric(label: 'APROBADOS', value: '12', color: AppColors.blue),
+            const SizedBox(width: 8),
+            Metric(label: 'INGRESOS', value: '148k', color: AppColors.green),
+          ],
+        ),
+        const SizedBox(height: 18),
+        const Wrap(
+          spacing: 7,
+          children: [
+            Chip(label: Text('Todos')),
+            Chip(label: Text('Pendiente')),
+            Chip(label: Text('Alta prioridad')),
+          ],
+        ),
+        const SizedBox(height: 14),
+        ...demoOrders
+            .take(3)
+            .map(
+              (order) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: ProviderOrderCard(order: order),
+              ),
+            ),
+      ],
+    ),
+  );
+}
+
+class ProviderOrderCard extends StatelessWidget {
+  const ProviderOrderCard({required this.order, super.key});
+  final Order order;
+  @override
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Solicitud de hoy',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              StatusPill(status: order.status),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(order.provider, style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            '${order.product} · ${order.quantity} L',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => push(context, RejectOrderPage(order: order)),
+                  child: const Text('Rechazar'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: FilledButton(
+                  onPressed: () =>
+                      push(context, ApproveOrderPage(order: order)),
+                  child: const Text('Aprobar'),
+                ),
+              ),
+            ],
+          ),
+          if (order.status == OrderStatus.approved)
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => push(context, const DispatchPage()),
+                icon: const Icon(Icons.local_shipping_outlined),
+                label: const Text('Despachar pedido'),
+              ),
+            ),
+          if (order.status == OrderStatus.transit)
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => push(context, const CloseOrderPage()),
+                icon: const Icon(Icons.check_circle_outline),
+                label: const Text('Cerrar pedido'),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+class ApproveOrderPage extends StatelessWidget {
+  const ApproveOrderPage({required this.order, super.key});
+  final Order order;
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Aprobar pedido')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        OrderSummary(order: order),
+        const SizedBox(height: 18),
+        Text(
+          'Validación de pago',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 10),
+        const ValidationRow(label: 'Formato de operación válido', state: 'OK'),
+        const ValidationRow(label: 'Banco verificado', state: 'OK'),
+        const ValidationRow(label: 'Monto coincide con el pedido', state: 'OK'),
+        const SizedBox(height: 24),
+        FilledButton.icon(
+          onPressed: () => showSuccess(
+            context,
+            'Pedido aprobado',
+            'El cliente será notificado y el pedido pasará a despacho.',
+          ),
+          icon: const Icon(Icons.check),
+          label: const Text('Sí, aprobar pedido'),
+          style: ButtonStyle(
+            backgroundColor: WidgetStatePropertyAll(AppColors.green),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class ValidationRow extends StatelessWidget {
+  const ValidationRow({required this.label, required this.state, super.key});
+  final String label;
+  final String state;
+  @override
+  Widget build(BuildContext context) => Card(
+    child: ListTile(
+      leading: const Icon(Icons.check_circle, color: AppColors.green),
+      title: Text(label),
+      trailing: Text(
+        state,
+        style: const TextStyle(
+          color: AppColors.green,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    ),
+  );
+}
+
+class DispatchPage extends StatelessWidget {
+  const DispatchPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Despachar pedido')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        const StatusBanner(
+          icon: Icons.local_shipping,
+          title: 'Pedido aprobado',
+          body: 'Listo para despacho',
+        ),
+        const SizedBox(height: 18),
+        const Timeline(status: OrderStatus.approved),
+        const SizedBox(height: 18),
+        const TextField(
+          decoration: InputDecoration(labelText: 'Vehículo asignado'),
+        ),
+        const SizedBox(height: 12),
+        const TextField(decoration: InputDecoration(labelText: 'Conductor')),
+        const SizedBox(height: 24),
+        FilledButton.icon(
+          onPressed: () => showSuccess(
+            context,
+            'Pedido en camino',
+            'El cliente recibió la notificación.',
+          ),
+          icon: const Icon(Icons.local_shipping),
+          label: const Text('Marcar como despachado'),
+        ),
+      ],
+    ),
+  );
+}
+
+class CloseOrderPage extends StatelessWidget {
+  const CloseOrderPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Cerrar pedido')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        const StatusBanner(
+          icon: Icons.check_circle,
+          title: 'Entrega confirmada',
+          body: 'Recibido por el cliente',
+        ),
+        const SizedBox(height: 18),
+        Text(
+          'Confirmación del cliente',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 10),
+        Card(
+          color: const Color(0xFFE9FFF6),
+          child: const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              'Firma digital validada. El cliente confirmó la recepción.',
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        FilledButton(
+          onPressed: () => showSuccess(
+            context,
+            'Pedido cerrado',
+            'La operación se guardó en el historial.',
+          ),
+          child: const Text('Confirmar cierre'),
+        ),
+      ],
+    ),
+  );
+}
+
+class RejectOrderPage extends StatefulWidget {
+  const RejectOrderPage({required this.order, super.key});
+  final Order order;
+  @override
+  State<RejectOrderPage> createState() => _RejectOrderPageState();
+}
+
+class _RejectOrderPageState extends State<RejectOrderPage> {
+  var reason = 'Stock insuficiente';
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Rechazar pedido')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Text(
+          'Motivo del rechazo',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 12),
+        ...[
+          'Stock insuficiente',
+          'Problemas logísticos',
+          'Fuera de cobertura',
+          'Otro motivo',
+        ].map(
+          (item) => Card(
+            child: RadioListTile(
+              value: item,
+              groupValue: reason,
+              onChanged: (value) => setState(() => reason = value!),
+              title: Text(item),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        FilledButton(
+          onPressed: () => showSuccess(
+            context,
+            'Pedido rechazado',
+            'El cliente será notificado con el motivo seleccionado.',
+          ),
+          style: FilledButton.styleFrom(backgroundColor: AppColors.red),
+          child: const Text('Sí, rechazar'),
+        ),
+      ],
+    ),
+  );
+}
+
+class ReportsPage extends StatelessWidget {
+  const ReportsPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Reportes de ventas')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Text(
+          'Reporte de operaciones',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        Text('Últimos 30 días', style: Theme.of(context).textTheme.bodyMedium),
+        const SizedBox(height: 18),
+        Row(
+          children: [
+            Metric(label: 'VENTAS', value: 'S/ 148k', color: AppColors.green),
+            const SizedBox(width: 8),
+            Metric(label: 'LITROS', value: '42.8k', color: AppColors.blue),
+          ],
+        ),
+        const SizedBox(height: 18),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Ventas por semana',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 18),
+                SizedBox(
+                  height: 100,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      for (final value in [
+                        38.0,
+                        58.0,
+                        46.0,
+                        78.0,
+                        64.0,
+                        92.0,
+                        70.0,
+                      ])
+                        Container(
+                          width: 24,
+                          height: value,
+                          decoration: BoxDecoration(
+                            color: value == 92
+                                ? AppColors.orange
+                                : AppColors.blue,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'L   M   M   J   V   S   D',
+                  style: TextStyle(color: AppColors.muted, letterSpacing: 7),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 18),
+        FilledButton.icon(
+          onPressed: () => showSuccess(
+            context,
+            'Reporte listo',
+            'El reporte mock está disponible para descargar.',
+          ),
+          icon: const Icon(Icons.download),
+          label: const Text('Generar reporte'),
+        ),
+      ],
+    ),
+  );
+}
+
+class SearchOrdersPage extends StatefulWidget {
+  const SearchOrdersPage({super.key});
+  @override
+  State<SearchOrdersPage> createState() => _SearchOrdersPageState();
+}
+
+class _SearchOrdersPageState extends State<SearchOrdersPage> {
+  var query = '';
+  @override
+  Widget build(BuildContext context) {
+    final results = demoOrders
+        .where(
+          (order) =>
+              order.id.toLowerCase().contains(query.toLowerCase()) ||
+              order.provider.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+    return Scaffold(
+      appBar: AppBar(title: const Text('Buscar pedido')),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          TextField(
+            onChanged: (value) => setState(() => query = value),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              hintText: 'Código, cliente o proveedor',
+            ),
+          ),
+          const SizedBox(height: 18),
+          if (results.isEmpty)
+            const EmptyState(
+              title: 'No encontramos pedidos',
+              body: 'Verifica el código o intenta con otro término.',
+            )
+          else
+            ...results.map(
+              (order) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: OrderCard(
+                  order: order,
+                  onTap: () => push(context, OrderDetailPage(order: order)),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class NotificationsPage extends StatelessWidget {
+  const NotificationsPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(
+      title: const Text('Notificaciones'),
+      actions: [
+        TextButton(onPressed: () {}, child: const Text('Marcar leídas')),
+      ],
+    ),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: const [
+        NotificationCard(
+          icon: Icons.check_circle,
+          color: AppColors.green,
+          title: 'Pedido aprobado',
+          body: 'Combustibles del Norte aprobó tu pedido.',
+        ),
+        NotificationCard(
+          icon: Icons.local_shipping,
+          color: AppColors.blue,
+          title: 'Pedido despachado',
+          body: 'Tu pedido FT-88421 salió a destino.',
+        ),
+        NotificationCard(
+          icon: Icons.warning_amber,
+          color: AppColors.orange,
+          title: 'Tanque en advertencia',
+          body: 'Diesel Tank A-102 está al 22%.',
+        ),
+      ],
+    ),
+  );
+}
+
+class NotificationCard extends StatelessWidget {
+  const NotificationCard({
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.body,
+    super.key,
+  });
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String body;
+  @override
+  Widget build(BuildContext context) => Card(
+    child: ListTile(
+      contentPadding: const EdgeInsets.all(12),
+      leading: CircleAvatar(
+        backgroundColor: color.withAlpha(22),
+        child: Icon(icon, color: color),
+      ),
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      subtitle: Text(body),
+      trailing: const Text(
+        'Hace 12 min',
+        style: TextStyle(fontSize: 10, color: AppColors.muted),
+      ),
+    ),
+  );
+}
+
+class SupportPage extends StatelessWidget {
+  const SupportPage({super.key});
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Soporte y contacto')),
+    body: ListView(
+      padding: const EdgeInsets.all(20),
+      children: [
+        Card(
+          color: const Color(0xFFE9FFF6),
+          child: const ListTile(
+            leading: Icon(Icons.circle, color: AppColors.green),
+            title: Text('En línea ahora'),
+            subtitle: Text('Horario: Lun–Dom · respuesta rápida'),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Text(
+          'Preguntas frecuentes',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        const SizedBox(height: 8),
+        const ExpansionTile(
+          title: Text('¿Cómo cambio mi contraseña?'),
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Desde tu perfil, selecciona seguridad y sigue los pasos.',
+              ),
+            ),
+          ],
+        ),
+        const ExpansionTile(
+          title: Text('¿Cuándo se confirma un pedido?'),
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'El proveedor valida disponibilidad y pago antes de aprobarlo.',
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Text('Contacto directo', style: Theme.of(context).textTheme.titleLarge),
+        ListTile(
+          leading: const Icon(Icons.email_outlined),
+          title: const Text('soporte@fulltank.com'),
+          trailing: TextButton(onPressed: () {}, child: const Text('Enviar')),
+        ),
+        ListTile(
+          leading: const Icon(Icons.phone_outlined),
+          title: const Text('+52 800 FUEL'),
+          trailing: TextButton(onPressed: () {}, child: const Text('Llamar')),
+        ),
+      ],
+    ),
+  );
+}
+
+class StatusBanner extends StatelessWidget {
+  const StatusBanner({
+    required this.icon,
+    required this.title,
+    required this.body,
+    super.key,
+  });
+  final IconData icon;
+  final String title;
+  final String body;
+  @override
+  Widget build(BuildContext context) => Card(
+    color: AppColors.lavender,
+    child: ListTile(
+      leading: Icon(icon, color: AppColors.blue),
+      title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+      subtitle: Text(body),
+    ),
+  );
+}
+
+class EmptyState extends StatelessWidget {
+  const EmptyState({required this.title, required this.body, super.key});
+  final String title;
+  final String body;
+  @override
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(28),
+      child: Column(
+        children: [
+          const Icon(Icons.search_off, color: AppColors.blue, size: 46),
+          const SizedBox(height: 12),
+          Text(title, style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 6),
+          Text(
+            body,
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+void showSuccess(BuildContext context, String title, String body) =>
+    showDialog<void>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Entendido'),
+          ),
+        ],
+      ),
+    );
