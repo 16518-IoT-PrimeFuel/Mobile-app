@@ -10,6 +10,7 @@ import 'package:mobile_app/domain/auth/auth_repository.dart';
 import 'package:mobile_app/domain/auth/auth_session.dart';
 import 'package:mobile_app/features/auth/application/auth_providers.dart';
 import 'package:mobile_app/features/auth/presentation/login_page.dart';
+import 'package:mobile_app/features/home/presentation/home_page.dart';
 
 void main() {
   testWidgets('renders the default login state', (tester) async {
@@ -56,6 +57,24 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('temporary guest access opens home and can return to login', (tester) async {
+    await tester.pumpWidget(_TestApp(repository: _FakeRepository()));
+    final guestButton = find.text('Ingresar como invitado');
+    await tester.ensureVisible(guestButton);
+    await tester.tap(guestButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('PetroAndes'), findsOneWidget);
+    expect(find.text('Requester · Fleet ops'), findsOneWidget);
+
+    final exitGuest = find.text('Exit guest preview');
+    await tester.ensureVisible(exitGuest);
+    await tester.tap(exitGuest);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Bienvenido de vuelta'), findsOneWidget);
+  });
 }
 
 class _TestApp extends StatelessWidget {
@@ -75,8 +94,12 @@ class _TestApp extends StatelessWidget {
               builder: (context, state) => const LoginPage(),
             ),
             GoRoute(
+              path: '/login',
+              builder: (context, state) => const LoginPage(),
+            ),
+            GoRoute(
               path: '/home',
-              builder: (context, state) => const SizedBox.shrink(),
+              builder: (context, state) => const HomePage(role: HomeRole.requester),
             ),
           ],
         ),

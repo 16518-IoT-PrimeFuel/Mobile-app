@@ -81,6 +81,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             _obscurePassword = !_obscurePassword;
                           }),
                           onSubmit: loading ? null : _submit,
+                          onGuest: loading ? null : _continueAsGuest,
                           onForgot: () => context.push('/recover'),
                           onCreateAccount: () => context.push('/signup'),
                         ),
@@ -119,6 +120,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           password: _passwordController.text,
           rememberMe: _rememberMe,
         );
+  }
+
+  void _continueAsGuest() {
+    ref.read(authControllerProvider.notifier).continueAsGuest();
   }
 }
 
@@ -172,6 +177,7 @@ class _LoginContent extends StatelessWidget {
     required this.onRememberChanged,
     required this.onTogglePassword,
     required this.onSubmit,
+    required this.onGuest,
     required this.onForgot,
     required this.onCreateAccount,
   });
@@ -189,6 +195,7 @@ class _LoginContent extends StatelessWidget {
   final ValueChanged<bool> onRememberChanged;
   final VoidCallback onTogglePassword;
   final VoidCallback? onSubmit;
+  final VoidCallback? onGuest;
   final VoidCallback onForgot;
   final VoidCallback onCreateAccount;
 
@@ -278,6 +285,11 @@ class _LoginContent extends StatelessWidget {
         SecondaryAuthButton(
           label: 'Crear cuenta empresarial',
           onPressed: onCreateAccount,
+        ),
+        const SizedBox(height: 10),
+        SecondaryAuthButton(
+          label: 'Ingresar como invitado',
+          onPressed: onGuest,
         ),
         const SizedBox(height: 10),
         const Row(

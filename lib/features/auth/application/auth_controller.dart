@@ -82,6 +82,13 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
+  void continueAsGuest() {
+    state = const AuthState(
+      status: AuthStatus.authenticated,
+      session: AuthSession(username: 'Invitado', token: 'guest'),
+    );
+  }
+
   Future<void> signOut() async {
     await _repository.signOut();
     state = const AuthState();

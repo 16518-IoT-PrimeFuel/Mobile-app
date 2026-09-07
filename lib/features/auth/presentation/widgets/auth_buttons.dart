@@ -84,7 +84,7 @@ class SecondaryAuthButton extends StatelessWidget {
   const SecondaryAuthButton({required this.label, required this.onPressed, super.key});
 
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

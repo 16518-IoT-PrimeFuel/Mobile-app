@@ -482,7 +482,7 @@ class _SentEnvelope extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: const Icon(
-              Icons.mark_email_outline,
+              Icons.email_outlined,
               size: 31,
               color: Color(0xFF10B981),
             ),
