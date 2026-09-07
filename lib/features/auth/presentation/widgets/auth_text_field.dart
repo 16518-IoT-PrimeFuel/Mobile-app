@@ -83,7 +83,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: borderColor,
-              width: active || hasError ? 1.5 : 1,
+              width: 1.5,
             ),
           ),
           child: TextField(
@@ -96,7 +96,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
             enableSuggestions: !widget.obscureText,
             style: const TextStyle(
               color: FullTankColors.navy,
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
             cursorColor: FullTankColors.blue,
@@ -104,7 +104,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
               hintText: widget.hintText,
               hintStyle: const TextStyle(
                 color: FullTankColors.inkSoft,
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: Icon(widget.icon, size: 18, color: iconColor),
