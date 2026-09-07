@@ -18,7 +18,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isAuthRoute = location == '/login' ||
           location == '/recover' ||
           location == '/signup';
-      if (!authenticated && location == '/home') return '/login';
+      if (!authenticated && location.startsWith('/home')) return '/login';
       if (authenticated && isAuthRoute) return '/home';
       return null;
     },
@@ -29,7 +29,35 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => HomePage(
+          role: state.uri.queryParameters['role'] == 'provider'
+              ? HomeRole.provider
+              : HomeRole.requester,
+        ),
+      ),
+      GoRoute(
+        path: '/home/provider',
+        builder: (context, state) => const HomePage(role: HomeRole.provider),
+      ),
+      GoRoute(
+        path: '/home/search',
+        builder: (context, state) => const GlobalSearchPage(),
+      ),
+      GoRoute(
+        path: '/home/quick-actions',
+        builder: (context, state) => const QuickActionsPage(),
+      ),
+      GoRoute(
+        path: '/home/activity',
+        builder: (context, state) => const ActivityCenterPage(),
+      ),
+      GoRoute(
+        path: '/home/empty/requester',
+        builder: (context, state) => const EmptyHomePage(role: HomeRole.requester),
+      ),
+      GoRoute(
+        path: '/home/empty/provider',
+        builder: (context, state) => const EmptyHomePage(role: HomeRole.provider),
       ),
       GoRoute(
         path: '/recover',
