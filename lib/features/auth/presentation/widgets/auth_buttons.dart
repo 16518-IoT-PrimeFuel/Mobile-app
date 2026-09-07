@@ -34,6 +34,7 @@ class PrimaryAuthButton extends StatelessWidget {
                 color: Color(0x66FFA500),
                 blurRadius: 22,
                 offset: Offset(0, 10),
+                spreadRadius: -10,
               ),
             ],
           ),
@@ -62,6 +63,7 @@ class PrimaryAuthButton extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
+                      letterSpacing: 0.1,
                     ),
                   ),
                   if (!loading) ...[
