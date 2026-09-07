@@ -45,6 +45,23 @@
 
 Las pantallas siguen usando mock data en esta entrega. El siguiente paso de integración sustituye el repository/mock provider por `FullTankApi`; no requiere cambiar la estructura visual.
 
+## Arquitectura actual
+
+```text
+main.dart
+  └── app.dart
+       ├── viewmodels/
+       ├── features/home/
+       ├── features/orders/
+       ├── features/inventory/
+       ├── features/account/
+       ├── widgets/
+       ├── models/
+       └── data/
+```
+
+`main.dart` solo arranca la aplicación. Cada feature contiene sus pantallas, los ViewModels contienen estado mutable y `data/` contiene mocks y acceso HTTP. Las pantallas no importan el cliente HTTP directamente.
+
 ## Pendientes técnicos explícitos
 
 - Persistir JWT de forma segura en almacenamiento nativo.
