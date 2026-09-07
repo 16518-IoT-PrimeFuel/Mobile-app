@@ -12,11 +12,11 @@ void main() {
     final screens = <({Widget screen, String title})>[
       (screen: const HomePage(role: HomeRole.requester), title: 'PetroAndes'),
       (screen: const HomePage(role: HomeRole.provider), title: 'FuelMex Logistics'),
-      (screen: const GlobalSearchPage(), title: 'Global search'),
-      (screen: const QuickActionsPage(), title: 'Quick actions'),
-      (screen: const ActivityCenterPage(), title: 'Activity'),
-      (screen: const EmptyHomePage(role: HomeRole.requester), title: 'No active orders'),
-      (screen: const EmptyHomePage(role: HomeRole.provider), title: 'No operations today'),
+      (screen: const GlobalSearchPage(), title: 'Búsqueda global'),
+      (screen: const QuickActionsPage(), title: 'Acciones rápidas'),
+      (screen: const ActivityCenterPage(), title: 'Actividad'),
+      (screen: const EmptyHomePage(role: HomeRole.requester), title: 'No hay pedidos activos'),
+      (screen: const EmptyHomePage(role: HomeRole.provider), title: 'No hay operaciones hoy'),
     ];
 
     for (final entry in screens) {
