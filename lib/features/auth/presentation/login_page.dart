@@ -56,9 +56,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Column(
                   children: [
-                    _HeroHeader(
-                      topInset: MediaQuery.paddingOf(context).top,
-                    ),
+                    const _HeroHeader(),
                     Transform.translate(
                       offset: const Offset(0, -8),
                       child: Container(
@@ -125,9 +123,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 }
 
 class _HeroHeader extends StatelessWidget {
-  const _HeroHeader({required this.topInset});
-
-  final double topInset;
+  const _HeroHeader();
 
   @override
   Widget build(BuildContext context) {
@@ -153,47 +149,6 @@ class _HeroHeader extends StatelessWidget {
                 ],
                 stops: [0, 0.7, 1],
               ),
-            ),
-          ),
-          Positioned(
-            top: topInset + 12,
-            left: 24,
-            right: 24,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ColorFiltered(
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
-                  ),
-                  child: Image.asset(
-                    'assets/fulltank-logo.png',
-                    height: 26,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 11,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0x1FFFFFFF),
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: const Color(0x59FFFFFF)),
-                  ),
-                  child: const Text(
-                    'B2B · v2.4',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ],
