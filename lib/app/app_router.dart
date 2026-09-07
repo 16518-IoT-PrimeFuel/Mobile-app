@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/application/auth_providers.dart';
 import '../features/auth/presentation/login_page.dart';
 import '../features/auth/presentation/out_of_scope_page.dart';
+import '../features/auth/presentation/recover_page.dart';
 import '../features/home/presentation/home_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -32,10 +33,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/recover',
-        builder: (context, state) => const OutOfScopePage(
-          title: 'Recuperar contraseña',
-          message: 'Esta pantalla pertenece a US-16 y se implementará después.',
-        ),
+        builder: (context, state) => const RecoverPage(),
       ),
       GoRoute(
         path: '/signup',
