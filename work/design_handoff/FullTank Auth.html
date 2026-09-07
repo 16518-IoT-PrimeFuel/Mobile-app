@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>FullTank · Auth Screens</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  html, body { margin: 0; padding: 0; background: #0B1220; height: 100%; }
+  body { font-family: 'Inter', system-ui, sans-serif; overflow: hidden; }
+  * { box-sizing: border-box; }
+  input::placeholder { color: #94A3B8; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design_canvas.jsx"></script>
+<script type="text/babel" src="ios_frame.jsx"></script>
+<script type="text/babel" src="tweaks_panel.jsx"></script>
+<script type="text/babel" src="fulltank-ui.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+<script type="text/babel" src="inventory-ui.jsx"></script>
+<script type="text/babel" src="inventory-screens.jsx"></script>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "navy": "#1A202C",
+  "blue": "#1E40AF",
+  "ctaFrom": "#FFB300",
+  "ctaTo": "#FFA500",
+  "radius": 8,
+  "font": "Inter"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  React.useEffect(() => { window.__ftTweaks = t; }, [t]);
+  window.__ftTweaks = t;
+
+  const phoneW = 340;
+  const phoneH = 720;
+
+  const framed = (Screen, label) => (
+    <div data-screen-label={label} style={centered}>
+      <IOSDevice width={phoneW} height={phoneH} dark>
+        <div style={fullBleed}><Screen /></div>
+      </IOSDevice>
+    </div>
+  );
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="auth" title="FullTank · Authentication"
+          subtitle="Mobile B2B fuel supply · iOS · spec-locked palette">
+
+          <DCArtboard id="splash" label="00 · Splash" width={phoneW} height={phoneH}>
+            {framed(SplashScreen, '00 Splash')}
+          </DCArtboard>
+
+          <DCArtboard id="login" label="01 · Login" width={phoneW} height={phoneH}>
+            {framed(LoginScreen, '01 Login')}
+          </DCArtboard>
+
+          <DCArtboard id="signup" label="02 · Sign Up" width={phoneW} height={phoneH}>
+            {framed(SignupScreen, '02 Signup')}
+          </DCArtboard>
+
+          <DCArtboard id="recover" label="03 · Recover" width={phoneW} height={phoneH}>
+            {framed(RecoverScreen, '03 Recover')}
+          </DCArtboard>
+
+        </DCSection>
+
+        <DCSection id="inventory" title="FullTank · Inventory Module"
+          subtitle="Live IoT sensor readings · Alerts · Restock flow">
+
+          <DCArtboard id="inv-list" label="04 · Tank List" width={phoneW} height={phoneH}>
+            {framed(InventoryListScreen, '04 Inventory List')}
+          </DCArtboard>
+
+          <DCArtboard id="inv-detail" label="05 · Tank Detail" width={phoneW} height={phoneH}>
+            {framed(TankDetailScreen, '05 Tank Detail')}
+          </DCArtboard>
+
+          <DCArtboard id="inv-alerts" label="06 · Alerts" width={phoneW} height={phoneH}>
+            {framed(AlertsScreen, '06 Alerts')}
+          </DCArtboard>
+
+          <DCArtboard id="inv-restock" label="07 · Restock" width={phoneW} height={phoneH}>
+            {framed(RestockScreen, '07 Restock')}
+          </DCArtboard>
+
+        </DCSection>
+      </DesignCanvas>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection title="Ink & Brand">
+          <TweakColor label="Navy (headings)" value={t.navy}
+            options={['#1A202C', '#0F172A', '#111827', '#172554']}
+            onChange={(v) => setTweak('navy', v)}/>
+          <TweakColor label="Blue (accents)" value={t.blue}
+            options={['#1E40AF', '#1D4ED8', '#2563EB', '#1E3A8A']}
+            onChange={(v) => setTweak('blue', v)}/>
+        </TweakSection>
+        <TweakSection title="CTA gradient">
+          <TweakColor label="Gradient start" value={t.ctaFrom}
+            options={['#FFB300', '#F59E0B', '#FB923C', '#FFA726']}
+            onChange={(v) => setTweak('ctaFrom', v)}/>
+          <TweakColor label="Gradient end" value={t.ctaTo}
+            options={['#FFA500', '#F97316', '#EA580C', '#FF8C00']}
+            onChange={(v) => setTweak('ctaTo', v)}/>
+        </TweakSection>
+        <TweakSection title="Shape">
+          <TweakSlider label="Input radius" value={t.radius}
+            min={4} max={16} step={1}
+            onChange={(v) => setTweak('radius', v)}/>
+        </TweakSection>
+        <TweakSection title="Typography">
+          <TweakRadio label="Family" value={t.font}
+            options={['Inter', 'Manrope', 'Space Grotesk']}
+            onChange={(v) => setTweak('font', v)}/>
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+const centered = {
+  width: '100%', height: '100%',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  background: '#0B1220',
+};
+const fullBleed = { width: '100%', height: '100%' };
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
