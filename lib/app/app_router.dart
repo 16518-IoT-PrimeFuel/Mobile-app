@@ -11,6 +11,8 @@ import '../features/inventory/presentation/inventory_page.dart';
 import '../features/orders/presentation/order_pages.dart';
 import '../features/dispatches/presentation/dispatch_pages.dart';
 import '../features/reports/presentation/reports_page.dart';
+import '../features/public/domain/public_content.dart';
+import '../features/public/presentation/public_pages.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(authControllerProvider);
@@ -37,6 +39,31 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+      GoRoute(
+        path: '/about',
+        builder: (context, state) =>
+            const PublicPage(section: PublicSection.about),
+      ),
+      GoRoute(
+        path: '/how-it-works',
+        builder: (context, state) =>
+            const PublicPage(section: PublicSection.howItWorks),
+      ),
+      GoRoute(
+        path: '/benefits',
+        builder: (context, state) =>
+            const PublicPage(section: PublicSection.benefits),
+      ),
+      GoRoute(
+        path: '/testimonials',
+        builder: (context, state) =>
+            const PublicPage(section: PublicSection.testimonials),
+      ),
+      GoRoute(
+        path: '/plans',
+        builder: (context, state) =>
+            const PublicPage(section: PublicSection.plans),
+      ),
       GoRoute(
         path: '/home',
         builder: (context, state) => HomePage(

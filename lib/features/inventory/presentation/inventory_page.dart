@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/fulltank_theme.dart';
 import '../../home/presentation/home_page.dart';
-part 'inventory_page_01.dart';
-part 'inventory_page_02.dart';
-part 'inventory_page_03.dart';
-part 'inventory_page_04.dart';
-part 'inventory_page_05.dart';
-part 'inventory_page_06.dart';
-part 'inventory_page_07.dart';
+part 'inventory_page_part_01.dart';
+part 'inventory_page_part_02.dart';
+part 'inventory_page_part_03.dart';
+part 'inventory_page_part_04.dart';
+part 'inventory_page_part_05.dart';
+part 'inventory_page_part_06.dart';
+part 'inventory_page_part_07.dart';
+part 'inventory_page_part_08.dart';
+part 'inventory_page_part_09.dart';
+part 'inventory_page_part_10.dart';
+part 'inventory_page_part_11.dart';
+
 
 const _uiScale = 1.3;
 const _green = Color(0xFF10B981);

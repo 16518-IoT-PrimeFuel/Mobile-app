@@ -2,7 +2,7 @@
 
 Este documento es la referencia visual de la aplicación móvil FullTank. Las imágenes recibidas muestran un producto B2B operativo: combustible, inventario, pedidos, pagos, entregas y reportes. La interfaz debe sentirse confiable y rápida para una persona que toma decisiones operativas desde el teléfono.
 
-La primera implementación cubrirá las user stories asignadas al comprador y el módulo US-46 de inventario con mock data. La conexión real con el backend llegará después, sin cambiar esta identidad visual.
+La implementación actual integra las stories públicas, autenticación, pedidos, inventario, despachos, reportes y cuenta. Las pantallas operativas usan mocks desacoplados de los contratos de dominio; los adaptadores para `FullTankApi` están preparados para activar la conexión real sin cambiar la UI.
 
 ## 1. Lectura del patrón visual
 
@@ -181,13 +181,13 @@ No mostrar errores técnicos sin traducir (`500`, `socket exception`, nombres de
 | US-43 | Detalle de pedido | Resumen, datos del pedido, pago y seguimiento. |
 | US-46 | Gestión de inventario | Catálogo de combustibles, métricas de disponibilidad, filtros y edición de producto. |
 
-## 6. MVVM y límites de implementación
+## 6. Arquitectura Clean + MVVM
 
-La UI debe depender de estados y comandos del ViewModel, no de HTTP ni de entidades del backend directamente.
+La UI debe depender de estados y comandos del ViewModel, no de HTTP ni de entidades del backend directamente. Cada feature sigue `presentation`, `application`, `domain` y `data`; los archivos de presentación se mantienen pequeños y los componentes visuales no conocen el cliente HTTP.
 
 ```text
-View → ViewModel → Repository → Mock data
-                         └────── API futura
+View → ViewModel/Provider → Repository contract → Mock repository
+                                             └── API repository → FullTankApi
 ```
 
 - Las Views renderizan estado y emiten acciones.
@@ -195,6 +195,7 @@ View → ViewModel → Repository → Mock data
 - Los repositories exponen interfaces simples.
 - El mock repository es la implementación inicial.
 - La futura integración usará `/api/v1` y JWT sin rediseñar pantallas.
+- El modo API se activa por variables `USE_MOCK_*`; por defecto permanece en mock.
 
 ## 7. Qué evitar
 

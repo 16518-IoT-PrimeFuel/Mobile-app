@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../home/presentation/home_page.dart';
-part 'dispatch_pages_01.dart';
-part 'dispatch_pages_02.dart';
-part 'dispatch_pages_03.dart';
-part 'dispatch_pages_04.dart';
-part 'dispatch_pages_05.dart';
-part 'dispatch_pages_06.dart';
-part 'dispatch_pages_07.dart';
-part 'dispatch_pages_08.dart';
+part 'dispatch_pages_part_01.dart';
+part 'dispatch_pages_part_02.dart';
+part 'dispatch_pages_part_03.dart';
+part 'dispatch_pages_part_04.dart';
+part 'dispatch_pages_part_05.dart';
+part 'dispatch_pages_part_06.dart';
+part 'dispatch_pages_part_07.dart';
+part 'dispatch_pages_part_08.dart';
+part 'dispatch_pages_part_09.dart';
+part 'dispatch_pages_part_10.dart';
+part 'dispatch_pages_part_11.dart';
+part 'dispatch_pages_part_12.dart';
+
 
 const _ink = Color(0xFF202735);
 const _muted = Color(0xFF718096);

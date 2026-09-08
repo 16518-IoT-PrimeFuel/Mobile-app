@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-part 'order_pages_01.dart';
-part 'order_pages_02.dart';
-part 'order_pages_03.dart';
-part 'order_pages_04.dart';
-part 'order_pages_05.dart';
-part 'order_pages_06.dart';
-part 'order_pages_07.dart';
-part 'order_pages_08.dart';
-part 'order_pages_09.dart';
-part 'order_pages_10.dart';
+part 'order_pages_part_01.dart';
+part 'order_pages_part_02.dart';
+part 'order_pages_part_03.dart';
+part 'order_pages_part_04.dart';
+part 'order_pages_part_05.dart';
+part 'order_pages_part_06.dart';
+part 'order_pages_part_07.dart';
+part 'order_pages_part_08.dart';
+part 'order_pages_part_09.dart';
+part 'order_pages_part_10.dart';
+part 'order_pages_part_11.dart';
+part 'order_pages_part_12.dart';
+part 'order_pages_part_13.dart';
+part 'order_pages_part_14.dart';
+part 'order_pages_part_15.dart';
+part 'order_pages_part_16.dart';
+
 
 const _ink = Color(0xFF172033);
 const _muted = Color(0xFF64748B);
