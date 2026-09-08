@@ -10,9 +10,9 @@ void main() {
     for (final variant in ReportVariant.values) {
       await tester.pumpWidget(MaterialApp(home: ReportsPage(variant: variant)));
       await tester.pump();
-      expect(find.text('Clientes'), findsOneWidget);
-      expect(find.text('Inventario'), findsOneWidget);
-      expect(find.text('Ventas'), findsWidgets);
+      expect(find.text('Inicio'), findsOneWidget);
+      expect(find.text('Pedidos'), findsWidgets);
+      expect(find.text('Despachos'), findsOneWidget);
       expect(find.text('Reportes'), findsOneWidget);
       expect(find.text('Cuenta'), findsOneWidget);
     }

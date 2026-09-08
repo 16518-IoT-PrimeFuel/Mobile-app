@@ -41,12 +41,12 @@ void main() {
       initialLocation: '/home',
       routes: [
         GoRoute(path: '/home', builder: (_, __) => screen('home', 0)),
-        GoRoute(path: '/inventory', builder: (_, __) => screen('inventory', 1)),
-        GoRoute(path: '/reports/sales', builder: (_, __) => screen('sales', 2)),
+        GoRoute(path: '/orders', builder: (_, __) => screen('orders', 1)),
         GoRoute(
-          path: '/reports/consumption',
-          builder: (_, __) => screen('consumption', 3),
+          path: '/dispatches',
+          builder: (_, __) => screen('dispatches', 2),
         ),
+        GoRoute(path: '/reports/sales', builder: (_, __) => screen('sales', 3)),
         GoRoute(
           path: '/account',
           builder: (_, __) =>
@@ -59,11 +59,11 @@ void main() {
     await tester.pumpAndSettle();
 
     for (final destination in [
-      ('Inventario', '/inventory'),
-      ('Ventas', '/reports/sales'),
-      ('Reportes', '/reports/consumption'),
+      ('Pedidos', '/orders'),
+      ('Despachos', '/dispatches'),
+      ('Reportes', '/reports/sales'),
       ('Cuenta', '/account'),
-      ('Clientes', '/home'),
+      ('Inicio', '/home'),
     ]) {
       await tester.tap(find.text(destination.$1));
       await tester.pumpAndSettle();
