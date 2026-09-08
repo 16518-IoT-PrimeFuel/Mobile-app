@@ -91,8 +91,13 @@ void main() {
 
     const routes = <({String path, String title})>[
       (path: '/orders/FT-88421/payment', title: 'Confirmar pago'),
+      (path: '/orders/search', title: 'Buscar pedidos'),
+      (path: '/orders/filter', title: 'Buscar pedidos'),
       (path: '/provider/orders', title: 'Pedidos por atender'),
+      (path: '/provider/orders/FT-2098', title: 'Pedido #FT-2098'),
+      (path: '/provider/orders/FT-2098/reject', title: 'Rechazar pedido'),
       (path: '/support/help', title: 'Centro de ayuda'),
+      (path: '/support/contact', title: 'Contactar soporte'),
       (path: '/notifications', title: 'Notificaciones'),
       (path: '/customers', title: 'Clientes'),
       (path: '/customers/new', title: 'Agregar cliente'),
@@ -105,6 +110,43 @@ void main() {
       expect(find.text(route.title), findsOneWidget, reason: route.path);
     }
   });
+
+  testWidgets(
+    'public routes stay open and protected routes require a session',
+    (tester) async {
+      final container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(_RouteRepository()),
+        ],
+      );
+      addTearDown(container.dispose);
+      final router = container.read(appRouterProvider);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp.router(routerConfig: router),
+        ),
+      );
+      await tester.pump();
+
+      const routes = <({String path, String title})>[
+        (path: '/about', title: 'Combustible sin fricción'),
+        (path: '/how-it-works', title: 'Así funciona FullTank'),
+        (path: '/benefits', title: 'Operación más simple'),
+        (path: '/testimonials', title: 'Lo que dicen nuestros clientes'),
+        (path: '/plans', title: 'Planes para cada operación'),
+      ];
+      for (final route in routes) {
+        router.go(route.path);
+        await tester.pumpAndSettle();
+        expect(find.text(route.title), findsOneWidget, reason: route.path);
+      }
+
+      router.go('/support/help');
+      await tester.pumpAndSettle();
+      expect(find.text('Bienvenido de vuelta'), findsOneWidget);
+    },
+  );
 }
 
 class _RouteRepository implements AuthRepository {

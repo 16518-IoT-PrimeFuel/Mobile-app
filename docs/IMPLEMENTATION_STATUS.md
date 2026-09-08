@@ -45,9 +45,34 @@
 
 Las pantallas siguen usando mock data en esta entrega. El siguiente paso de integración sustituye el repository/mock provider por `FullTankApi`; no requiere cambiar la estructura visual.
 
-## Pendientes técnicos explícitos
+## Arquitectura actual
+
+```text
+main.dart
+  └── app/
+       ├── app_router.dart
+       └── fulltank_app.dart
+features/*/
+  ├── application/       # Riverpod controllers/providers
+  ├── domain/            # entidades y contratos
+  ├── data/              # mocks y adaptadores API
+  └── presentation/      # páginas y widgets
+```
+
+`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio, pero las pantallas operativas todavía no consumen esos controllers/providers y mantienen datos mock locales.
+
+## Refactor aplicado
+
+- Se integraron las ramas de operaciones: inventario, pedidos y despachos.
+- Las pantallas grandes se dividieron en módulos de presentación pequeños.
+- Se añadieron contratos, entidades, mocks, adaptadores API y providers para pedidos, inventario, despachos y reportes.
+- Las stories públicas faltantes tienen contenido aislado y rutas `/about`, `/how-it-works`, `/benefits`, `/testimonials` y `/plans`.
+- El modo mock sigue siendo el predeterminado durante el desarrollo visual.
+
+## Pendientes de integración real
 
 - Persistir JWT de forma segura en almacenamiento nativo.
-- Inyectar `FullTankApi` en ViewModels.
-- Reemplazar cada mock repository por llamadas reales y mapear errores HTTP a estados de UI.
-- Añadir tests widget y de contrato cuando las dependencias de Flutter estén disponibles en el entorno.
+- Conectar cada ViewModel a las pantallas concretas de operaciones.
+- Validar los nombres de campos de respuesta contra el backend desplegado.
+- Activar providers API por entorno cuando exista una URL estable.
+- Mapear errores HTTP a estados de UI traducidos y accionables.
