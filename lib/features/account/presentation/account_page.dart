@@ -664,7 +664,7 @@ class _HelpSettings extends StatelessWidget {
             color: FullTankColors.blue,
             title: 'Centro de ayuda',
             detail: 'Guías, FAQs y tutoriales',
-            onTap: () => _showMessage(context, 'Centro de ayuda próximamente.'),
+            onTap: () => context.push('/support/help'),
           ),
           _HelpRow(
             icon: Icons.headset_mic_outlined,
@@ -672,7 +672,7 @@ class _HelpSettings extends StatelessWidget {
             title: 'Contactar soporte',
             detail: 'Respuesta promedio · 4 min',
             badge: '24/7',
-            onTap: () => _showMessage(context, 'Soporte disponible 24/7.'),
+            onTap: () => context.push('/support/contact'),
           ),
         ],
       ),

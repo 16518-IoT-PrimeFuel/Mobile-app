@@ -126,7 +126,7 @@ class _RequesterHome extends StatelessWidget {
                 label: 'Soporte',
                 color: _purple,
                 softColor: _purpleSoft,
-                onTap: () => context.push('/account/help'),
+                onTap: () => context.push('/support/help'),
               ),
             ),
           ],
@@ -186,6 +186,7 @@ class _ProviderHome extends StatelessWidget {
           title: 'Aprobar pedido — AgroNorte',
           detail: '12.000 L Diésel B5 · hace 8 min',
           button: 'Aprobar',
+          onTap: () => context.push('/provider/orders/FT-2098'),
         ),
         const SizedBox(height: 8),
         _ActionRequiredCard(
@@ -205,6 +206,7 @@ class _ProviderHome extends StatelessWidget {
           title: 'Revisar pago — Cementos B',
           detail: '\$248.500 MXN · pendiente de confirmación',
           button: 'Revisar',
+          onTap: () => context.push('/orders/FT-2098/payment'),
         ),
       ],
     );
@@ -288,12 +290,18 @@ class _HomeHeader extends StatelessWidget {
           onSelected: (value) {
             if (value == 'activity') {
               context.push('/home/activity');
+            } else if (value == 'notifications') {
+              context.push('/notifications');
             } else {
               onSignOut();
             }
           },
           padding: EdgeInsets.zero,
           itemBuilder: (context) => const [
+            PopupMenuItem(
+              value: 'notifications',
+              child: Text('Notificaciones'),
+            ),
             PopupMenuItem(value: 'activity', child: Text('Actividad')),
             PopupMenuItem(value: 'logout', child: Text('Cerrar sesión')),
           ],
