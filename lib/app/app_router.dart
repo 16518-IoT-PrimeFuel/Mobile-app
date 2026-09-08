@@ -7,6 +7,9 @@ import '../features/auth/presentation/out_of_scope_page.dart';
 import '../features/auth/presentation/recover_page.dart';
 import '../features/account/presentation/account_page.dart';
 import '../features/home/presentation/home_page.dart';
+import '../features/inventory/presentation/inventory_page.dart';
+import '../features/orders/presentation/order_pages.dart';
+import '../features/dispatches/presentation/dispatch_pages.dart';
 import '../features/reports/presentation/reports_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -25,7 +28,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           (location.startsWith('/home') ||
               location.startsWith('/reports') ||
               location.startsWith('/account') ||
-              location == '/inventory'))
+              location.startsWith('/inventory') ||
+              location.startsWith('/orders') ||
+              location.startsWith('/dispatches')))
         return '/login';
       if (authenticated && isAuthRoute) return '/home';
       return null;
@@ -47,6 +52,98 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/inventory',
         builder: (context, state) => const InventoryPage(),
+      ),
+      GoRoute(
+        path: '/inventory/tank/:tankId',
+        builder: (context, state) =>
+            TankDetailPage(tankId: state.pathParameters['tankId'] ?? 'A-102'),
+      ),
+      GoRoute(
+        path: '/inventory/alerts',
+        builder: (context, state) => const InventoryAlertsPage(),
+      ),
+      GoRoute(
+        path: '/inventory/restock/:tankId',
+        builder: (context, state) =>
+            RestockPage(tankId: state.pathParameters['tankId'] ?? 'A-102'),
+      ),
+      GoRoute(
+        path: '/orders/history',
+        builder: (context, state) => OrdersPage(
+          history: true,
+          state: orderPageStateFromQuery(state.uri.queryParameters['state']),
+        ),
+      ),
+      GoRoute(
+        path: '/orders/history/:orderId',
+        builder: (context, state) => OrderDetailPage(
+          history: true,
+          orderId: state.pathParameters['orderId'] ?? 'FT-88402',
+        ),
+      ),
+      GoRoute(
+        path: '/orders',
+        builder: (context, state) => OrdersPage(
+          history: false,
+          state: orderPageStateFromQuery(state.uri.queryParameters['state']),
+        ),
+      ),
+      GoRoute(
+        path: '/orders/new',
+        builder: (context, state) => NewOrderPage(
+          initialState: newOrderStateFromQuery(
+            state.uri.queryParameters['state'],
+          ),
+        ),
+      ),
+      GoRoute(
+        path: '/orders/:orderId',
+        builder: (context, state) => OrderDetailPage(
+          history: false,
+          orderId: state.pathParameters['orderId'] ?? 'FT-88421',
+        ),
+      ),
+      GoRoute(
+        path: '/dispatches',
+        builder: (context, state) => TransportAvailabilityPage(
+          initialState: dispatchAvailabilityStateFromQuery(
+            state.uri.queryParameters['state'],
+          ),
+        ),
+      ),
+      GoRoute(
+        path: '/dispatches/fleet',
+        builder: (context, state) => const FleetPage(),
+      ),
+      GoRoute(
+        path: '/dispatches/fleet/new',
+        builder: (context, state) => FleetFormPage(
+          initialState: state.uri.queryParameters['state'] == 'duplicate'
+              ? VehicleFormState.duplicate
+              : VehicleFormState.normal,
+          editingPlate: state.uri.queryParameters['edit'],
+        ),
+      ),
+      GoRoute(
+        path: '/dispatches/drivers',
+        builder: (context, state) => const DriverPage(),
+      ),
+      GoRoute(
+        path: '/dispatches/drivers/new',
+        builder: (context, state) => DriverFormPage(
+          initialState: state.uri.queryParameters['state'] == 'duplicate'
+              ? DriverFormState.duplicate
+              : DriverFormState.normal,
+          editing: state.uri.queryParameters['edit'] == 'true',
+        ),
+      ),
+      GoRoute(
+        path: '/dispatches/assign',
+        builder: (context, state) => DispatchAssignmentPage(
+          initialState: dispatchAssignmentStateFromQuery(
+            state.uri.queryParameters['state'],
+          ),
+        ),
       ),
       GoRoute(
         path: '/account',
@@ -92,8 +189,14 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/reports/sales',
-        builder: (context, state) =>
-            const ReportsPage(variant: ReportVariant.sales),
+        builder: (context, state) => SalesReportPage(
+          initialState: switch (state.uri.queryParameters['state']) {
+            'generating' => SalesReportState.generating,
+            'ready' => SalesReportState.ready,
+            'empty' => SalesReportState.empty,
+            _ => SalesReportState.dashboard,
+          },
+        ),
       ),
       GoRoute(
         path: '/reports/export',

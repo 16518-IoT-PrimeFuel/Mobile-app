@@ -27,7 +27,8 @@ const _purpleSoft = Color(0xFFF5F3FF);
 const _uiTextScale = 1.3;
 
 Widget _withHomeUiScale(BuildContext context, Widget child) => MediaQuery(
-  data: MediaQuery.of(context)
-      .copyWith(textScaler: const TextScaler.linear(_uiTextScale)),
+  data: MediaQuery.of(
+    context,
+  ).copyWith(textScaler: const TextScaler.linear(_uiTextScale)),
   child: child,
 );

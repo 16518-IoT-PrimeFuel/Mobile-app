@@ -121,6 +121,7 @@ class _ActionRequiredCard extends StatelessWidget {
     required this.title,
     required this.detail,
     required this.button,
+    this.onTap,
   });
 
   final Color color;
@@ -129,6 +130,7 @@ class _ActionRequiredCard extends StatelessWidget {
   final String title;
   final String detail;
   final String button;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -190,7 +192,7 @@ class _ActionRequiredCard extends StatelessWidget {
         const SizedBox(width: 6),
         Padding(
           padding: const EdgeInsets.only(top: 14),
-          child: _DarkButton(label: button, onTap: () {}),
+          child: _DarkButton(label: button, onTap: onTap ?? () {}),
         ),
       ],
     ),

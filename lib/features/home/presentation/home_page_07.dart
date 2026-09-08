@@ -12,12 +12,12 @@ class FullTankBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labels = ['Clientes', 'Inventario', 'Ventas', 'Reportes', 'Cuenta'];
+    const labels = ['Inicio', 'Pedidos', 'Despachos', 'Reportes', 'Cuenta'];
     const icons = [
-      Icons.people_outline,
-      Icons.inventory_2_outlined,
-      Icons.show_chart,
-      Icons.description_outlined,
+      Icons.home_outlined,
+      Icons.receipt_long_outlined,
+      Icons.local_shipping_outlined,
+      Icons.bar_chart_outlined,
       Icons.person_outline,
     ];
     return Container(
@@ -80,11 +80,11 @@ class FullTankBottomNav extends StatelessWidget {
       case 0:
         router.go('/home');
       case 1:
-        router.go('/inventory');
+        router.go('/orders');
       case 2:
-        router.go('/reports/sales');
+        router.go('/dispatches');
       case 3:
-        router.go('/reports/consumption');
+        router.go('/reports/sales');
       case 4:
         router.go('/account');
     }

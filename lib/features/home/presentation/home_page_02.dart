@@ -155,7 +155,7 @@ class _OrderStatusCard extends StatelessWidget {
                 ],
               ),
               TextButton(
-                onPressed: () => context.push('/home/activity'),
+                onPressed: () => context.push('/orders/FT-88421'),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(0, 32),

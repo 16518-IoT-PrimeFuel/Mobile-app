@@ -339,7 +339,7 @@ class _QuickActionsSheet extends StatelessWidget {
           _GradientAction(
             label: 'Crear pedido',
             icon: Icons.note_add_outlined,
-            onTap: onClose,
+            onTap: () => context.push('/orders/new'),
           ),
           const SizedBox(height: 7),
           const _SheetAction(
