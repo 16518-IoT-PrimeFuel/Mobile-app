@@ -65,49 +65,6 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-class InventoryPage extends StatelessWidget {
-  const InventoryPage({super.key});
-
-  @override
-  Widget build(BuildContext context) => _withHomeUiScale(
-    context,
-    Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const _SubpageHeader(
-                title: 'Inventario',
-                subtitle: 'Tanques y existencias en tiempo real',
-              ),
-              const SizedBox(height: 18),
-              _Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('INVENTARIO', style: _labelStyle),
-                    const SizedBox(height: 6),
-                    const Text(
-                      'Consulta tus tanques y niveles de combustible.',
-                      style: _metaStyle,
-                    ),
-                    const SizedBox(height: 14),
-                    _DarkButton(label: 'Ver tanques', onTap: () {}),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: const FullTankBottomNav(active: 1),
-    ),
-  );
-}
-
 class _RequesterHome extends StatelessWidget {
   const _RequesterHome({required this.onSignOut, required this.guest});
 
@@ -149,7 +106,7 @@ class _RequesterHome extends StatelessWidget {
                 label: 'Ver\npedidos',
                 color: const Color(0xFF0F9B91),
                 softColor: const Color(0xFFEAFBF8),
-                onTap: () => context.push('/home/search'),
+                onTap: () => context.push('/orders/history'),
               ),
             ),
             const SizedBox(width: 7),
@@ -238,6 +195,7 @@ class _ProviderHome extends StatelessWidget {
           title: 'Asignar vehículo — Transportes Delta',
           detail: 'Bahía 2 · programado hoy 3:00 PM',
           button: 'Asignar',
+          onTap: () => context.push('/dispatches/assign'),
         ),
         const SizedBox(height: 8),
         _ActionRequiredCard(
@@ -528,7 +486,7 @@ class _OrderStatusCard extends StatelessWidget {
                 ],
               ),
               TextButton(
-                onPressed: () => context.push('/home/activity'),
+                onPressed: () => context.push('/orders/FT-88421'),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(0, 32),
@@ -774,6 +732,7 @@ class _ActionRequiredCard extends StatelessWidget {
     required this.title,
     required this.detail,
     required this.button,
+    this.onTap,
   });
 
   final Color color;
@@ -782,6 +741,7 @@ class _ActionRequiredCard extends StatelessWidget {
   final String title;
   final String detail;
   final String button;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -843,7 +803,7 @@ class _ActionRequiredCard extends StatelessWidget {
         const SizedBox(width: 6),
         Padding(
           padding: const EdgeInsets.only(top: 14),
-          child: _DarkButton(label: button, onTap: () {}),
+          child: _DarkButton(label: button, onTap: onTap ?? () {}),
         ),
       ],
     ),
@@ -1278,7 +1238,7 @@ class _QuickActionsSheet extends StatelessWidget {
           _GradientAction(
             label: 'Crear pedido',
             icon: Icons.note_add_outlined,
-            onTap: onClose,
+            onTap: () => context.push('/orders/new'),
           ),
           const SizedBox(height: 7),
           const _SheetAction(
@@ -1924,12 +1884,12 @@ class FullTankBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const labels = ['Clientes', 'Inventario', 'Ventas', 'Reportes', 'Cuenta'];
+    const labels = ['Inicio', 'Pedidos', 'Despachos', 'Reportes', 'Cuenta'];
     const icons = [
-      Icons.people_outline,
-      Icons.inventory_2_outlined,
-      Icons.show_chart,
-      Icons.description_outlined,
+      Icons.home_outlined,
+      Icons.receipt_long_outlined,
+      Icons.local_shipping_outlined,
+      Icons.bar_chart_outlined,
       Icons.person_outline,
     ];
     return Container(
@@ -1992,11 +1952,11 @@ class FullTankBottomNav extends StatelessWidget {
       case 0:
         router.go('/home');
       case 1:
-        router.go('/inventory');
+        router.go('/orders');
       case 2:
-        router.go('/reports/sales');
+        router.go('/dispatches');
       case 3:
-        router.go('/reports/consumption');
+        router.go('/reports/sales');
       case 4:
         router.go('/account');
     }
