@@ -29,6 +29,8 @@ class _FullTankAppState extends ConsumerState<FullTankApp> {
       title: 'FullTank',
       theme: FullTankTheme.light(),
       routerConfig: router,
+      builder: (context, child) =>
+          withFullTankUiScale(context, child ?? const SizedBox.shrink()),
     );
   }
 }

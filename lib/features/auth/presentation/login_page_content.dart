@@ -35,53 +35,56 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ? authState.failure
         : null;
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.light,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Column(
-                  children: [
-                    const _HeroHeader(),
-                    Transform.translate(
-                      offset: const Offset(0, -8),
-                      child: Container(
-                        width: double.infinity,
-                        color: Colors.white,
-                        padding: const EdgeInsets.fromLTRB(24, 4, 24, 32),
-                        child: _LoginContent(
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                          onEmailChanged: (_) => setState(() {}),
-                          onPasswordChanged: (_) => setState(() {}),
-                          emailError: _emailError,
-                          passwordError: _passwordError,
-                          failure: failure,
-                          loading: loading,
-                          rememberMe: _rememberMe,
-                          obscurePassword: _obscurePassword,
-                          onRememberChanged: (value) => setState(() {
-                            _rememberMe = value;
-                          }),
-                          onTogglePassword: () => setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          }),
-                          onSubmit: loading ? null : _submit,
-                          onGuest: loading ? null : _continueAsGuest,
-                          onForgot: () => context.push('/recover'),
-                          onCreateAccount: () => context.push('/signup'),
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Column(
+                    children: [
+                      const _HeroHeader(),
+                      Transform.translate(
+                        offset: const Offset(0, -8),
+                        child: Container(
+                          width: double.infinity,
+                          color: Colors.white,
+                          padding: const EdgeInsets.fromLTRB(24, 4, 24, 32),
+                          child: _LoginContent(
+                            emailController: _emailController,
+                            passwordController: _passwordController,
+                            onEmailChanged: (_) => setState(() {}),
+                            onPasswordChanged: (_) => setState(() {}),
+                            emailError: _emailError,
+                            passwordError: _passwordError,
+                            failure: failure,
+                            loading: loading,
+                            rememberMe: _rememberMe,
+                            obscurePassword: _obscurePassword,
+                            onRememberChanged: (value) => setState(() {
+                              _rememberMe = value;
+                            }),
+                            onTogglePassword: () => setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            }),
+                            onSubmit: loading ? null : _submit,
+                            onGuest: loading ? null : _continueAsGuest,
+                            onForgot: () => context.push('/recover'),
+                            onCreateAccount: () => context.push('/signup'),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

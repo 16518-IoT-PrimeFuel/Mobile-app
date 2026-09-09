@@ -8,5 +8,5 @@ import '../application/auth_controller.dart';
 import '../application/auth_providers.dart';
 import 'widgets/auth_buttons.dart';
 import 'widgets/auth_text_field.dart';
-part 'login_page_part_01.dart';
-part 'login_page_part_02.dart';
+part 'login_page_content.dart';
+part 'login_form_widgets.dart';

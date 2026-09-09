@@ -68,7 +68,11 @@ class PrimaryAuthButton extends StatelessWidget {
                   ),
                   if (!loading) ...[
                     const SizedBox(width: 10),
-                    const Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+                    const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                   ],
                 ],
               ),
@@ -81,7 +85,11 @@ class PrimaryAuthButton extends StatelessWidget {
 }
 
 class SecondaryAuthButton extends StatelessWidget {
-  const SecondaryAuthButton({required this.label, required this.onPressed, super.key});
+  const SecondaryAuthButton({
+    required this.label,
+    required this.onPressed,
+    super.key,
+  });
 
   final String label;
   final VoidCallback? onPressed;

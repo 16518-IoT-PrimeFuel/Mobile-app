@@ -21,12 +21,11 @@ void main() {
     expect(find.text('Ingresa tu email corporativo'), findsOneWidget);
   });
 
-  testWidgets('shows the not found state for the reference email', (tester) async {
+  testWidgets('shows the not found state for the reference email', (
+    tester,
+  ) async {
     await tester.pumpWidget(const _TestApp());
-    await tester.enterText(
-      find.byType(TextField),
-      'noexiste@empresa.com',
-    );
+    await tester.enterText(find.byType(TextField), 'noexiste@empresa.com');
     await tester.tap(find.text('Enviar enlace de recuperación'));
     await tester.pump();
 
@@ -38,10 +37,7 @@ void main() {
 
   testWidgets('shows the sent state for a valid email', (tester) async {
     await tester.pumpWidget(const _TestApp());
-    await tester.enterText(
-      find.byType(TextField),
-      'operador@empresa.com',
-    );
+    await tester.enterText(find.byType(TextField), 'operador@empresa.com');
     await tester.tap(find.text('Enviar enlace de recuperación'));
     await tester.pump();
 

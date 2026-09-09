@@ -56,8 +56,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
     final borderColor = hasError
         ? FullTankColors.danger
         : active
-            ? FullTankColors.blue
-            : FullTankColors.line;
+        ? FullTankColors.blue
+        : FullTankColors.line;
     final iconColor = hasError || active
         ? (hasError ? FullTankColors.danger : FullTankColors.blue)
         : FullTankColors.inkSoft;
@@ -81,10 +81,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
           decoration: BoxDecoration(
             color: active ? Colors.white : FullTankColors.card,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: borderColor,
-              width: 1.5,
-            ),
+            border: Border.all(color: borderColor, width: 1.5),
           ),
           child: TextField(
             controller: widget.controller,

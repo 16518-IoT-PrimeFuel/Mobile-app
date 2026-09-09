@@ -38,7 +38,9 @@ void main() {
   test('invalid credentials expose a user-facing failure', () async {
     final container = ProviderContainer(
       overrides: [
-        authRepositoryProvider.overrideWithValue(_FakeAuthRepository(fails: true)),
+        authRepositoryProvider.overrideWithValue(
+          _FakeAuthRepository(fails: true),
+        ),
       ],
     );
     addTearDown(container.dispose);
