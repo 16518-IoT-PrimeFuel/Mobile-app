@@ -37,7 +37,7 @@ class _DispatchShell extends StatelessWidget {
   final Widget? action;
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 11, 16, 18),
+    padding: const EdgeInsets.fromLTRB(20, 14, 20, 22),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,7 +49,7 @@ class _DispatchShell extends StatelessWidget {
               icon: const Icon(Icons.arrow_back, size: 19),
               style: IconButton.styleFrom(
                 backgroundColor: _panel,
-                fixedSize: const Size(34, 34),
+                fixedSize: const Size(44, 44),
                 padding: EdgeInsets.zero,
               ),
             ),
@@ -64,7 +64,7 @@ class _DispatchShell extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: _ink,
-                      fontSize: 16,
+                      fontSize: 18,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -.3,
                     ),
@@ -72,7 +72,7 @@ class _DispatchShell extends StatelessWidget {
                   if (subtitle.isNotEmpty)
                     Text(
                       subtitle,
-                      style: const TextStyle(color: _muted, fontSize: 8.5),
+                      style: const TextStyle(color: _muted, fontSize: 10),
                     ),
                 ],
               ),
@@ -122,10 +122,10 @@ class _OrangeButton extends StatelessWidget {
         disabledBackgroundColor: _panel,
         foregroundColor: Colors.white,
         disabledForegroundColor: _subtle,
-        minimumSize: const Size.fromHeight(36),
+        minimumSize: const Size.fromHeight(52),
         shape: const StadiumBorder(),
         elevation: 2,
-        textStyle: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800),
+        textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
       ),
       child: Text(label),
     ),

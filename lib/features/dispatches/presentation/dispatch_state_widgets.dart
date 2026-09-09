@@ -6,7 +6,7 @@ class _InfoNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     width: double.infinity,
-    padding: const EdgeInsets.all(10),
+    padding: const EdgeInsets.all(14),
     decoration: BoxDecoration(
       color: _blueSoft,
       border: Border.all(color: const Color(0xFFCAD8FF)),
@@ -14,8 +14,8 @@ class _InfoNotice extends StatelessWidget {
     ),
     child: Row(
       children: [
-        const Icon(Icons.info_outline, color: _blue, size: 16),
-        const SizedBox(width: 7),
+        const Icon(Icons.info_outline, color: _blue, size: 20),
+        const SizedBox(width: 10),
         Expanded(
           child: Text(
             message,
@@ -102,7 +102,7 @@ class _StatusTag extends StatelessWidget {
   final Color? soft;
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
     decoration: BoxDecoration(
       color: soft ?? color.withAlpha(22),
       borderRadius: BorderRadius.circular(99),

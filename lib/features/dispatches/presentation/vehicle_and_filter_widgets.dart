@@ -5,7 +5,7 @@ class _VehicleCard extends StatelessWidget {
   final _Vehicle vehicle;
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(9),
+    padding: const EdgeInsets.all(13),
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: _line),
@@ -14,8 +14,8 @@ class _VehicleCard extends StatelessWidget {
     child: Row(
       children: [
         Container(
-          width: 35,
-          height: 35,
+          width: 44,
+          height: 44,
           decoration: BoxDecoration(
             color: vehicle.status == 'DISPONIBLE' ? _greenSoft : _amberSoft,
             borderRadius: BorderRadius.circular(9),
@@ -23,10 +23,10 @@ class _VehicleCard extends StatelessWidget {
           child: Icon(
             Icons.local_shipping_outlined,
             color: vehicle.status == 'DISPONIBLE' ? _green : _amber,
-            size: 18,
+            size: 22,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 10),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

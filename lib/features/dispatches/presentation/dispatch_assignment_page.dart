@@ -17,43 +17,47 @@ class _DispatchAssignmentPageState extends State<DispatchAssignmentPage> {
   @override
   Widget build(BuildContext context) {
     final success = _state == AssignmentState.success;
-    return Scaffold(
-      body: SafeArea(
-        child: _DispatchShell(
-          title: success
-              ? 'Despacho asignado'
-              : _state == AssignmentState.confirm ||
-                    _state == AssignmentState.conflict
-              ? 'Confirmar asignación'
-              : 'Asignar recursos',
-          subtitle: success
-              ? ''
-              : _state == AssignmentState.order
-              ? 'Vehículo y conductor'
-              : 'Revisa y asigna',
-          onBack: () => context.pop(),
-          child: success
-              ? const _AssignmentSuccess()
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_state != AssignmentState.conflict)
-                      _AssignmentStepper(state: _state),
-                    const SizedBox(height: 13),
-                    if (_state == AssignmentState.conflict)
-                      _AssignmentConflict(
-                        onChange: () =>
-                            setState(() => _state = AssignmentState.vehicle),
-                      )
-                    else
-                      _assignmentBody(),
-                    const SizedBox(height: 14),
-                    if (_state != AssignmentState.conflict) _assignmentAction(),
-                  ],
-                ),
+    return withFullTankUiScale(
+      context,
+      Scaffold(
+        body: SafeArea(
+          child: _DispatchShell(
+            title: success
+                ? 'Despacho asignado'
+                : _state == AssignmentState.confirm ||
+                      _state == AssignmentState.conflict
+                ? 'Confirmar asignación'
+                : 'Asignar recursos',
+            subtitle: success
+                ? ''
+                : _state == AssignmentState.order
+                ? 'Vehículo y conductor'
+                : 'Revisa y asigna',
+            onBack: () => context.pop(),
+            child: success
+                ? const _AssignmentSuccess()
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_state != AssignmentState.conflict)
+                        _AssignmentStepper(state: _state),
+                      const SizedBox(height: 13),
+                      if (_state == AssignmentState.conflict)
+                        _AssignmentConflict(
+                          onChange: () =>
+                              setState(() => _state = AssignmentState.vehicle),
+                        )
+                      else
+                        _assignmentBody(),
+                      const SizedBox(height: 14),
+                      if (_state != AssignmentState.conflict)
+                        _assignmentAction(),
+                    ],
+                  ),
+          ),
         ),
+        bottomNavigationBar: const FullTankBottomNav(active: 2),
       ),
-      bottomNavigationBar: const FullTankBottomNav(active: 2),
     );
   }
 

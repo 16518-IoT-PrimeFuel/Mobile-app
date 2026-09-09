@@ -15,63 +15,66 @@ class FleetPage extends StatefulWidget {
 class _FleetPageState extends State<FleetPage> {
   final _items = List<_Vehicle>.from(_vehicles);
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: _DispatchShell(
-        title: 'Gestión de flota',
-        subtitle: '${_items.length} vehículos registrados',
-        onBack: () => context.go('/dispatches'),
-        action: IconButton(
-          tooltip: 'Añadir vehículo',
-          onPressed: _add,
-          icon: const Icon(Icons.add, color: Colors.white, size: 21),
-          style: IconButton.styleFrom(
-            backgroundColor: _orange,
-            fixedSize: const Size(34, 34),
+  Widget build(BuildContext context) => withFullTankUiScale(
+    context,
+    Scaffold(
+      body: SafeArea(
+        child: _DispatchShell(
+          title: 'Gestión de flota',
+          subtitle: '${_items.length} vehículos registrados',
+          onBack: () => context.go('/dispatches'),
+          action: IconButton(
+            tooltip: 'Añadir vehículo',
+            onPressed: _add,
+            icon: const Icon(Icons.add, color: Colors.white, size: 21),
+            style: IconButton.styleFrom(
+              backgroundColor: _orange,
+              fixedSize: const Size(44, 44),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  _StatBox(
+                    label: 'DISPONIBLES',
+                    value: '03',
+                    color: _green,
+                    soft: _greenSoft,
+                  ),
+                  SizedBox(width: 5),
+                  _StatBox(
+                    label: 'OCUPADOS',
+                    value: '01',
+                    color: _amber,
+                    soft: _amberSoft,
+                  ),
+                  SizedBox(width: 5),
+                  _StatBox(
+                    label: 'FUERA',
+                    value: '02',
+                    color: _red,
+                    soft: _redSoft,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              for (final item in _items)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 7),
+                  child: _FleetCard(
+                    vehicle: item,
+                    onEdit: () => _edit(item),
+                    onDelete: () => _delete(item),
+                  ),
+                ),
+            ],
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                _StatBox(
-                  label: 'DISPONIBLES',
-                  value: '03',
-                  color: _green,
-                  soft: _greenSoft,
-                ),
-                SizedBox(width: 5),
-                _StatBox(
-                  label: 'OCUPADOS',
-                  value: '01',
-                  color: _amber,
-                  soft: _amberSoft,
-                ),
-                SizedBox(width: 5),
-                _StatBox(
-                  label: 'FUERA',
-                  value: '02',
-                  color: _red,
-                  soft: _redSoft,
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            for (final item in _items)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 7),
-                child: _FleetCard(
-                  vehicle: item,
-                  onEdit: () => _edit(item),
-                  onDelete: () => _delete(item),
-                ),
-              ),
-          ],
-        ),
       ),
+      bottomNavigationBar: const FullTankBottomNav(active: 2),
     ),
-    bottomNavigationBar: const FullTankBottomNav(active: 2),
   );
 
   Future<void> _add() async {
