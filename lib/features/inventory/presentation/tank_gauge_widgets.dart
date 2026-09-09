@@ -10,9 +10,9 @@ class _LevelBar extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(999),
       child: LinearProgressIndicator(
-        minHeight: 6 * _uiScale,
+        minHeight: 8.7,
         value: value,
-        backgroundColor: FullTankColors.line,
+        backgroundColor: Color(0xFFE2E8F0),
         valueColor: AlwaysStoppedAnimation(_statusColor(status)),
       ),
     );
@@ -22,10 +22,7 @@ class _LevelBar extends StatelessWidget {
 class _LivePill extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.symmetric(
-      horizontal: 10 * _uiScale,
-      vertical: 5 * _uiScale,
-    ),
+    padding: EdgeInsets.symmetric(horizontal: 14.5, vertical: 7.25),
     decoration: BoxDecoration(
       color: _greenSoft,
       borderRadius: BorderRadius.circular(999),
@@ -39,7 +36,7 @@ class _LivePill extends StatelessWidget {
           'LIVE',
           style: TextStyle(
             color: _green,
-            fontSize: 10.5,
+            fontSize: 15.225,
             fontWeight: FontWeight.w700,
             letterSpacing: .4,
           ),
@@ -57,21 +54,16 @@ class _GaugeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     width: double.infinity,
-    padding: EdgeInsets.fromLTRB(
-      16 * _uiScale,
-      20 * _uiScale,
-      16 * _uiScale,
-      18 * _uiScale,
-    ),
+    padding: EdgeInsets.fromLTRB(23.2, 29.0, 23.2, 26.1),
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: FullTankColors.line),
-      borderRadius: BorderRadius.circular(8 * _uiScale),
+      border: Border.all(color: Color(0xFFE2E8F0)),
+      borderRadius: BorderRadius.circular(11.6),
     ),
     child: Column(
       children: [
         SizedBox.square(
-          dimension: 200 * _uiScale,
+          dimension: 290.0,
           child: CustomPaint(
             painter: _GaugePainter(
               value: tank.level / 100,
@@ -85,8 +77,8 @@ class _GaugeCard extends StatelessWidget {
                     TextSpan(
                       text: '${tank.level}',
                       style: const TextStyle(
-                        color: FullTankColors.navy,
-                        fontSize: 44,
+                        color: Color(0xFF1A202C),
+                        fontSize: 63.8,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -1.5,
                       ),
@@ -94,8 +86,8 @@ class _GaugeCard extends StatelessWidget {
                         TextSpan(
                           text: '%',
                           style: TextStyle(
-                            color: FullTankColors.inkSoft,
-                            fontSize: 20,
+                            color: Color(0xFF94A3B8),
+                            fontSize: 29.0,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -105,29 +97,25 @@ class _GaugeCard extends StatelessWidget {
                   const Text(
                     'CURRENT LEVEL',
                     style: TextStyle(
-                      color: FullTankColors.inkMid,
-                      fontSize: 11,
+                      color: Color(0xFF4A5568),
+                      fontSize: 15.95,
                       fontWeight: FontWeight.w600,
                       letterSpacing: .8,
                     ),
                   ),
-                  SizedBox(height: 6 * _uiScale),
+                  SizedBox(height: 8.7),
                   _StatusPill(status: status),
                 ],
               ),
             ),
           ),
         ),
-        SizedBox(height: 16 * _uiScale),
+        SizedBox(height: 23.2),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _GaugeMetric(label: 'Actual', value: tank.current),
-            Container(
-              width: 1,
-              height: 36 * _uiScale,
-              color: FullTankColors.line,
-            ),
+            Container(width: 1, height: 52.2, color: Color(0xFFE2E8F0)),
             _GaugeMetric(label: 'Capacidad', value: tank.capacity),
           ],
         ),
@@ -147,8 +135,8 @@ class _GaugeMetric extends StatelessWidget {
       Text(
         label.toUpperCase(),
         style: const TextStyle(
-          color: FullTankColors.inkMid,
-          fontSize: 10,
+          color: Color(0xFF4A5568),
+          fontSize: 14.5,
           fontWeight: FontWeight.w600,
           letterSpacing: .5,
         ),
@@ -157,16 +145,16 @@ class _GaugeMetric extends StatelessWidget {
         TextSpan(
           text: _liters(value),
           style: const TextStyle(
-            color: FullTankColors.navy,
-            fontSize: 16,
+            color: Color(0xFF1A202C),
+            fontSize: 23.2,
             fontWeight: FontWeight.w800,
           ),
           children: const [
             TextSpan(
               text: ' L',
               style: TextStyle(
-                color: FullTankColors.inkSoft,
-                fontSize: 11,
+                color: Color(0xFF94A3B8),
+                fontSize: 15.95,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -185,17 +173,17 @@ class _GaugePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.shortestSide / 2 - 16 * _uiScale;
+    final radius = size.shortestSide / 2 - 23.2;
     final rect = Rect.fromCircle(center: center, radius: radius);
     final track = Paint()
-      ..color = FullTankColors.line
+      ..color = Color(0xFFE2E8F0)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 12 * _uiScale
+      ..strokeWidth = 17.4
       ..strokeCap = StrokeCap.round;
     final fill = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 12 * _uiScale
+      ..strokeWidth = 17.4
       ..strokeCap = StrokeCap.round;
     const start = 3 * 3.141592653589793 / 4;
     const sweep = 3 * 3.141592653589793 / 2;

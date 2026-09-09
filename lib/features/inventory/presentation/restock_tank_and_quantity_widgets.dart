@@ -8,15 +8,15 @@ class _TargetTankCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = _statusFor(tank.level);
     return Container(
-      padding: EdgeInsets.all(14 * _uiScale),
+      padding: EdgeInsets.all(20.3),
       decoration: BoxDecoration(
-        color: FullTankColors.card,
-        borderRadius: BorderRadius.circular(8 * _uiScale),
+        color: Color(0xFFF3F4F6),
+        borderRadius: BorderRadius.circular(11.6),
       ),
       child: Row(
         children: [
           _TankIcon(status: status),
-          SizedBox(width: 12 * _uiScale),
+          SizedBox(width: 17.4),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,20 +25,20 @@ class _TargetTankCard extends StatelessWidget {
                 Text(
                   tank.name,
                   style: const TextStyle(
-                    color: FullTankColors.navy,
-                    fontSize: 14,
+                    color: Color(0xFF1A202C),
+                    fontSize: 20.3,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Row(
                   children: [
                     _StatusPill(status: status),
-                    SizedBox(width: 8 * _uiScale),
+                    SizedBox(width: 11.6),
                     Text(
                       '${_liters(tank.current)} / ${_liters(tank.capacity)} L',
                       style: const TextStyle(
-                        color: FullTankColors.inkMid,
-                        fontSize: 11,
+                        color: Color(0xFF4A5568),
+                        fontSize: 15.95,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -80,12 +80,12 @@ class _PriorityChip extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          padding: EdgeInsets.all(12 * _uiScale),
+          padding: EdgeInsets.all(17.4),
           alignment: Alignment.centerLeft,
-          backgroundColor: selected ? _statusSoft(status) : FullTankColors.card,
-          foregroundColor: selected ? color : FullTankColors.navy,
+          backgroundColor: selected ? _statusSoft(status) : Color(0xFFF3F4F6),
+          foregroundColor: selected ? color : Color(0xFF1A202C),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8 * _uiScale),
+            borderRadius: BorderRadius.circular(11.6),
             side: BorderSide(
               color: selected ? color : Colors.transparent,
               width: 1.5,
@@ -100,15 +100,15 @@ class _PriorityChip extends StatelessWidget {
                 Text(
                   label,
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 17.4,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
                   detail,
                   style: const TextStyle(
-                    color: FullTankColors.inkMid,
-                    fontSize: 10.5,
+                    color: Color(0xFF4A5568),
+                    fontSize: 15.225,
                   ),
                 ),
               ],
@@ -151,10 +151,10 @@ class _QuantityPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.all(16 * _uiScale),
+    padding: EdgeInsets.all(23.2),
     decoration: BoxDecoration(
-      color: FullTankColors.card,
-      borderRadius: BorderRadius.circular(8 * _uiScale),
+      color: Color(0xFFF3F4F6),
+      borderRadius: BorderRadius.circular(11.6),
     ),
     child: Column(
       children: [
@@ -164,7 +164,7 @@ class _QuantityPicker extends StatelessWidget {
           textBaseline: TextBaseline.alphabetic,
           children: [
             SizedBox(
-              width: 130 * _uiScale,
+              width: 188.5,
               child: TextField(
                 controller: controller,
                 onChanged: onChanged,
@@ -177,29 +177,29 @@ class _QuantityPicker extends StatelessWidget {
                   isDense: true,
                 ),
                 style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 34,
+                  color: Color(0xFF1A202C),
+                  fontSize: 49.3,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -1,
                 ),
               ),
             ),
-            SizedBox(width: 6 * _uiScale),
+            SizedBox(width: 8.7),
             const Text(
               'L',
               style: TextStyle(
-                color: FullTankColors.inkSoft,
-                fontSize: 16,
+                color: Color(0xFF94A3B8),
+                fontSize: 23.2,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ],
         ),
-        SizedBox(height: 10 * _uiScale),
+        SizedBox(height: 14.5),
         Wrap(
           alignment: WrapAlignment.center,
-          spacing: 6 * _uiScale,
-          runSpacing: 6 * _uiScale,
+          spacing: 8.7,
+          runSpacing: 8.7,
           children: [
             _QuickQuantity(
               label: '3,000 L',

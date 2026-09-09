@@ -19,11 +19,11 @@ class _MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.all(12 * _uiScale),
+    padding: EdgeInsets.all(17.4),
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: FullTankColors.line),
-      borderRadius: BorderRadius.circular(8 * _uiScale),
+      border: Border.all(color: Color(0xFFE2E8F0)),
+      borderRadius: BorderRadius.circular(11.6),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,25 +32,21 @@ class _MetricCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              width: 30 * _uiScale,
-              height: 30 * _uiScale,
+              width: 43.5,
+              height: 43.5,
               decoration: BoxDecoration(
                 color: _statusSoft(status),
-                borderRadius: BorderRadius.circular(8 * _uiScale),
+                borderRadius: BorderRadius.circular(11.6),
               ),
               alignment: Alignment.center,
-              child: Icon(
-                icon,
-                size: 18 * _uiScale,
-                color: _statusColor(status),
-              ),
+              child: Icon(icon, size: 26.1, color: _statusColor(status)),
             ),
             if (trend != null)
               Text(
                 trend!,
                 style: TextStyle(
                   color: _statusColor(status),
-                  fontSize: 11,
+                  fontSize: 15.95,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -60,8 +56,8 @@ class _MetricCard extends StatelessWidget {
         Text(
           label.toUpperCase(),
           style: const TextStyle(
-            color: FullTankColors.inkMid,
-            fontSize: 10.5,
+            color: Color(0xFF4A5568),
+            fontSize: 15.225,
             fontWeight: FontWeight.w600,
             letterSpacing: .5,
           ),
@@ -70,8 +66,8 @@ class _MetricCard extends StatelessWidget {
           TextSpan(
             text: value,
             style: const TextStyle(
-              color: FullTankColors.navy,
-              fontSize: 20,
+              color: Color(0xFF1A202C),
+              fontSize: 29.0,
               fontWeight: FontWeight.w800,
               letterSpacing: -.4,
             ),
@@ -80,8 +76,8 @@ class _MetricCard extends StatelessWidget {
                 TextSpan(
                   text: ' $unit',
                   style: const TextStyle(
-                    color: FullTankColors.inkSoft,
-                    fontSize: 11,
+                    color: Color(0xFF94A3B8),
+                    fontSize: 15.95,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -99,24 +95,24 @@ class _SensorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.all(12 * _uiScale),
+    padding: EdgeInsets.all(17.4),
     decoration: BoxDecoration(
-      color: FullTankColors.card,
-      borderRadius: BorderRadius.circular(8 * _uiScale),
+      color: Color(0xFFF3F4F6),
+      borderRadius: BorderRadius.circular(11.6),
     ),
     child: Row(
       children: [
         Container(
-          width: 32 * _uiScale,
-          height: 32 * _uiScale,
+          width: 46.4,
+          height: 46.4,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(8 * _uiScale),
+            borderRadius: BorderRadius.circular(11.6),
           ),
           alignment: Alignment.center,
-          child: const Icon(Icons.wifi_tethering, color: FullTankColors.blue),
+          child: const Icon(Icons.wifi_tethering, color: Color(0xFF1E40AF)),
         ),
-        SizedBox(width: 10 * _uiScale),
+        SizedBox(width: 14.5),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,8 +121,8 @@ class _SensorCard extends StatelessWidget {
               Text(
                 tank.sensor,
                 style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 13,
+                  color: Color(0xFF1A202C),
+                  fontSize: 18.85,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -140,8 +136,8 @@ class _SensorCard extends StatelessWidget {
             Text(
               tank.updated,
               style: const TextStyle(
-                color: FullTankColors.navy,
-                fontSize: 12,
+                color: Color(0xFF1A202C),
+                fontSize: 17.4,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -153,8 +149,8 @@ class _SensorCard extends StatelessWidget {
 }
 
 const _metaLabelStyle = TextStyle(
-  color: FullTankColors.inkMid,
-  fontSize: 10,
+  color: Color(0xFF4A5568),
+  fontSize: 14.5,
   fontWeight: FontWeight.w600,
   letterSpacing: .4,
 );
@@ -167,8 +163,8 @@ class _StatusPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.symmetric(
-      horizontal: (compact ? 8 : 10) * (compact ? 1 : _uiScale),
-      vertical: (compact ? 3 : 5) * (compact ? 1 : _uiScale),
+      horizontal: compact ? 8 : 14.5,
+      vertical: compact ? 3 : 7.25,
     ),
     decoration: BoxDecoration(
       color: _statusSoft(status),
@@ -179,15 +175,15 @@ class _StatusPill extends StatelessWidget {
       children: [
         Icon(
           Icons.circle,
-          size: 6 * (compact ? 1 : _uiScale),
+          size: compact ? 6 : 8.7,
           color: _statusColor(status),
         ),
-        SizedBox(width: 5 * (compact ? 1 : _uiScale)),
+        SizedBox(width: compact ? 5 : 7.25),
         Text(
           _statusLabel(status),
           style: TextStyle(
             color: _statusColor(status),
-            fontSize: 11,
+            fontSize: compact ? 11 : 15.95,
             fontWeight: FontWeight.w700,
           ),
         ),

@@ -14,20 +14,17 @@ class _QuickQuantity extends StatelessWidget {
   Widget build(BuildContext context) => OutlinedButton(
     onPressed: () => onPressed(value),
     style: OutlinedButton.styleFrom(
-      padding: EdgeInsets.symmetric(
-        horizontal: 11 * _uiScale,
-        vertical: 5 * _uiScale,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 15.95, vertical: 7.25),
       minimumSize: Size.zero,
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       backgroundColor: Colors.white,
-      foregroundColor: FullTankColors.navy,
-      side: const BorderSide(color: FullTankColors.line),
+      foregroundColor: Color(0xFF1A202C),
+      side: const BorderSide(color: Color(0xFFE2E8F0)),
       shape: const StadiumBorder(),
     ),
     child: Text(
       label,
-      style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600),
+      style: const TextStyle(fontSize: 16.675, fontWeight: FontWeight.w600),
     ),
   );
 }
@@ -46,18 +43,15 @@ class _FormInfoRow extends StatelessWidget {
   Widget build(BuildContext context) => Semantics(
     label: '$label: $value',
     child: Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 12 * _uiScale,
-        vertical: 10 * _uiScale,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 17.4, vertical: 14.5),
       decoration: BoxDecoration(
-        color: FullTankColors.card,
-        borderRadius: BorderRadius.circular(8 * _uiScale),
+        color: Color(0xFFF3F4F6),
+        borderRadius: BorderRadius.circular(11.6),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18 * _uiScale, color: FullTankColors.inkSoft),
-          SizedBox(width: 8 * _uiScale),
+          Icon(icon, size: 26.1, color: Color(0xFF94A3B8)),
+          SizedBox(width: 11.6),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,8 +61,8 @@ class _FormInfoRow extends StatelessWidget {
                   value,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: FullTankColors.navy,
-                    fontSize: 12,
+                    color: Color(0xFF1A202C),
+                    fontSize: 17.4,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -100,11 +94,11 @@ class _OrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.all(14 * _uiScale),
+    padding: EdgeInsets.all(20.3),
     decoration: BoxDecoration(
-      color: FullTankColors.blueSoft,
-      border: Border.all(color: FullTankColors.blue.withAlpha(56)),
-      borderRadius: BorderRadius.circular(8 * _uiScale),
+      color: Color(0xFFEFF4FF),
+      border: Border.all(color: Color(0xFF1E40AF).withAlpha(56)),
+      borderRadius: BorderRadius.circular(11.6),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,38 +106,38 @@ class _OrderSummary extends StatelessWidget {
         const Text(
           'RESUMEN DEL PEDIDO',
           style: TextStyle(
-            color: FullTankColors.blue,
-            fontSize: 10.5,
+            color: Color(0xFF1E40AF),
+            fontSize: 15.225,
             fontWeight: FontWeight.w700,
             letterSpacing: .6,
           ),
         ),
-        SizedBox(height: 8 * _uiScale),
+        SizedBox(height: 11.6),
         _SummaryRow(
           label: 'Combustible (${_liters(quantity)} L × \$1.28)',
           value: _money(fuel),
         ),
         _SummaryRow(label: 'Entrega urgente', value: '+ ${_money(delivery)}'),
         _SummaryRow(label: 'Impuestos', value: _money(taxes)),
-        SizedBox(height: 6 * _uiScale),
-        Divider(height: 1, color: FullTankColors.blue.withAlpha(56)),
-        SizedBox(height: 6 * _uiScale),
+        SizedBox(height: 8.7),
+        Divider(height: 1, color: Color(0xFF1E40AF).withAlpha(56)),
+        SizedBox(height: 8.7),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
               'Total estimado',
               style: TextStyle(
-                color: FullTankColors.navy,
-                fontSize: 15,
+                color: Color(0xFF1A202C),
+                fontSize: 21.75,
                 fontWeight: FontWeight.w800,
               ),
             ),
             Text(
               _money(total),
               style: const TextStyle(
-                color: FullTankColors.navy,
-                fontSize: 15,
+                color: Color(0xFF1A202C),
+                fontSize: 21.75,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -161,24 +155,21 @@ class _SummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.only(bottom: 5 * _uiScale),
+    padding: EdgeInsets.only(bottom: 7.25),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(
-              color: FullTankColors.inkMid,
-              fontSize: 12.5,
-            ),
+            style: const TextStyle(color: Color(0xFF4A5568), fontSize: 18.125),
           ),
         ),
         Text(
           value,
           style: const TextStyle(
-            color: FullTankColors.navy,
-            fontSize: 12.5,
+            color: Color(0xFF1A202C),
+            fontSize: 18.125,
             fontWeight: FontWeight.w600,
           ),
         ),

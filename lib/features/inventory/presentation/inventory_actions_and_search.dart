@@ -8,11 +8,11 @@ class _PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
     width: double.infinity,
-    height: 52 * _uiScale,
+    height: 75.4,
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: FullTankColors.ctaTo,
+        backgroundColor: Color(0xFFFFA500),
         foregroundColor: Colors.white,
         shape: const StadiumBorder(),
         elevation: 5,
@@ -23,9 +23,12 @@ class _PrimaryButton extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            style: const TextStyle(
+              fontSize: 21.75,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          SizedBox(width: 10 * _uiScale),
+          SizedBox(width: 14.5),
           const Icon(Icons.arrow_forward, size: 18),
         ],
       ),

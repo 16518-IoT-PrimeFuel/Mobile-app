@@ -9,62 +9,59 @@ class TankDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final tank = _tankForId(tankId);
     final status = _statusFor(tank.level);
-    return _withInventoryScale(
-      context,
-      _InventoryShell(
-        title: tank.id,
-        subtitle: tank.type,
-        back: true,
-        right: _LivePill(),
-        children: [
-          _GaugeCard(tank: tank, status: status),
-          _InventorySectionLabel('Telemetría en tiempo real'),
-          SizedBox(height: 8 * _uiScale),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisSpacing: 8 * _uiScale,
-            mainAxisSpacing: 8 * _uiScale,
-            childAspectRatio: 1.18,
-            children: const [
-              _MetricCard(
-                icon: Icons.thermostat_outlined,
-                label: 'Temperatura',
-                value: '24.3',
-                unit: '°C',
-              ),
-              _MetricCard(
-                icon: Icons.speed_outlined,
-                label: 'Presión',
-                value: '1.02',
-                unit: 'atm',
-                trend: '+0.4%',
-              ),
-              _MetricCard(
-                icon: Icons.water_drop_outlined,
-                label: 'Flujo',
-                value: '0.8',
-                unit: 'L/h salida',
-                status: _TankStatus.warning,
-              ),
-              _MetricCard(
-                icon: Icons.access_time,
-                label: 'Tiempo al vacío',
-                value: '~4h',
-                status: _TankStatus.critical,
-              ),
-            ],
-          ),
-          SizedBox(height: 14 * _uiScale),
-          _SensorCard(tank: tank),
-          SizedBox(height: 14 * _uiScale),
-          _PrimaryButton(
-            label: 'Solicitar reposición',
-            onPressed: () => context.go('/inventory/restock/${tank.id}'),
-          ),
-        ],
-      ),
+    return _InventoryShell(
+      title: tank.id,
+      subtitle: tank.type,
+      back: true,
+      right: _LivePill(),
+      children: [
+        _GaugeCard(tank: tank, status: status),
+        _InventorySectionLabel('Telemetría en tiempo real'),
+        SizedBox(height: 11.6),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisSpacing: 11.6,
+          mainAxisSpacing: 11.6,
+          childAspectRatio: 1.18,
+          children: const [
+            _MetricCard(
+              icon: Icons.thermostat_outlined,
+              label: 'Temperatura',
+              value: '24.3',
+              unit: '°C',
+            ),
+            _MetricCard(
+              icon: Icons.speed_outlined,
+              label: 'Presión',
+              value: '1.02',
+              unit: 'atm',
+              trend: '+0.4%',
+            ),
+            _MetricCard(
+              icon: Icons.water_drop_outlined,
+              label: 'Flujo',
+              value: '0.8',
+              unit: 'L/h salida',
+              status: _TankStatus.warning,
+            ),
+            _MetricCard(
+              icon: Icons.access_time,
+              label: 'Tiempo al vacío',
+              value: '~4h',
+              status: _TankStatus.critical,
+            ),
+          ],
+        ),
+        SizedBox(height: 20.3),
+        _SensorCard(tank: tank),
+        SizedBox(height: 20.3),
+        _PrimaryButton(
+          label: 'Solicitar reposición',
+          onPressed: () => context.go('/inventory/restock/${tank.id}'),
+        ),
+      ],
     );
   }
 }
@@ -131,83 +128,74 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
     final warning = visible
         .where((alert) => alert.status == _TankStatus.warning)
         .toList();
-    return _withInventoryScale(
-      context,
-      _InventoryShell(
-        title: 'Alertas',
-        subtitle: '4 activas · 2 críticas',
-        back: true,
-        right: _HeaderIconButton(
-          icon: Icons.filter_alt_outlined,
-          label: 'Filtrar alertas',
-          onPressed: () async {
-            final selected = await showModalBottomSheet<String>(
-              context: context,
-              builder: (context) => SafeArea(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const ListTile(
-                      title: Text(
-                        'Filtrar alertas',
-                        style: TextStyle(fontWeight: FontWeight.w800),
-                      ),
+    return _InventoryShell(
+      title: 'Alertas',
+      subtitle: '4 activas · 2 críticas',
+      back: true,
+      right: _HeaderIconButton(
+        icon: Icons.filter_alt_outlined,
+        label: 'Filtrar alertas',
+        onPressed: () async {
+          final selected = await showModalBottomSheet<String>(
+            context: context,
+            builder: (context) => SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const ListTile(
+                    title: Text(
+                      'Filtrar alertas',
+                      style: TextStyle(fontWeight: FontWeight.w800),
                     ),
-                    for (final option in const [
-                      ('all', 'Todas las alertas'),
-                      ('critical', 'Solo críticas'),
-                      ('warning', 'Solo advertencias'),
-                    ])
-                      ListTile(
-                        leading: Icon(
-                          option.$1 == 'critical'
-                              ? Icons.error_outline
-                              : option.$1 == 'warning'
-                              ? Icons.warning_amber_outlined
-                              : Icons.notifications_none,
-                        ),
-                        title: Text(option.$2),
-                        trailing: _filter == option.$1
-                            ? const Icon(
-                                Icons.check,
-                                color: FullTankColors.blue,
-                              )
-                            : null,
-                        onTap: () => Navigator.pop(context, option.$1),
+                  ),
+                  for (final option in const [
+                    ('all', 'Todas las alertas'),
+                    ('critical', 'Solo críticas'),
+                    ('warning', 'Solo advertencias'),
+                  ])
+                    ListTile(
+                      leading: Icon(
+                        option.$1 == 'critical'
+                            ? Icons.error_outline
+                            : option.$1 == 'warning'
+                            ? Icons.warning_amber_outlined
+                            : Icons.notifications_none,
                       ),
-                  ],
-                ),
-              ),
-            );
-            if (selected != null) setState(() => _filter = selected);
-          },
-        ),
-        children: [
-          _CriticalBanner(count: _alerts.where((a) => a.level < 20).length),
-          if (critical.isNotEmpty) ...[
-            _AlertGroupLabel(label: 'Críticas', status: _TankStatus.critical),
-            ...critical.map(
-              (alert) => Padding(
-                padding: EdgeInsets.only(bottom: 8 * _uiScale),
-                child: _AlertRow(alert: alert),
+                      title: Text(option.$2),
+                      trailing: _filter == option.$1
+                          ? const Icon(Icons.check, color: Color(0xFF1E40AF))
+                          : null,
+                      onTap: () => Navigator.pop(context, option.$1),
+                    ),
+                ],
               ),
             ),
-            SizedBox(height: 8 * _uiScale),
-          ],
-          if (warning.isNotEmpty) ...[
-            _AlertGroupLabel(
-              label: 'Advertencias',
-              status: _TankStatus.warning,
-            ),
-            ...warning.map(
-              (alert) => Padding(
-                padding: EdgeInsets.only(bottom: 8 * _uiScale),
-                child: _AlertRow(alert: alert),
-              ),
-            ),
-          ],
-        ],
+          );
+          if (selected != null) setState(() => _filter = selected);
+        },
       ),
+      children: [
+        _CriticalBanner(count: _alerts.where((a) => a.level < 20).length),
+        if (critical.isNotEmpty) ...[
+          _AlertGroupLabel(label: 'Críticas', status: _TankStatus.critical),
+          ...critical.map(
+            (alert) => Padding(
+              padding: EdgeInsets.only(bottom: 11.6),
+              child: _AlertRow(alert: alert),
+            ),
+          ),
+          SizedBox(height: 11.6),
+        ],
+        if (warning.isNotEmpty) ...[
+          _AlertGroupLabel(label: 'Advertencias', status: _TankStatus.warning),
+          ...warning.map(
+            (alert) => Padding(
+              padding: EdgeInsets.only(bottom: 11.6),
+              child: _AlertRow(alert: alert),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

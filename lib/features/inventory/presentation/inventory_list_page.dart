@@ -162,109 +162,106 @@ class _InventoryPageState extends State<InventoryPage> {
         _ => true,
       };
     }).toList();
-    return _withInventoryScale(
-      context,
-      _InventoryShell(
-        title: 'Inventario',
-        subtitle: '${_tanks.length} tanques · IoT en vivo',
-        right: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _HeaderIconButton(
-              icon: Icons.search,
-              label: 'Buscar tanques',
-              onPressed: () async {
-                final selected = await showSearch<TankData?>(
-                  context: context,
-                  delegate: _TankSearchDelegate(),
-                );
-                if (context.mounted && selected != null) {
-                  context.go('/inventory/tank/${selected.id}');
-                }
-              },
-            ),
-            _HeaderIconButton(
-              icon: Icons.notifications_none_outlined,
-              label: 'Ver alertas',
-              badge: 3,
-              onPressed: () => context.go('/inventory/alerts'),
-            ),
-          ],
-        ),
+    return _InventoryShell(
+      title: 'Inventario',
+      subtitle: '${_tanks.length} tanques · IoT en vivo',
+      right: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: _SummaryMetric(
-                  label: 'Crítico',
-                  count: _tanks.where((tank) => tank.level < 20).length,
-                  status: _TankStatus.critical,
-                ),
-              ),
-              SizedBox(width: 8 * _uiScale),
-              Expanded(
-                child: _SummaryMetric(
-                  label: 'Advertencia',
-                  count: _tanks
-                      .where((tank) => tank.level >= 20 && tank.level < 40)
-                      .length,
-                  status: _TankStatus.warning,
-                ),
-              ),
-              SizedBox(width: 8 * _uiScale),
-              Expanded(
-                child: _SummaryMetric(
-                  label: 'Óptimo',
-                  count: _tanks.where((tank) => tank.level >= 40).length,
-                  status: _TankStatus.optimal,
-                ),
-              ),
-            ],
+          _HeaderIconButton(
+            icon: Icons.search,
+            label: 'Buscar tanques',
+            onPressed: () async {
+              final selected = await showSearch<TankData?>(
+                context: context,
+                delegate: _TankSearchDelegate(),
+              );
+              if (context.mounted && selected != null) {
+                context.go('/inventory/tank/${selected.id}');
+              }
+            },
           ),
-          SizedBox(height: 14 * _uiScale),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _FilterChip(
-                  label: 'Todos',
-                  count: _tanks.length,
-                  selected: _filter == 'all',
-                  onPressed: () => setState(() => _filter = 'all'),
-                ),
-                _FilterChip(
-                  label: 'Crítico',
-                  count: 2,
-                  status: _TankStatus.critical,
-                  selected: _filter == 'critical',
-                  onPressed: () => setState(() => _filter = 'critical'),
-                ),
-                _FilterChip(
-                  label: 'Advertencia',
-                  count: 1,
-                  status: _TankStatus.warning,
-                  selected: _filter == 'warning',
-                  onPressed: () => setState(() => _filter = 'warning'),
-                ),
-                _FilterChip(
-                  label: 'Óptimo',
-                  count: 3,
-                  status: _TankStatus.optimal,
-                  selected: _filter == 'optimal',
-                  onPressed: () => setState(() => _filter = 'optimal'),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 12 * _uiScale),
-          ...visible.map(
-            (tank) => Padding(
-              padding: EdgeInsets.only(bottom: 8 * _uiScale),
-              child: _TankRow(tank: tank),
-            ),
+          _HeaderIconButton(
+            icon: Icons.notifications_none_outlined,
+            label: 'Ver alertas',
+            badge: 3,
+            onPressed: () => context.go('/inventory/alerts'),
           ),
         ],
       ),
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _SummaryMetric(
+                label: 'Crítico',
+                count: _tanks.where((tank) => tank.level < 20).length,
+                status: _TankStatus.critical,
+              ),
+            ),
+            SizedBox(width: 11.6),
+            Expanded(
+              child: _SummaryMetric(
+                label: 'Advertencia',
+                count: _tanks
+                    .where((tank) => tank.level >= 20 && tank.level < 40)
+                    .length,
+                status: _TankStatus.warning,
+              ),
+            ),
+            SizedBox(width: 11.6),
+            Expanded(
+              child: _SummaryMetric(
+                label: 'Óptimo',
+                count: _tanks.where((tank) => tank.level >= 40).length,
+                status: _TankStatus.optimal,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20.3),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _FilterChip(
+                label: 'Todos',
+                count: _tanks.length,
+                selected: _filter == 'all',
+                onPressed: () => setState(() => _filter = 'all'),
+              ),
+              _FilterChip(
+                label: 'Crítico',
+                count: 2,
+                status: _TankStatus.critical,
+                selected: _filter == 'critical',
+                onPressed: () => setState(() => _filter = 'critical'),
+              ),
+              _FilterChip(
+                label: 'Advertencia',
+                count: 1,
+                status: _TankStatus.warning,
+                selected: _filter == 'warning',
+                onPressed: () => setState(() => _filter = 'warning'),
+              ),
+              _FilterChip(
+                label: 'Óptimo',
+                count: 3,
+                status: _TankStatus.optimal,
+                selected: _filter == 'optimal',
+                onPressed: () => setState(() => _filter = 'optimal'),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 17.4),
+        ...visible.map(
+          (tank) => Padding(
+            padding: EdgeInsets.only(bottom: 11.6),
+            child: _TankRow(tank: tank),
+          ),
+        ),
+      ],
     );
   }
 }

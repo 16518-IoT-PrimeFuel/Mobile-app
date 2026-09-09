@@ -24,12 +24,7 @@ class _InventoryShell extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(
-              20 * _uiScale,
-              4 * _uiScale,
-              20 * _uiScale,
-              8 * _uiScale,
-            ),
+            padding: EdgeInsets.fromLTRB(29.0, 5.8, 29.0, 11.6),
             child: Row(
               children: [
                 if (back) ...[
@@ -41,13 +36,13 @@ class _InventoryShell extends StatelessWidget {
                       tooltip: 'Volver',
                       icon: const Icon(Icons.arrow_back, size: 18),
                       style: IconButton.styleFrom(
-                        backgroundColor: FullTankColors.card,
-                        fixedSize: Size.square(40 * _uiScale),
+                        backgroundColor: Color(0xFFF3F4F6),
+                        fixedSize: Size.square(58.0),
                         padding: EdgeInsets.zero,
                       ),
                     ),
                   ),
-                  SizedBox(width: 10 * _uiScale),
+                  SizedBox(width: 14.5),
                 ],
                 Expanded(
                   child: Column(
@@ -57,8 +52,8 @@ class _InventoryShell extends StatelessWidget {
                         title,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: FullTankColors.navy,
-                          fontSize: 22,
+                          color: Color(0xFF1A202C),
+                          fontSize: 31.9,
                           fontWeight: FontWeight.w800,
                           letterSpacing: -.5,
                         ),
@@ -66,8 +61,8 @@ class _InventoryShell extends StatelessWidget {
                       Text(
                         subtitle,
                         style: const TextStyle(
-                          color: FullTankColors.inkMid,
-                          fontSize: 12,
+                          color: Color(0xFF4A5568),
+                          fontSize: 17.4,
                         ),
                       ),
                     ],
@@ -80,10 +75,10 @@ class _InventoryShell extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.fromLTRB(
-                20 * _uiScale,
-                10 * _uiScale,
-                20 * _uiScale,
-                hasBottomNav ? 24 * _uiScale : 20 * _uiScale,
+                29.0,
+                14.5,
+                29.0,
+                hasBottomNav ? 34.8 : 29.0,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +118,7 @@ class _HeaderIconButton extends StatelessWidget {
       icon: Stack(
         clipBehavior: Clip.none,
         children: [
-          Icon(icon, size: 19 * _uiScale),
+          Icon(icon, size: 27.55),
           if (badge != null)
             Positioned(
               right: -7,
@@ -140,7 +135,7 @@ class _HeaderIconButton extends StatelessWidget {
                   '$badge',
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 9,
+                    fontSize: 13.05,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -149,8 +144,8 @@ class _HeaderIconButton extends StatelessWidget {
         ],
       ),
       style: IconButton.styleFrom(
-        backgroundColor: FullTankColors.card,
-        fixedSize: Size.square(40 * _uiScale),
+        backgroundColor: Color(0xFFF3F4F6),
+        fixedSize: Size.square(58.0),
         padding: EdgeInsets.zero,
       ),
     ),
@@ -170,13 +165,10 @@ class _SummaryMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.symmetric(
-      horizontal: 12 * _uiScale,
-      vertical: 10 * _uiScale,
-    ),
+    padding: EdgeInsets.symmetric(horizontal: 17.4, vertical: 14.5),
     decoration: BoxDecoration(
       color: _statusSoft(status),
-      borderRadius: BorderRadius.circular(8 * _uiScale),
+      borderRadius: BorderRadius.circular(11.6),
       border: Border.all(color: _statusColor(status).withAlpha(56)),
     ),
     child: Column(
@@ -186,7 +178,7 @@ class _SummaryMetric extends StatelessWidget {
           label.toUpperCase(),
           style: TextStyle(
             color: _statusColor(status),
-            fontSize: 10,
+            fontSize: 14.5,
             fontWeight: FontWeight.w700,
             letterSpacing: .6,
           ),
@@ -194,8 +186,8 @@ class _SummaryMetric extends StatelessWidget {
         Text(
           count.toString().padLeft(2, '0'),
           style: const TextStyle(
-            color: FullTankColors.navy,
-            fontSize: 22,
+            color: Color(0xFF1A202C),
+            fontSize: 31.9,
             fontWeight: FontWeight.w800,
             letterSpacing: -.5,
           ),
