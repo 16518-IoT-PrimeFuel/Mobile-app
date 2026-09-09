@@ -19,50 +19,47 @@ class _TransportAvailabilityPageState extends State<TransportAvailabilityPage> {
   var _availableOnly = false;
 
   @override
-  Widget build(BuildContext context) => withFullTankUiScale(
-    context,
-    Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: _DispatchShell(
-          title: 'Transporte disponible',
-          subtitle: _state == TransportAvailabilityState.loading
-              ? 'Cargando...'
-              : _state == TransportAvailabilityState.empty
-              ? 'Sin coincidencias'
-              : 'Revisa recursos antes de asignar',
-          onBack: () => context.go('/home'),
-          action: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const _DispatchMenu(),
-              IconButton(
-                tooltip: 'Actualizar disponibilidad',
-                onPressed: _refresh,
-                icon: const Icon(Icons.sync, size: 19),
-                style: IconButton.styleFrom(
-                  backgroundColor: _panel,
-                  fixedSize: const Size(44, 44),
-                ),
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.white,
+    body: SafeArea(
+      child: _DispatchShell(
+        title: 'Transporte disponible',
+        subtitle: _state == TransportAvailabilityState.loading
+            ? 'Cargando...'
+            : _state == TransportAvailabilityState.empty
+            ? 'Sin coincidencias'
+            : 'Revisa recursos antes de asignar',
+        onBack: () => context.go('/home'),
+        action: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const _DispatchMenu(),
+            IconButton(
+              tooltip: 'Actualizar disponibilidad',
+              onPressed: _refresh,
+              icon: const Icon(Icons.sync, size: 19),
+              style: IconButton.styleFrom(
+                backgroundColor: _panel,
+                fixedSize: const Size(44, 44),
               ),
-            ],
-          ),
-          child: _state == TransportAvailabilityState.loading
-              ? const _AvailabilityLoading()
-              : _state == TransportAvailabilityState.empty
-              ? _AvailabilityEmpty(onAdjust: _openFilters)
-              : _state == TransportAvailabilityState.conflict
-              ? _AvailabilityConflict(onRefresh: _refresh)
-              : _AvailabilityContent(
-                  capacity: _capacity,
-                  availableOnly: _availableOnly,
-                  onAdjust: _openFilters,
-                  onClearConflict: _refresh,
-                ),
+            ),
+          ],
         ),
+        child: _state == TransportAvailabilityState.loading
+            ? const _AvailabilityLoading()
+            : _state == TransportAvailabilityState.empty
+            ? _AvailabilityEmpty(onAdjust: _openFilters)
+            : _state == TransportAvailabilityState.conflict
+            ? _AvailabilityConflict(onRefresh: _refresh)
+            : _AvailabilityContent(
+                capacity: _capacity,
+                availableOnly: _availableOnly,
+                onAdjust: _openFilters,
+                onClearConflict: _refresh,
+              ),
       ),
-      bottomNavigationBar: const FullTankBottomNav(active: 2),
     ),
+    bottomNavigationBar: const FullTankBottomNav(active: 2),
   );
 
   Future<void> _refresh() async {

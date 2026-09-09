@@ -19,7 +19,7 @@ class _InfoNotice extends StatelessWidget {
         Expanded(
           child: Text(
             message,
-            style: const TextStyle(color: _muted, fontSize: 8, height: 1.35),
+            style: const TextStyle(color: _muted, fontSize: 11.6, height: 1.35),
           ),
         ),
       ],
@@ -58,7 +58,7 @@ class _DuplicateNotice extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   color: _ink,
-                  fontSize: 8.5,
+                  fontSize: 12.325,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -67,7 +67,7 @@ class _DuplicateNotice extends StatelessWidget {
                 message,
                 style: const TextStyle(
                   color: _muted,
-                  fontSize: 7.5,
+                  fontSize: 10.875,
                   height: 1.3,
                 ),
               ),
@@ -82,7 +82,7 @@ class _DuplicateNotice extends StatelessWidget {
                   action,
                   style: const TextStyle(
                     color: _ink,
-                    fontSize: 7.5,
+                    fontSize: 10.875,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -111,7 +111,7 @@ class _StatusTag extends StatelessWidget {
       label,
       style: TextStyle(
         color: color,
-        fontSize: 6.5,
+        fontSize: 9.425,
         fontWeight: FontWeight.w800,
       ),
     ),
@@ -179,7 +179,7 @@ class _EmptyDispatchState extends StatelessWidget {
         textAlign: TextAlign.center,
         style: const TextStyle(
           color: _ink,
-          fontSize: 15,
+          fontSize: 21.75,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -187,7 +187,7 @@ class _EmptyDispatchState extends StatelessWidget {
       Text(
         message,
         textAlign: TextAlign.center,
-        style: const TextStyle(color: _muted, fontSize: 9, height: 1.45),
+        style: const TextStyle(color: _muted, fontSize: 13.05, height: 1.45),
       ),
     ],
   );

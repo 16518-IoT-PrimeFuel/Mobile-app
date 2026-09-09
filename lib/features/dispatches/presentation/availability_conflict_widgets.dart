@@ -14,7 +14,7 @@ class _AvailabilityConflict extends StatelessWidget {
         'Conflicto de disponibilidad',
         style: TextStyle(
           color: _ink,
-          fontSize: 15,
+          fontSize: 21.75,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -22,7 +22,7 @@ class _AvailabilityConflict extends StatelessWidget {
       const Text(
         'TK-4421 acaba de ser asignada a otro pedido. Actualiza para ver recursos en tiempo real.',
         textAlign: TextAlign.center,
-        style: TextStyle(color: _muted, fontSize: 9, height: 1.4),
+        style: TextStyle(color: _muted, fontSize: 13.05, height: 1.4),
       ),
       const SizedBox(height: 18),
       _OrangeButton(label: 'Actualizar disponibilidad', onPressed: onRefresh),
@@ -50,7 +50,7 @@ class _LiveConflictBanner extends StatelessWidget {
             'TK-3812 acaba de ser asignada a otro pedido. Actualiza disponibilidad.',
             style: TextStyle(
               color: _ink,
-              fontSize: 8,
+              fontSize: 11.6,
               height: 1.25,
               fontWeight: FontWeight.w600,
             ),
@@ -60,7 +60,7 @@ class _LiveConflictBanner extends StatelessWidget {
           onPressed: onRefresh,
           child: const Text(
             'Actualizar',
-            style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 11.6, fontWeight: FontWeight.w800),
           ),
         ),
       ],
@@ -135,7 +135,7 @@ class _Info extends StatelessWidget {
             label,
             style: const TextStyle(
               color: _muted,
-              fontSize: 6.5,
+              fontSize: 9.425,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -146,7 +146,7 @@ class _Info extends StatelessWidget {
         value,
         style: const TextStyle(
           color: _ink,
-          fontSize: 8,
+          fontSize: 11.6,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -183,7 +183,7 @@ class _FilterChip extends StatelessWidget {
           label,
           style: TextStyle(
             color: selected ? Colors.white : _muted,
-            fontSize: 7.5,
+            fontSize: 10.875,
             fontWeight: FontWeight.w800,
           ),
         ),

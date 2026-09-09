@@ -16,12 +16,12 @@ class _ChoiceList extends StatelessWidget {
         title,
         style: const TextStyle(
           color: _muted,
-          fontSize: 7,
+          fontSize: 10.15,
           fontWeight: FontWeight.w800,
         ),
       ),
       const SizedBox(height: 3),
-      Text(helper, style: const TextStyle(color: _subtle, fontSize: 7)),
+      Text(helper, style: const TextStyle(color: _subtle, fontSize: 10.15)),
       const SizedBox(height: 7),
       ...children.map(
         (child) =>
@@ -59,14 +59,14 @@ class _OrderChoice extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   color: _ink,
-                  fontSize: 8,
+                  fontSize: 11.6,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               const SizedBox(height: 3),
               Text(
                 detail,
-                style: const TextStyle(color: _muted, fontSize: 7.5),
+                style: const TextStyle(color: _muted, fontSize: 10.875),
               ),
             ],
           ),
@@ -112,14 +112,14 @@ class _SelectableChoice extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     color: _ink,
-                    fontSize: 8.5,
+                    fontSize: 12.325,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   detail,
-                  style: const TextStyle(color: _muted, fontSize: 7.5),
+                  style: const TextStyle(color: _muted, fontSize: 10.875),
                 ),
               ],
             ),
@@ -151,7 +151,7 @@ class _AssignmentSummary extends StatelessWidget {
               'RESUMEN DE ASIGNACIÓN',
               style: TextStyle(
                 color: Colors.white70,
-                fontSize: 7,
+                fontSize: 10.15,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -180,13 +180,13 @@ class _AssignmentSummary extends StatelessWidget {
               children: [
                 Text(
                   'Salida estimada',
-                  style: TextStyle(color: Colors.white70, fontSize: 7),
+                  style: TextStyle(color: Colors.white70, fontSize: 10.15),
                 ),
                 Text(
                   'Hoy · 14:15',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 8,
+                    fontSize: 11.6,
                     fontWeight: FontWeight.w800,
                   ),
                 ),

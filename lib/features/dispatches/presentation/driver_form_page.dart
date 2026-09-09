@@ -32,85 +32,81 @@ class _DriverFormPageState extends State<DriverFormPage> {
     final duplicate =
         widget.initialState == DriverFormState.duplicate ||
         _dni.text.trim() == '48-291-772';
-    return withFullTankUiScale(
-      context,
-      Scaffold(
-        body: SafeArea(
-          child: _DispatchShell(
-            title: widget.editing ? 'Editar conductor' : 'Nuevo conductor',
-            subtitle: widget.editing ? 'Miguel Ortega' : 'Alta en flota',
-            onBack: () => context.pop(),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _TextField(
-                    label: 'NOMBRE COMPLETO',
-                    value: widget.editing
-                        ? 'Miguel Ortega Ruiz'
-                        : 'Juan Ramírez López',
-                    icon: Icons.person_outline,
+    return Scaffold(
+      body: SafeArea(
+        child: _DispatchShell(
+          title: widget.editing ? 'Editar conductor' : 'Nuevo conductor',
+          subtitle: widget.editing ? 'Miguel Ortega' : 'Alta en flota',
+          onBack: () => context.pop(),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _TextField(
+                  label: 'NOMBRE COMPLETO',
+                  value: widget.editing
+                      ? 'Miguel Ortega Ruiz'
+                      : 'Juan Ramírez López',
+                  icon: Icons.person_outline,
+                ),
+                const SizedBox(height: 10),
+                _FormLabel('DNI / CURP', trailing: 'Sin espacios'),
+                TextField(
+                  controller: _dni,
+                  onChanged: (_) => setState(() {}),
+                  decoration: _input(
+                    Icons.badge_outlined,
+                    '48-291-772',
+                    error: duplicate ? 'Este DNI ya está registrado' : null,
                   ),
-                  const SizedBox(height: 10),
-                  _FormLabel('DNI / CURP', trailing: 'Sin espacios'),
-                  TextField(
-                    controller: _dni,
-                    onChanged: (_) => setState(() {}),
-                    decoration: _input(
-                      Icons.badge_outlined,
-                      '48-291-772',
-                      error: duplicate ? 'Este DNI ya está registrado' : null,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  _TextField(
-                    label: 'NÚMERO DE LICENCIA',
-                    value: widget.editing ? 'A-2 · 2027' : 'A-2 · Vigencia',
-                    icon: Icons.badge_outlined,
-                  ),
-                  const SizedBox(height: 10),
-                  const _FormLabel('CATEGORÍA DE LICENCIA'),
-                  Row(
-                    children: [
-                      for (final item in ['A-1', 'A-2', 'A-3', 'E'])
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: ChoiceChip(
-                              label: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                ),
+                const SizedBox(height: 10),
+                _TextField(
+                  label: 'NÚMERO DE LICENCIA',
+                  value: widget.editing ? 'A-2 · 2027' : 'A-2 · Vigencia',
+                  icon: Icons.badge_outlined,
+                ),
+                const SizedBox(height: 10),
+                const _FormLabel('CATEGORÍA DE LICENCIA'),
+                Row(
+                  children: [
+                    for (final item in ['A-1', 'A-2', 'A-3', 'E'])
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 5),
+                          child: ChoiceChip(
+                            label: Text(
+                              item,
+                              style: const TextStyle(
+                                fontSize: 11.6,
+                                fontWeight: FontWeight.w700,
                               ),
-                              selected: _category == item,
-                              onSelected: (_) =>
-                                  setState(() => _category = item),
                             ),
+                            selected: _category == item,
+                            onSelected: (_) => setState(() => _category = item),
                           ),
                         ),
-                    ],
-                  ),
-                  if (duplicate) ...[
-                    const SizedBox(height: 12),
-                    _DuplicateNotice(
-                      title: 'DNI duplicado',
-                      message:
-                          'El DNI 48-291-772 pertenece a Juan Ramírez López. Verifica el documento antes de guardar.',
-                      action: 'Volver a conductores',
-                      onPressed: () => context.pop(),
-                    ),
+                      ),
                   ],
-                  const SizedBox(height: 15),
-                  _OrangeButton(
-                    label: widget.editing
-                        ? 'Guardar cambios'
-                        : 'Guardar conductor',
-                    onPressed: duplicate ? null : () => context.pop(true),
+                ),
+                if (duplicate) ...[
+                  const SizedBox(height: 12),
+                  _DuplicateNotice(
+                    title: 'DNI duplicado',
+                    message:
+                        'El DNI 48-291-772 pertenece a Juan Ramírez López. Verifica el documento antes de guardar.',
+                    action: 'Volver a conductores',
+                    onPressed: () => context.pop(),
                   ),
                 ],
-              ),
+                const SizedBox(height: 15),
+                _OrangeButton(
+                  label: widget.editing
+                      ? 'Guardar cambios'
+                      : 'Guardar conductor',
+                  onPressed: duplicate ? null : () => context.pop(true),
+                ),
+              ],
             ),
           ),
         ),
@@ -170,7 +166,7 @@ class _DriverCard extends StatelessWidget {
             driver.initials,
             style: const TextStyle(
               color: _ink,
-              fontSize: 9,
+              fontSize: 13.05,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -188,7 +184,7 @@ class _DriverCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         color: _ink,
-                        fontSize: 9,
+                        fontSize: 13.05,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -202,7 +198,7 @@ class _DriverCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 'DNI · ${driver.dni} · Lic · ${driver.license}',
-                style: const TextStyle(color: _muted, fontSize: 7.5),
+                style: const TextStyle(color: _muted, fontSize: 10.875),
               ),
               if (driver.assignment != null) ...[
                 const SizedBox(height: 5),

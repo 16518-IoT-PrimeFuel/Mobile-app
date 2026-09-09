@@ -31,110 +31,107 @@ class _FleetFormPageState extends State<FleetFormPage> {
         widget.initialState == VehicleFormState.duplicate ||
         (widget.editingPlate == null &&
             _plate.text.trim().toUpperCase() == 'TK-3812');
-    return withFullTankUiScale(
-      context,
-      Scaffold(
-        body: SafeArea(
-          child: _DispatchShell(
-            title: widget.editingPlate == null
-                ? 'Nuevo vehículo'
-                : 'Editar vehículo',
-            subtitle: 'Añade a tu flota',
-            onBack: () => context.pop(),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _FormLabel('PLACA', trailing: 'Formato: XX-####'),
-                  TextField(
-                    controller: _plate,
-                    onChanged: (_) => setState(() {}),
-                    decoration: _fieldDecoration(
-                      Icons.credit_card_outlined,
-                      'TK-4421',
-                      error: duplicate
-                          ? 'Esta placa ya está registrada en tu flota'
-                          : null,
+    return Scaffold(
+      body: SafeArea(
+        child: _DispatchShell(
+          title: widget.editingPlate == null
+              ? 'Nuevo vehículo'
+              : 'Editar vehículo',
+          subtitle: 'Añade a tu flota',
+          onBack: () => context.pop(),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _FormLabel('PLACA', trailing: 'Formato: XX-####'),
+                TextField(
+                  controller: _plate,
+                  onChanged: (_) => setState(() {}),
+                  decoration: _fieldDecoration(
+                    Icons.credit_card_outlined,
+                    'TK-4421',
+                    error: duplicate
+                        ? 'Esta placa ya está registrada en tu flota'
+                        : null,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _TextField(
+                        label: 'MARCA',
+                        value: 'International',
+                        icon: Icons.dns_outlined,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _TextField(
-                          label: 'MARCA',
-                          value: 'International',
-                          icon: Icons.dns_outlined,
-                        ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: _TextField(
+                        label: 'MODELO',
+                        value: 'DuraStar',
+                        icon: Icons.edit_outlined,
                       ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: _TextField(
-                          label: 'MODELO',
-                          value: 'DuraStar',
-                          icon: Icons.edit_outlined,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  _TextField(
-                    label: 'CAPACIDAD',
-                    value: '15,000',
-                    suffix: 'L',
-                    icon: Icons.speed_outlined,
-                  ),
-                  const SizedBox(height: 10),
-                  const _FormLabel('TIPO DE VEHÍCULO'),
-                  Wrap(
-                    spacing: 5,
-                    runSpacing: 5,
-                    children:
-                        [
-                              'Cisterna 10k',
-                              'Cisterna 15k',
-                              'Cisterna 20k',
-                              'Cisterna 25k',
-                              'Cisterna 30k+',
-                            ]
-                            .map(
-                              (item) => ChoiceChip(
-                                label: Text(
-                                  item,
-                                  style: const TextStyle(
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                _TextField(
+                  label: 'CAPACIDAD',
+                  value: '15,000',
+                  suffix: 'L',
+                  icon: Icons.speed_outlined,
+                ),
+                const SizedBox(height: 10),
+                const _FormLabel('TIPO DE VEHÍCULO'),
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 5,
+                  children:
+                      [
+                            'Cisterna 10k',
+                            'Cisterna 15k',
+                            'Cisterna 20k',
+                            'Cisterna 25k',
+                            'Cisterna 30k+',
+                          ]
+                          .map(
+                            (item) => ChoiceChip(
+                              label: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 11.6,
+                                  fontWeight: FontWeight.w700,
                                 ),
-                                selected: _type == item,
-                                onSelected: (_) => setState(() => _type = item),
                               ),
-                            )
-                            .toList(),
+                              selected: _type == item,
+                              onSelected: (_) => setState(() => _type = item),
+                            ),
+                          )
+                          .toList(),
+                ),
+                const SizedBox(height: 14),
+                if (duplicate)
+                  _DuplicateNotice(
+                    title: 'Placa duplicada',
+                    message:
+                        'TK-3812 ya existe en tu flota como International DuraStar (15,000 L).',
+                    action: 'Volver a flota',
+                    onPressed: () => context.pop(),
                   ),
-                  const SizedBox(height: 14),
-                  if (duplicate)
-                    _DuplicateNotice(
-                      title: 'Placa duplicada',
-                      message:
-                          'TK-3812 ya existe en tu flota como International DuraStar (15,000 L).',
-                      action: 'Volver a flota',
-                      onPressed: () => context.pop(),
-                    ),
-                  if (!duplicate)
-                    const _InfoNotice(
-                      message:
-                          'El vehículo estará disponible para asignación una vez validado por el equipo de operaciones.',
-                    ),
-                  const SizedBox(height: 14),
-                  _OrangeButton(
-                    label: widget.editingPlate == null
-                        ? 'Guardar vehículo'
-                        : 'Guardar cambios',
-                    onPressed: duplicate ? null : () => context.pop(true),
+                if (!duplicate)
+                  const _InfoNotice(
+                    message:
+                        'El vehículo estará disponible para asignación una vez validado por el equipo de operaciones.',
                   ),
-                ],
-              ),
+                const SizedBox(height: 14),
+                _OrangeButton(
+                  label: widget.editingPlate == null
+                      ? 'Guardar vehículo'
+                      : 'Guardar cambios',
+                  onPressed: duplicate ? null : () => context.pop(true),
+                ),
+              ],
             ),
           ),
         ),
@@ -177,67 +174,64 @@ class DriverPage extends StatefulWidget {
 class _DriverPageState extends State<DriverPage> {
   final _drivers = List<_Driver>.from(_driversData);
   @override
-  Widget build(BuildContext context) => withFullTankUiScale(
-    context,
-    Scaffold(
-      body: SafeArea(
-        child: _DispatchShell(
-          title: 'Conductores',
-          subtitle: '${_drivers.length} conductores registrados',
-          onBack: () => context.go('/dispatches'),
-          action: IconButton(
-            tooltip: 'Añadir conductor',
-            onPressed: _add,
-            icon: const Icon(Icons.add, color: Colors.white, size: 21),
-            style: IconButton.styleFrom(
-              backgroundColor: _orange,
-              fixedSize: const Size(34, 34),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Row(
-                children: [
-                  _StatBox(
-                    label: 'DISPONIBLES',
-                    value: '03',
-                    color: _green,
-                    soft: _greenSoft,
-                  ),
-                  SizedBox(width: 5),
-                  _StatBox(
-                    label: 'ASIGNADOS',
-                    value: '01',
-                    color: _amber,
-                    soft: _amberSoft,
-                  ),
-                  SizedBox(width: 5),
-                  _StatBox(
-                    label: 'INACTIVOS',
-                    value: '01',
-                    color: _subtle,
-                    soft: _panel,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              for (final driver in _drivers)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 7),
-                  child: _DriverCard(
-                    driver: driver,
-                    onEdit: () =>
-                        context.push('/dispatches/drivers/new?edit=true'),
-                    onDelete: () => _delete(driver),
-                  ),
-                ),
-            ],
+  Widget build(BuildContext context) => Scaffold(
+    body: SafeArea(
+      child: _DispatchShell(
+        title: 'Conductores',
+        subtitle: '${_drivers.length} conductores registrados',
+        onBack: () => context.go('/dispatches'),
+        action: IconButton(
+          tooltip: 'Añadir conductor',
+          onPressed: _add,
+          icon: const Icon(Icons.add, color: Colors.white, size: 21),
+          style: IconButton.styleFrom(
+            backgroundColor: _orange,
+            fixedSize: const Size(34, 34),
           ),
         ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                _StatBox(
+                  label: 'DISPONIBLES',
+                  value: '03',
+                  color: _green,
+                  soft: _greenSoft,
+                ),
+                SizedBox(width: 5),
+                _StatBox(
+                  label: 'ASIGNADOS',
+                  value: '01',
+                  color: _amber,
+                  soft: _amberSoft,
+                ),
+                SizedBox(width: 5),
+                _StatBox(
+                  label: 'INACTIVOS',
+                  value: '01',
+                  color: _subtle,
+                  soft: _panel,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            for (final driver in _drivers)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 7),
+                child: _DriverCard(
+                  driver: driver,
+                  onEdit: () =>
+                      context.push('/dispatches/drivers/new?edit=true'),
+                  onDelete: () => _delete(driver),
+                ),
+              ),
+          ],
+        ),
       ),
-      bottomNavigationBar: const FullTankBottomNav(active: 2),
     ),
+    bottomNavigationBar: const FullTankBottomNav(active: 2),
   );
 
   Future<void> _add() async {
@@ -269,7 +263,12 @@ class _DriverPageState extends State<DriverPage> {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            style: FilledButton.styleFrom(backgroundColor: _red),
+            style: FilledButton.styleFrom(
+              backgroundColor: _red,
+              minimumSize: const Size.fromHeight(52),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              shape: const StadiumBorder(),
+            ),
             child: const Text('Sí, eliminar'),
           ),
         ],

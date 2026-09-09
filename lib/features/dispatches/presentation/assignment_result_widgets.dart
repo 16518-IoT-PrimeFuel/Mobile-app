@@ -21,7 +21,7 @@ class _DarkRow extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: Colors.white54,
-                fontSize: 6.5,
+                fontSize: 9.425,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -29,7 +29,7 @@ class _DarkRow extends StatelessWidget {
               value,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 7.5,
+                fontSize: 10.875,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -62,7 +62,7 @@ class _AssignmentConflict extends StatelessWidget {
                 'Conflicto de recursos detectado\nNo puedes continuar con la asignación actual.',
                 style: TextStyle(
                   color: _red,
-                  fontSize: 8,
+                  fontSize: 11.6,
                   height: 1.35,
                   fontWeight: FontWeight.w700,
                 ),
@@ -121,13 +121,13 @@ class _ConflictResource extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   color: _ink,
-                  fontSize: 8,
+                  fontSize: 11.6,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               Text(
                 detail,
-                style: const TextStyle(color: _muted, fontSize: 7.5),
+                style: const TextStyle(color: _muted, fontSize: 10.875),
               ),
             ],
           ),
@@ -136,7 +136,7 @@ class _ConflictResource extends StatelessWidget {
           onPressed: onChange,
           child: const Text(
             'Cambiar',
-            style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800),
+            style: TextStyle(fontSize: 11.6, fontWeight: FontWeight.w800),
           ),
         ),
       ],
@@ -165,7 +165,7 @@ class _AssignmentSuccess extends StatelessWidget {
         'Despacho asignado',
         style: TextStyle(
           color: _ink,
-          fontSize: 16,
+          fontSize: 23.2,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -173,7 +173,7 @@ class _AssignmentSuccess extends StatelessWidget {
       const Text(
         '#ORD-4820 está listo para salir. Se notificó al conductor y al cliente.',
         textAlign: TextAlign.center,
-        style: TextStyle(color: _muted, fontSize: 9, height: 1.4),
+        style: TextStyle(color: _muted, fontSize: 13.05, height: 1.4),
       ),
       const SizedBox(height: 16),
       Container(
@@ -202,7 +202,7 @@ class _AssignmentSuccess extends StatelessWidget {
           'Asignar otro recurso',
           style: TextStyle(
             color: _blue,
-            fontSize: 8,
+            fontSize: 11.6,
             fontWeight: FontWeight.w800,
           ),
         ),

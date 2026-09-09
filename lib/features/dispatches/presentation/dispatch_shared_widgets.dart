@@ -9,12 +9,12 @@ class _KeyValue extends StatelessWidget {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: _muted, fontSize: 8)),
+        Text(label, style: const TextStyle(color: _muted, fontSize: 11.6)),
         Text(
           value,
           style: const TextStyle(
             color: _ink,
-            fontSize: 8,
+            fontSize: 11.6,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -64,7 +64,7 @@ class _DispatchShell extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: _ink,
-                      fontSize: 18,
+                      fontSize: 26.1,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -.3,
                     ),
@@ -72,7 +72,7 @@ class _DispatchShell extends StatelessWidget {
                   if (subtitle.isNotEmpty)
                     Text(
                       subtitle,
-                      style: const TextStyle(color: _muted, fontSize: 10),
+                      style: const TextStyle(color: _muted, fontSize: 14.5),
                     ),
                 ],
               ),
@@ -125,7 +125,7 @@ class _OrangeButton extends StatelessWidget {
         minimumSize: const Size.fromHeight(52),
         shape: const StadiumBorder(),
         elevation: 2,
-        textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
+        textStyle: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800),
       ),
       child: Text(label),
     ),
@@ -146,13 +146,16 @@ class _FormLabel extends StatelessWidget {
             text,
             style: const TextStyle(
               color: _muted,
-              fontSize: 7,
+              fontSize: 10.15,
               fontWeight: FontWeight.w800,
             ),
           ),
         ),
         if (trailing != null)
-          Text(trailing!, style: const TextStyle(color: _subtle, fontSize: 7)),
+          Text(
+            trailing!,
+            style: const TextStyle(color: _subtle, fontSize: 10.15),
+          ),
       ],
     ),
   );

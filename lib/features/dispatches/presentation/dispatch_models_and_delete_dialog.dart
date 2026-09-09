@@ -16,7 +16,12 @@ class _DeleteDialog extends StatelessWidget {
       ),
       FilledButton(
         onPressed: () => Navigator.pop(context, true),
-        style: FilledButton.styleFrom(backgroundColor: _red),
+        style: FilledButton.styleFrom(
+          backgroundColor: _red,
+          minimumSize: const Size.fromHeight(52),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          shape: const StadiumBorder(),
+        ),
         child: const Text('Sí, eliminar'),
       ),
     ],

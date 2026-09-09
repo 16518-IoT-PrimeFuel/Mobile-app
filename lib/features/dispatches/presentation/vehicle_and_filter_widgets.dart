@@ -37,7 +37,7 @@ class _VehicleCard extends StatelessWidget {
                     vehicle.plate,
                     style: const TextStyle(
                       color: _ink,
-                      fontSize: 9,
+                      fontSize: 13.05,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -51,7 +51,7 @@ class _VehicleCard extends StatelessWidget {
               const SizedBox(height: 3),
               Text(
                 '${vehicle.brand} · ${vehicle.type}',
-                style: const TextStyle(color: _muted, fontSize: 7.5),
+                style: const TextStyle(color: _muted, fontSize: 10.875),
               ),
               const SizedBox(height: 7),
               Row(
@@ -86,7 +86,7 @@ class _VehicleMeta extends StatelessWidget {
         label,
         style: const TextStyle(
           color: _subtle,
-          fontSize: 6.5,
+          fontSize: 9.425,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -95,7 +95,7 @@ class _VehicleMeta extends StatelessWidget {
         value,
         style: const TextStyle(
           color: _ink,
-          fontSize: 7.5,
+          fontSize: 10.875,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -144,7 +144,7 @@ class _DispatchFilterSheetState extends State<_DispatchFilterSheet> {
           'Ajustar filtros',
           style: TextStyle(
             color: _ink,
-            fontSize: 15,
+            fontSize: 21.75,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -153,7 +153,7 @@ class _DispatchFilterSheetState extends State<_DispatchFilterSheet> {
           'CAPACIDAD MÍNIMA',
           style: TextStyle(
             color: _muted,
-            fontSize: 8,
+            fontSize: 11.6,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -174,7 +174,7 @@ class _DispatchFilterSheetState extends State<_DispatchFilterSheet> {
           contentPadding: EdgeInsets.zero,
           title: const Text(
             'Sólo vehículos disponibles',
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
+            style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700),
           ),
           value: availableOnly,
           onChanged: (value) => setState(() => availableOnly = value),
