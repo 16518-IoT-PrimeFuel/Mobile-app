@@ -20,7 +20,7 @@ class _RememberMe extends StatelessWidget {
             child: Checkbox(
               value: value,
               onChanged: (checked) => onChanged(checked ?? false),
-              activeColor: FullTankColors.blue,
+              activeColor: Color(0xFF1E40AF),
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
             ),
@@ -29,7 +29,7 @@ class _RememberMe extends StatelessWidget {
           const Text(
             'Recordarme',
             style: TextStyle(
-              color: FullTankColors.inkMid,
+              color: Color(0xFF4A5568),
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
@@ -51,7 +51,7 @@ class _FailureBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: FullTankColors.dangerSoft,
+        color: Color(0xFFFEF2F2),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0x33EF4444)),
       ),
@@ -61,14 +61,14 @@ class _FailureBanner extends StatelessWidget {
           const Icon(
             Icons.warning_amber_rounded,
             size: 18,
-            color: FullTankColors.danger,
+            color: Color(0xFFEF4444),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
               style: const TextStyle(
-                color: FullTankColors.navyMid,
+                color: Color(0xFF2D3748),
                 fontSize: 11.5,
                 height: 1.35,
                 fontWeight: FontWeight.w500,
@@ -90,20 +90,20 @@ class _DividerLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: FullTankColors.line, height: 1)),
+        const Expanded(child: Divider(color: Color(0xFFE2E8F0), height: 1)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             label,
             style: const TextStyle(
-              color: FullTankColors.inkSoft,
+              color: Color(0xFF94A3B8),
               fontSize: 10.5,
               fontWeight: FontWeight.w600,
               letterSpacing: 1,
             ),
           ),
         ),
-        const Expanded(child: Divider(color: FullTankColors.line, height: 1)),
+        const Expanded(child: Divider(color: Color(0xFFE2E8F0), height: 1)),
       ],
     );
   }

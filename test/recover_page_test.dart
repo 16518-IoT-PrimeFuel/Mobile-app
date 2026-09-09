@@ -15,6 +15,7 @@ void main() {
 
   testWidgets('shows the empty email validation state', (tester) async {
     await tester.pumpWidget(const _TestApp());
+    await tester.ensureVisible(find.text('Enviar enlace de recuperación'));
     await tester.tap(find.text('Enviar enlace de recuperación'));
     await tester.pump();
 
@@ -26,6 +27,7 @@ void main() {
   ) async {
     await tester.pumpWidget(const _TestApp());
     await tester.enterText(find.byType(TextField), 'noexiste@empresa.com');
+    await tester.ensureVisible(find.text('Enviar enlace de recuperación'));
     await tester.tap(find.text('Enviar enlace de recuperación'));
     await tester.pump();
 
@@ -38,6 +40,7 @@ void main() {
   testWidgets('shows the sent state for a valid email', (tester) async {
     await tester.pumpWidget(const _TestApp());
     await tester.enterText(find.byType(TextField), 'operador@empresa.com');
+    await tester.ensureVisible(find.text('Enviar enlace de recuperación'));
     await tester.tap(find.text('Enviar enlace de recuperación'));
     await tester.pump();
 

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/fulltank_theme.dart';
-import '../../home/presentation/home_page.dart';
+import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 
-const _ink = FullTankColors.navy;
-const _muted = FullTankColors.inkMid;
-const _line = FullTankColors.line;
-const _blue = FullTankColors.blue;
-const _blueSoft = FullTankColors.blueSoft;
+const _ink = Color(0xFF1A202C);
+const _muted = Color(0xFF4A5568);
+const _line = Color(0xFFE2E8F0);
+const _blue = Color(0xFF1E40AF);
+const _blueSoft = Color(0xFFEFF4FF);
 const _green = Color(0xFF0F9B91);
 const _greenSoft = Color(0xFFEAFBF8);
 const _orange = Color(0xFFFF8A0A);
 const _orangeSoft = Color(0xFFFFF4E9);
-const _red = FullTankColors.danger;
-const _redSoft = FullTankColors.dangerSoft;
+const _red = Color(0xFFEF4444);
+const _redSoft = Color(0xFFFEF2F2);
 
 class MissingPageShell extends StatelessWidget {
   const MissingPageShell({
@@ -61,7 +60,7 @@ class MissingPageShell extends StatelessWidget {
                           title,
                           style: const TextStyle(
                             color: _ink,
-                            fontSize: 23,
+                            fontSize: 33.35,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -.4,
                           ),
@@ -69,7 +68,11 @@ class MissingPageShell extends StatelessWidget {
                         if (subtitle != null)
                           Text(
                             subtitle!,
-                            style: const TextStyle(color: _muted),
+                            style: const TextStyle(
+                              color: _muted,
+                              fontSize: 19.575,
+                              height: 1.5,
+                            ),
                           ),
                       ],
                     ),
@@ -119,7 +122,7 @@ class _SectionTitle extends StatelessWidget {
       text,
       style: const TextStyle(
         color: _muted,
-        fontSize: 11,
+        fontSize: 15.95,
         fontWeight: FontWeight.w800,
         letterSpacing: .6,
       ),
@@ -140,7 +143,9 @@ class _PrimaryButton extends StatelessWidget {
       style: FilledButton.styleFrom(
         backgroundColor: _blue,
         minimumSize: const Size.fromHeight(52),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         shape: const StadiumBorder(),
+        textStyle: const TextStyle(fontSize: 20.3, fontWeight: FontWeight.w600),
       ),
       child: Text(label),
     ),
@@ -162,7 +167,11 @@ class _StatusChip extends StatelessWidget {
     ),
     child: Text(
       label,
-      style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w800),
+      style: TextStyle(
+        color: color,
+        fontSize: 14.5,
+        fontWeight: FontWeight.w800,
+      ),
     ),
   );
 }
@@ -191,14 +200,14 @@ class SplashPage extends StatelessWidget {
             'FullTank',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 30,
+              fontSize: 43.5,
               fontWeight: FontWeight.w800,
             ),
           ),
           const SizedBox(height: 7),
           const Text(
             'Energía que mueve tu operación',
-            style: TextStyle(color: Color(0xFFCBD5E1)),
+            style: TextStyle(color: Color(0xFFCBD5E1), fontSize: 19.575),
           ),
           const SizedBox(height: 32),
           OutlinedButton(
@@ -206,6 +215,10 @@ class SplashPage extends StatelessWidget {
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
               side: const BorderSide(color: Color(0xFF64748B)),
+              minimumSize: const Size.fromHeight(52),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              shape: const StadiumBorder(),
+              textStyle: const TextStyle(fontSize: 20.3),
             ),
             child: const Text('Continuar'),
           ),
@@ -393,6 +406,10 @@ class _FormField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         isDense: true,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 15,
+        ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     ),
@@ -536,7 +553,7 @@ class _OrderTotalCard extends StatelessWidget {
             Text(
               'S/ 42,600',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 29.0,
                 fontWeight: FontWeight.w800,
                 color: _ink,
               ),
@@ -654,7 +671,7 @@ class _ProviderOrderCard extends StatelessWidget {
           Text(
             customer,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 23.2,
               fontWeight: FontWeight.w800,
               color: _ink,
             ),
@@ -694,7 +711,7 @@ class ProviderOrderDetailPage extends StatelessWidget {
               Text(
                 'AgroNorte S.A.',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 26.1,
                   fontWeight: FontWeight.w800,
                   color: _ink,
                 ),
@@ -730,6 +747,8 @@ class ProviderOrderDetailPage extends StatelessWidget {
           onPressed: () => context.push('/provider/orders/$orderId/reject'),
           style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(48),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            shape: const StadiumBorder(),
             foregroundColor: _red,
           ),
           child: const Text('Rechazar pedido'),
@@ -827,6 +846,10 @@ class _ProviderOrderActionPageState extends State<ProviderOrderActionPage> {
                     : isClose
                     ? 'Nota de cierre'
                     : 'Indicaciones para despacho',
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 15,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -868,6 +891,10 @@ class SupportHelpPage extends StatelessWidget {
             suffixIcon: const Icon(Icons.arrow_forward),
             filled: true,
             fillColor: _blueSoft,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 15,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -977,7 +1004,16 @@ class _ContactSupportPageState extends State<ContactSupportPage> {
                   children: [
                     DropdownButtonFormField<String>(
                       initialValue: _topic,
-                      decoration: const InputDecoration(labelText: 'Tema'),
+                      decoration: InputDecoration(
+                        labelText: 'Tema',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 15,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
                       items: const [
                         DropdownMenuItem(
                           value: 'Pedido',
@@ -997,6 +1033,10 @@ class _ContactSupportPageState extends State<ContactSupportPage> {
                       maxLines: 6,
                       decoration: InputDecoration(
                         labelText: 'Cuéntanos qué pasó',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 15,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -1062,6 +1102,10 @@ class _SearchOrdersPageState extends State<SearchOrdersPage> {
             decoration: InputDecoration(
               hintText: 'Ej. FT-88421',
               prefixIcon: const Icon(Icons.search),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 15,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(11),
               ),
@@ -1253,6 +1297,10 @@ class CustomersPage extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Buscar cliente',
             prefixIcon: const Icon(Icons.search),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 15,
+            ),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
           ),
         ),
@@ -1416,7 +1464,7 @@ class CustomerDetailPage extends StatelessWidget {
               SizedBox(height: 5),
               Text(
                 '8 pedidos · 32,000 L',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                style: TextStyle(fontSize: 26.1, fontWeight: FontWeight.w800),
               ),
             ],
           ),
@@ -1431,6 +1479,8 @@ class CustomerDetailPage extends StatelessWidget {
           onPressed: () => _message(context, 'Cliente archivado.'),
           style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(48),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            shape: const StadiumBorder(),
             foregroundColor: _red,
           ),
           child: const Text('Archivar cliente'),

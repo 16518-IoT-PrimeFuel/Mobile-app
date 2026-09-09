@@ -25,9 +25,9 @@ class _LightBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BackButtonShell(
       onPressed: onPressed,
-      backgroundColor: FullTankColors.card,
+      backgroundColor: Color(0xFFF3F4F6),
       borderColor: Colors.transparent,
-      iconColor: FullTankColors.navy,
+      iconColor: Color(0xFF1A202C),
     );
   }
 }
@@ -108,8 +108,8 @@ class _SentCopy extends StatelessWidget {
       textAlign: TextAlign.center,
       text: TextSpan(
         style: const TextStyle(
-          color: FullTankColors.inkMid,
-          fontSize: 12,
+          color: Color(0xFF4A5568),
+          fontSize: 17.4,
           height: 1.5,
         ),
         children: [
@@ -117,7 +117,7 @@ class _SentCopy extends StatelessWidget {
           TextSpan(
             text: email,
             style: const TextStyle(
-              color: FullTankColors.navy,
+              color: Color(0xFF1A202C),
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -139,7 +139,7 @@ class _SentEmailCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: FullTankColors.card,
+        color: Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -154,7 +154,7 @@ class _SentEmailCard extends StatelessWidget {
             child: const Icon(
               Icons.mail_outline,
               size: 18,
-              color: FullTankColors.blue,
+              color: Color(0xFF1E40AF),
             ),
           ),
           const SizedBox(width: 10),
@@ -165,8 +165,8 @@ class _SentEmailCard extends StatelessWidget {
                 const Text(
                   'ENVIADO A',
                   style: TextStyle(
-                    color: FullTankColors.inkMid,
-                    fontSize: 9.5,
+                    color: Color(0xFF4A5568),
+                    fontSize: 13.775,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
                   ),
@@ -175,8 +175,8 @@ class _SentEmailCard extends StatelessWidget {
                 Text(
                   email,
                   style: const TextStyle(
-                    color: FullTankColors.navy,
-                    fontSize: 12,
+                    color: Color(0xFF1A202C),
+                    fontSize: 17.4,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -193,7 +193,7 @@ class _SentEmailCard extends StatelessWidget {
               '• ENVIADO',
               style: TextStyle(
                 color: Color(0xFF10B981),
-                fontSize: 9.5,
+                fontSize: 13.775,
                 fontWeight: FontWeight.w700,
               ),
             ),

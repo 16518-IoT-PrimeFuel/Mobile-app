@@ -35,56 +35,53 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ? authState.failure
         : null;
 
-    return MediaQuery(
-      data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: Column(
-                    children: [
-                      const _HeroHeader(),
-                      Transform.translate(
-                        offset: const Offset(0, -8),
-                        child: Container(
-                          width: double.infinity,
-                          color: Colors.white,
-                          padding: const EdgeInsets.fromLTRB(24, 4, 24, 32),
-                          child: _LoginContent(
-                            emailController: _emailController,
-                            passwordController: _passwordController,
-                            onEmailChanged: (_) => setState(() {}),
-                            onPasswordChanged: (_) => setState(() {}),
-                            emailError: _emailError,
-                            passwordError: _passwordError,
-                            failure: failure,
-                            loading: loading,
-                            rememberMe: _rememberMe,
-                            obscurePassword: _obscurePassword,
-                            onRememberChanged: (value) => setState(() {
-                              _rememberMe = value;
-                            }),
-                            onTogglePassword: () => setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            }),
-                            onSubmit: loading ? null : _submit,
-                            onGuest: loading ? null : _continueAsGuest,
-                            onForgot: () => context.push('/recover'),
-                            onCreateAccount: () => context.push('/signup'),
-                          ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Column(
+                  children: [
+                    const _HeroHeader(),
+                    Transform.translate(
+                      offset: const Offset(0, -8),
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white,
+                        padding: const EdgeInsets.fromLTRB(24, 4, 24, 32),
+                        child: _LoginContent(
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                          onEmailChanged: (_) => setState(() {}),
+                          onPasswordChanged: (_) => setState(() {}),
+                          emailError: _emailError,
+                          passwordError: _passwordError,
+                          failure: failure,
+                          loading: loading,
+                          rememberMe: _rememberMe,
+                          obscurePassword: _obscurePassword,
+                          onRememberChanged: (value) => setState(() {
+                            _rememberMe = value;
+                          }),
+                          onTogglePassword: () => setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          }),
+                          onSubmit: loading ? null : _submit,
+                          onGuest: loading ? null : _continueAsGuest,
+                          onForgot: () => context.push('/recover'),
+                          onCreateAccount: () => context.push('/signup'),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -198,7 +195,7 @@ class _LoginContent extends StatelessWidget {
         const Text(
           'Bienvenido de vuelta',
           style: TextStyle(
-            color: FullTankColors.navy,
+            color: Color(0xFF1A202C),
             fontSize: 28,
             fontWeight: FontWeight.w700,
             letterSpacing: -0.7,
@@ -208,7 +205,7 @@ class _LoginContent extends StatelessWidget {
         const Text(
           'Accede a tu red de suministro y gestiona operaciones en tiempo real.',
           style: TextStyle(
-            color: FullTankColors.inkMid,
+            color: Color(0xFF4A5568),
             fontSize: 13.5,
             height: 1.5,
           ),
@@ -253,7 +250,7 @@ class _LoginContent extends StatelessWidget {
               child: const Text(
                 '¿Olvidaste tu contraseña?',
                 style: TextStyle(
-                  color: FullTankColors.blue,
+                  color: Color(0xFF1E40AF),
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
@@ -283,18 +280,14 @@ class _LoginContent extends StatelessWidget {
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.shield_outlined,
-              size: 13,
-              color: FullTankColors.inkSoft,
-            ),
+            Icon(Icons.shield_outlined, size: 13, color: Color(0xFF94A3B8)),
             SizedBox(width: 6),
             Flexible(
               child: Text(
                 'Encriptación de extremo a extremo · SOC 2 Type II',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: FullTankColors.inkSoft,
+                  color: Color(0xFF94A3B8),
                   fontSize: 11,
                   letterSpacing: 0.15,
                 ),

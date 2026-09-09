@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/theme/fulltank_theme.dart';
 import 'widgets/auth_buttons.dart';
 import 'widgets/auth_text_field.dart';
 part 'recover_page_content.dart';

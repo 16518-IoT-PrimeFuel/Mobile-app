@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/fulltank_theme.dart';
-
 class OutOfScopePage extends StatelessWidget {
   const OutOfScopePage({required this.title, required this.message, super.key});
 
@@ -11,27 +9,24 @@ class OutOfScopePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return withFullTankUiScale(
-      context,
-      Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => context.pop(),
-            icon: const Icon(Icons.arrow_back),
-          ),
-          title: Text(title),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: const Icon(Icons.arrow_back),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Center(
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: FullTankColors.inkMid,
-                fontSize: 15,
-                height: 1.5,
-              ),
+        title: Text(title, style: const TextStyle(fontSize: 31.9)),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF4A5568),
+              fontSize: 21.75,
+              height: 1.5,
             ),
           ),
         ),

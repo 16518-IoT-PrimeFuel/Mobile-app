@@ -56,14 +56,14 @@ class _RecoveryPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: FullTankColors.blueSoft,
+        color: Color(0xFFEFF4FF),
         borderRadius: BorderRadius.circular(999),
       ),
       child: const Text(
         'RECUPERACIÓN SEGURA',
         style: TextStyle(
-          color: FullTankColors.blue,
-          fontSize: 10.5,
+          color: Color(0xFF1E40AF),
+          fontSize: 15.225,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.8,
         ),
@@ -81,28 +81,28 @@ class _InboxInfoCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: FullTankColors.info,
-        border: Border.all(color: FullTankColors.infoBorder),
+        color: Color(0xFFDBEAFE),
+        border: Border.all(color: Color(0xFFBFDBFE)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline, size: 18, color: FullTankColors.blue),
+          const Icon(Icons.info_outline, size: 18, color: Color(0xFF1E40AF)),
           const SizedBox(width: 10),
           Expanded(
             child: RichText(
               text: const TextSpan(
                 style: TextStyle(
-                  color: FullTankColors.navyMid,
-                  fontSize: 11.5,
+                  color: Color(0xFF2D3748),
+                  fontSize: 16.675,
                   height: 1.45,
                 ),
                 children: [
                   TextSpan(
                     text: 'Revisa tu bandeja\n',
                     style: TextStyle(
-                      color: FullTankColors.blue,
+                      color: Color(0xFF1E40AF),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -131,7 +131,7 @@ class _SupportCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: FullTankColors.card,
+        color: Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -146,7 +146,7 @@ class _SupportCard extends StatelessWidget {
             child: const Icon(
               Icons.help_outline,
               size: 19,
-              color: FullTankColors.navy,
+              color: Color(0xFF1A202C),
             ),
           ),
           const SizedBox(width: 12),
@@ -157,8 +157,8 @@ class _SupportCard extends StatelessWidget {
                 Text(
                   '¿Necesitas ayuda?',
                   style: TextStyle(
-                    color: FullTankColors.inkMid,
-                    fontSize: 11,
+                    color: Color(0xFF4A5568),
+                    fontSize: 15.95,
                     height: 1.2,
                   ),
                 ),
@@ -166,15 +166,15 @@ class _SupportCard extends StatelessWidget {
                 Text(
                   'Contactar soporte 24/7',
                   style: TextStyle(
-                    color: FullTankColors.navy,
-                    fontSize: 13,
+                    color: Color(0xFF1A202C),
+                    fontSize: 18.85,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
               ],
             ),
           ),
-          const Icon(Icons.arrow_forward, size: 18, color: FullTankColors.navy),
+          const Icon(Icons.arrow_forward, size: 18, color: Color(0xFF1A202C)),
         ],
       ),
     );

@@ -53,6 +53,7 @@ void main() {
     await tester.pumpWidget(
       const MaterialApp(home: SignupPage(role: SignupRole.provider)),
     );
+    await tester.ensureVisible(find.text('Enviar solicitud'));
     await tester.tap(find.text('Enviar solicitud'));
     await tester.pump();
     expect(find.text('Este campo es obligatorio'), findsWidgets);

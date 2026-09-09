@@ -69,8 +69,8 @@ class _RecoverPageState extends State<RecoverPage> {
                 const Text(
                   'Recuperar contraseña',
                   style: TextStyle(
-                    color: FullTankColors.navy,
-                    fontSize: 28,
+                    color: Color(0xFF1A202C),
+                    fontSize: 40.6,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.7,
                   ),
@@ -79,8 +79,8 @@ class _RecoverPageState extends State<RecoverPage> {
                 const Text(
                   'Ingresa tu email corporativo para recibir instrucciones de recuperación.',
                   style: TextStyle(
-                    color: FullTankColors.inkMid,
-                    fontSize: 13.5,
+                    color: Color(0xFF4A5568),
+                    fontSize: 19.575,
                     height: 1.55,
                   ),
                 ),
@@ -91,6 +91,7 @@ class _RecoverPageState extends State<RecoverPage> {
                   hintText: 'tu@empresa.com',
                   icon: Icons.mail_outline,
                   keyboardType: TextInputType.emailAddress,
+                  largeText: true,
                   errorText: errorText,
                   onChanged: (_) {
                     if (_stage != _RecoverStage.form || _submitted) {
@@ -107,6 +108,7 @@ class _RecoverPageState extends State<RecoverPage> {
                 PrimaryAuthButton(
                   label: 'Enviar enlace de recuperación',
                   onPressed: _submit,
+                  largeText: true,
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -114,9 +116,9 @@ class _RecoverPageState extends State<RecoverPage> {
                   child: TextButton(
                     onPressed: () => context.pop(),
                     style: TextButton.styleFrom(
-                      foregroundColor: FullTankColors.blue,
+                      foregroundColor: Color(0xFF1E40AF),
                       textStyle: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 18.85,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -156,8 +158,8 @@ class _RecoverPageState extends State<RecoverPage> {
             'Revisa tu bandeja',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: FullTankColors.navy,
-              fontSize: 23,
+              color: Color(0xFF1A202C),
+              fontSize: 33.35,
               fontWeight: FontWeight.w700,
               letterSpacing: -0.4,
             ),
@@ -167,14 +169,18 @@ class _RecoverPageState extends State<RecoverPage> {
           const SizedBox(height: 22),
           _SentEmailCard(email: _emailController.text.trim()),
           const SizedBox(height: 16),
-          PrimaryAuthButton(label: 'Abrir mi correo', onPressed: () {}),
+          PrimaryAuthButton(
+            label: 'Abrir mi correo',
+            onPressed: () {},
+            largeText: true,
+          ),
           TextButton(
             onPressed: () {},
             style: TextButton.styleFrom(
-              foregroundColor: FullTankColors.blue,
+              foregroundColor: Color(0xFF1E40AF),
               minimumSize: const Size(double.infinity, 44),
               textStyle: const TextStyle(
-                fontSize: 12,
+                fontSize: 17.4,
                 fontWeight: FontWeight.w600,
               ),
             ),
