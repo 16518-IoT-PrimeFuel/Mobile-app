@@ -26,7 +26,7 @@ class _ProfileField extends StatelessWidget {
           keyboardType: keyboardType,
           style: _fieldText,
           decoration: InputDecoration(
-            prefixIcon: Icon(icon, size: 15, color: FullTankColors.inkSoft),
+            prefixIcon: Icon(icon, size: 15, color: Color(0xFF94A3B8)),
             filled: true,
             fillColor: Colors.white,
             contentPadding: const EdgeInsets.symmetric(
@@ -36,11 +36,11 @@ class _ProfileField extends StatelessWidget {
             isDense: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(9),
-              borderSide: const BorderSide(color: FullTankColors.line),
+              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(9),
-              borderSide: const BorderSide(color: FullTankColors.line),
+              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
             ),
           ),
         ),
@@ -76,7 +76,7 @@ class _SecuritySettingsState extends State<_SecuritySettings> {
         children: [
           _SettingsRow(
             icon: Icons.key_outlined,
-            color: FullTankColors.blue,
+            color: Color(0xFF1E40AF),
             title: 'Cambiar contraseña',
             detail: 'Última actualización hace 3 meses',
             onTap: () =>
@@ -105,7 +105,7 @@ class _SecuritySettingsState extends State<_SecuritySettings> {
             onPressed: () => _showMessage(context, 'Sesiones cerradas.'),
             child: const Text(
               'Cerrar todas',
-              style: TextStyle(color: FullTankColors.danger),
+              style: TextStyle(color: Color(0xFFEF4444)),
             ),
           ),
         ],
@@ -195,7 +195,7 @@ class _NotificationSettingsState extends State<_NotificationSettings> {
           ),
           _NotificationRow(
             icon: Icons.receipt_long_outlined,
-            color: FullTankColors.blue,
+            color: Color(0xFF1E40AF),
             title: 'Actualizaciones de\npedidos',
             detail: 'Aprobado · despachado ·\nentregado',
             value: enabled[1],
@@ -218,7 +218,7 @@ class _NotificationSettingsState extends State<_NotificationSettings> {
         children: [
           _NotificationRow(
             icon: Icons.notifications_none_outlined,
-            color: FullTankColors.inkSoft,
+            color: Color(0xFF94A3B8),
             title: 'Novedades del producto',
             detail: 'Nuevas funciones y mejoras',
             value: enabled[3],

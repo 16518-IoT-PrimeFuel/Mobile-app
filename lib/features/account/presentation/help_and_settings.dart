@@ -20,7 +20,7 @@ class _HelpSettings extends StatelessWidget {
         children: [
           _HelpRow(
             icon: Icons.help_outline,
-            color: FullTankColors.blue,
+            color: Color(0xFF1E40AF),
             title: 'Centro de ayuda',
             detail: 'Guías, FAQs y tutoriales',
             onTap: () => context.push('/support/help'),
@@ -42,14 +42,14 @@ class _HelpSettings extends StatelessWidget {
         children: [
           _HelpRow(
             icon: Icons.description_outlined,
-            color: FullTankColors.inkSoft,
+            color: Color(0xFF94A3B8),
             title: 'Términos y condiciones',
             detail: 'Versión 3.2 · vigente desde jul 2026',
             onTap: () => _showMessage(context, 'Términos y condiciones.'),
           ),
           _HelpRow(
             icon: Icons.privacy_tip_outlined,
-            color: FullTankColors.inkSoft,
+            color: Color(0xFF94A3B8),
             title: 'Aviso de privacidad',
             detail: 'Manejo de datos y sensores IoT',
             onTap: () => _showMessage(context, 'Aviso de privacidad.'),
@@ -68,7 +68,7 @@ class _HelpSettings extends StatelessWidget {
           icon: const Icon(Icons.logout, size: 14),
           label: const Text('Cerrar sesión'),
           style: OutlinedButton.styleFrom(
-            foregroundColor: FullTankColors.danger,
+            foregroundColor: Color(0xFFEF4444),
             side: const BorderSide(color: Color(0xFFFECACA)),
             minimumSize: const Size.fromHeight(38),
             shape: const StadiumBorder(),
@@ -93,7 +93,7 @@ class _AccountHeader extends StatelessWidget {
         onPressed: () => context.pop(),
         icon: const Icon(Icons.arrow_back, size: 18),
         style: IconButton.styleFrom(
-          backgroundColor: FullTankColors.card,
+          backgroundColor: Color(0xFFF3F4F6),
           fixedSize: const Size(42, 42),
           padding: EdgeInsets.zero,
         ),
@@ -125,7 +125,7 @@ class _SettingsPanel extends StatelessWidget {
     for (var i = 0; i < items.length; i++) ...[
       items[i],
       if (i < items.length - 1)
-        const Divider(height: 1, color: FullTankColors.line),
+        const Divider(height: 1, color: Color(0xFFE2E8F0)),
     ],
   ];
 }
@@ -173,7 +173,7 @@ class _SettingsRow extends StatelessWidget {
               const Icon(
                 Icons.chevron_right,
                 size: 16,
-                color: FullTankColors.inkSoft,
+                color: Color(0xFF94A3B8),
               ),
         ],
       ),

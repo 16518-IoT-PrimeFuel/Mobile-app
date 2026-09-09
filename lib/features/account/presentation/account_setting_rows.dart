@@ -36,7 +36,7 @@ class _NotificationRow extends StatelessWidget {
         Switch(
           value: value,
           onChanged: onChanged,
-          activeThumbColor: FullTankColors.blue,
+          activeThumbColor: Color(0xFF1E40AF),
         ),
       ],
     ),
@@ -63,7 +63,7 @@ class _DeviceRow extends StatelessWidget {
     padding: const EdgeInsets.symmetric(vertical: 13),
     child: Row(
       children: [
-        _AccountIconTile(icon: icon, color: FullTankColors.blue),
+        _AccountIconTile(icon: icon, color: Color(0xFF1E40AF)),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -77,15 +77,15 @@ class _DeviceRow extends StatelessWidget {
         if (current)
           const _StatusPill(
             label: 'AHORA',
-            color: FullTankColors.blue,
-            softColor: FullTankColors.blueSoft,
+            color: Color(0xFF1E40AF),
+            softColor: Color(0xFFEFF4FF),
           )
         else
           TextButton(
             onPressed: onClose,
             child: const Text(
               'Cerrar',
-              style: TextStyle(color: FullTankColors.danger),
+              style: TextStyle(color: Color(0xFFEF4444)),
             ),
           ),
       ],
@@ -130,11 +130,7 @@ class _HelpRow extends StatelessWidget {
           ),
           if (badge != null)
             _StatusPill(label: badge!, color: _teal, softColor: _tealSoft),
-          const Icon(
-            Icons.chevron_right,
-            size: 16,
-            color: FullTankColors.inkSoft,
-          ),
+          const Icon(Icons.chevron_right, size: 16, color: Color(0xFF94A3B8)),
         ],
       ),
     ),
@@ -154,7 +150,7 @@ class _LanguageSelector extends StatelessWidget {
       height: 42,
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: FullTankColors.card,
+        color: Color(0xFFF3F4F6),
         borderRadius: BorderRadius.circular(99),
       ),
       child: Row(
@@ -168,17 +164,15 @@ class _LanguageSelector extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: selected == i
-                        ? FullTankColors.blue
+                        ? Color(0xFF1E40AF)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(99),
                   ),
                   child: Text(
                     languages[i],
                     style: TextStyle(
-                      color: selected == i
-                          ? Colors.white
-                          : FullTankColors.navyMid,
-                      fontSize: 7.5,
+                      color: selected == i ? Colors.white : Color(0xFF2D3748),
+                      fontSize: 10.875,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

@@ -19,11 +19,11 @@ class _ContactRow extends StatelessWidget {
     decoration: last
         ? null
         : const BoxDecoration(
-            border: Border(bottom: BorderSide(color: FullTankColors.line)),
+            border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
           ),
     child: Row(
       children: [
-        _AccountIconTile(icon: icon, color: FullTankColors.inkMid),
+        _AccountIconTile(icon: icon, color: Color(0xFF4A5568)),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -158,8 +158,9 @@ class _EditProfileState extends State<_EditProfile> {
         child: FilledButton(
           onPressed: () => _showMessage(context, 'Cambios guardados.'),
           style: FilledButton.styleFrom(
-            backgroundColor: FullTankColors.blue,
+            backgroundColor: Color(0xFF1E40AF),
             minimumSize: const Size.fromHeight(52),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             shape: const StadiumBorder(),
           ),
           child: const Text('Guardar cambios'),
@@ -198,7 +199,7 @@ class _PhotoCard extends StatelessWidget {
         TextButton(
           onPressed: onChange,
           style: TextButton.styleFrom(
-            backgroundColor: FullTankColors.blueSoft,
+            backgroundColor: Color(0xFFEFF4FF),
             minimumSize: Size.zero,
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
           ),

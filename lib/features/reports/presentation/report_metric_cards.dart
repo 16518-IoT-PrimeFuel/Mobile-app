@@ -32,8 +32,8 @@ class _PeriodCard extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            color: FullTankColors.inkMid,
-            fontSize: 7,
+            color: Color(0xFF4A5568),
+            fontSize: 10.15,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -41,14 +41,14 @@ class _PeriodCard extends StatelessWidget {
         Text(
           value,
           style: const TextStyle(
-            color: FullTankColors.navy,
-            fontSize: 17,
+            color: Color(0xFF1A202C),
+            fontSize: 24.65,
             fontWeight: FontWeight.w800,
           ),
         ),
         Text(
           detail,
-          style: const TextStyle(color: FullTankColors.inkMid, fontSize: 7.5),
+          style: const TextStyle(color: Color(0xFF4A5568), fontSize: 10.875),
         ),
       ],
     ),
@@ -89,8 +89,8 @@ class _MetricCard extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: FullTankColors.inkMid,
-            fontSize: 6,
+            color: Color(0xFF4A5568),
+            fontSize: 8.7,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -104,15 +104,15 @@ class _MetricCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 12,
+                  color: Color(0xFF1A202C),
+                  fontSize: 17.4,
                   fontWeight: FontWeight.w800,
                 ),
               ),
             ),
             Text(
               detail,
-              style: const TextStyle(color: FullTankColors.inkMid, fontSize: 6),
+              style: const TextStyle(color: Color(0xFF4A5568), fontSize: 8.7),
             ),
           ],
         ),
@@ -145,8 +145,8 @@ class _CurrentPeriodCard extends StatelessWidget {
         Text(
           'PERÍODO ACTUAL',
           style: TextStyle(
-            color: FullTankColors.inkMid,
-            fontSize: 7,
+            color: Color(0xFF4A5568),
+            fontSize: 10.15,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -156,14 +156,14 @@ class _CurrentPeriodCard extends StatelessWidget {
             Text(
               '\$31.200',
               style: TextStyle(
-                color: FullTankColors.navy,
-                fontSize: 16,
+                color: Color(0xFF1A202C),
+                fontSize: 23.2,
                 fontWeight: FontWeight.w800,
               ),
             ),
             Text(
               ' K',
-              style: TextStyle(color: FullTankColors.inkMid, fontSize: 8),
+              style: TextStyle(color: Color(0xFF4A5568), fontSize: 11.6),
             ),
             SizedBox(width: 10),
             _DeltaBadge('+16%'),
@@ -175,13 +175,13 @@ class _CurrentPeriodCard extends StatelessWidget {
           children: [
             Text(
               'vs. anterior',
-              style: TextStyle(color: FullTankColors.inkMid, fontSize: 7.5),
+              style: TextStyle(color: Color(0xFF4A5568), fontSize: 10.875),
             ),
             Text(
               '\$27.000K',
               style: TextStyle(
-                color: FullTankColors.navyMid,
-                fontSize: 7.5,
+                color: Color(0xFF2D3748),
+                fontSize: 10.875,
                 fontWeight: FontWeight.w700,
               ),
             ),

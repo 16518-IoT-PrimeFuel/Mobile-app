@@ -114,7 +114,7 @@ class _Avatar extends StatelessWidget {
     height: size,
     alignment: Alignment.center,
     decoration: BoxDecoration(
-      color: FullTankColors.navy,
+      color: Color(0xFF1A202C),
       borderRadius: BorderRadius.circular(size * .25),
     ),
     child: Text(
@@ -159,7 +159,7 @@ class _StatusPill extends StatelessWidget {
           label,
           style: TextStyle(
             color: color,
-            fontSize: 6.5,
+            fontSize: 9.425,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -173,40 +173,40 @@ void _showMessage(BuildContext context, String message) {
 }
 
 const _headerTitle = TextStyle(
-  color: FullTankColors.navy,
-  fontSize: 19,
+  color: Color(0xFF1A202C),
+  fontSize: 27.55,
   fontWeight: FontWeight.w800,
   letterSpacing: -.5,
 );
 const _bodyStrong = TextStyle(
-  color: FullTankColors.navy,
-  fontSize: 9,
+  color: Color(0xFF1A202C),
+  fontSize: 13.05,
   fontWeight: FontWeight.w800,
 );
-const _smallText = TextStyle(color: FullTankColors.inkMid, fontSize: 7);
+const _smallText = TextStyle(color: Color(0xFF4A5568), fontSize: 10.15);
 const _microLabel = TextStyle(
-  color: FullTankColors.inkMid,
-  fontSize: 6.5,
+  color: Color(0xFF4A5568),
+  fontSize: 9.425,
   fontWeight: FontWeight.w800,
 );
 const _contactValue = TextStyle(
-  color: FullTankColors.navy,
-  fontSize: 8,
+  color: Color(0xFF1A202C),
+  fontSize: 11.6,
   fontWeight: FontWeight.w700,
 );
 const _fieldText = TextStyle(
-  color: FullTankColors.navyMid,
-  fontSize: 8,
+  color: Color(0xFF2D3748),
+  fontSize: 11.6,
   fontWeight: FontWeight.w600,
 );
 const _scoreText = TextStyle(
   color: _teal,
-  fontSize: 9,
+  fontSize: 13.05,
   fontWeight: FontWeight.w800,
 );
 const _quickText = TextStyle(
-  color: FullTankColors.navyMid,
-  fontSize: 7,
+  color: Color(0xFF2D3748),
+  fontSize: 10.15,
   height: 1.05,
   fontWeight: FontWeight.w700,
 );

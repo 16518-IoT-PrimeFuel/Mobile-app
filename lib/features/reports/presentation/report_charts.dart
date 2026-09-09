@@ -11,7 +11,7 @@ class _Segmented extends StatelessWidget {
     height: 38,
     padding: const EdgeInsets.all(4),
     decoration: BoxDecoration(
-      color: FullTankColors.card,
+      color: Color(0xFFF3F4F6),
       borderRadius: BorderRadius.circular(99),
     ),
     child: Row(
@@ -30,8 +30,8 @@ class _Segmented extends StatelessWidget {
             child: Text(
               items[index],
               style: TextStyle(
-                color: FullTankColors.navyMid,
-                fontSize: 8,
+                color: Color(0xFF2D3748),
+                fontSize: 11.6,
                 fontWeight: index == selected
                     ? FontWeight.w800
                     : FontWeight.w500,
@@ -57,19 +57,19 @@ class _ChartHeading extends StatelessWidget {
       Text(
         label,
         style: const TextStyle(
-          color: FullTankColors.inkMid,
-          fontSize: 8,
+          color: Color(0xFF4A5568),
+          fontSize: 11.6,
           fontWeight: FontWeight.w800,
         ),
       ),
       if (trailing.isNotEmpty)
         Row(
           children: [
-            const Icon(Icons.remove, color: FullTankColors.blue, size: 13),
+            const Icon(Icons.remove, color: Color(0xFF1E40AF), size: 13),
             const SizedBox(width: 4),
             Text(
               trailing,
-              style: const TextStyle(color: FullTankColors.inkMid, fontSize: 7),
+              style: const TextStyle(color: Color(0xFF4A5568), fontSize: 10.15),
             ),
           ],
         ),
@@ -130,16 +130,16 @@ class _LineChartPainter extends CustomPainter {
         Offset(left + i * step, top + values[i] * (bottom - top)),
     ];
     final grid = Paint()
-      ..color = FullTankColors.line
+      ..color = Color(0xFFE2E8F0)
       ..strokeWidth = 1;
     for (final y in [top, (top + bottom) / 2, bottom])
       canvas.drawLine(Offset(left, y), Offset(right, y), grid);
     final area = Path()..moveTo(points.first.dx, bottom);
     for (final point in points) area.lineTo(point.dx, point.dy);
     area.lineTo(points.last.dx, bottom);
-    canvas.drawPath(area, Paint()..color = FullTankColors.blueSoft);
+    canvas.drawPath(area, Paint()..color = Color(0xFFEFF4FF));
     final line = Paint()
-      ..color = FullTankColors.blue
+      ..color = Color(0xFF1E40AF)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
     final path = Path()..moveTo(points.first.dx, points.first.dy);
@@ -152,7 +152,7 @@ class _LineChartPainter extends CustomPainter {
         canvas,
         ['MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO'][i],
         Offset(left - 5 + i * step, bottom + 10),
-        i == 5 ? FullTankColors.navy : FullTankColors.inkSoft,
+        i == 5 ? Color(0xFF1A202C) : Color(0xFF94A3B8),
         6,
       );
     _drawText(
@@ -161,23 +161,17 @@ class _LineChartPainter extends CustomPainter {
       Offset(points.last.dx - 26, points.last.dy - 17),
       Colors.white,
       6,
-      background: FullTankColors.navy,
+      background: Color(0xFF1A202C),
     );
-    _drawText(canvas, '74k', Offset(0, top - 4), FullTankColors.inkSoft, 6);
+    _drawText(canvas, '74k', Offset(0, top - 4), Color(0xFF94A3B8), 6);
     _drawText(
       canvas,
       '37k',
       Offset(0, (top + bottom) / 2 - 4),
-      FullTankColors.inkSoft,
+      Color(0xFF94A3B8),
       6,
     );
-    _drawText(
-      canvas,
-      '0',
-      Offset(left - 2, bottom - 8),
-      FullTankColors.inkSoft,
-      6,
-    );
+    _drawText(canvas, '0', Offset(left - 2, bottom - 8), Color(0xFF94A3B8), 6);
   }
 
   @override

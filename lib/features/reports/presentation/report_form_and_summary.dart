@@ -10,7 +10,7 @@ class _BarChartPainter extends CustomPainter {
     final groupWidth = (right - left) / 6;
     final barWidth = groupWidth * .22;
     final grid = Paint()
-      ..color = FullTankColors.line
+      ..color = Color(0xFFE2E8F0)
       ..strokeWidth = 1;
     for (final y in [top, (top + bottom) / 2, bottom])
       canvas.drawLine(Offset(left, y), Offset(right, y), grid);
@@ -22,7 +22,7 @@ class _BarChartPainter extends CustomPainter {
       final previousHeight = (bottom - top) * previous[i] / 65;
       canvas.drawRect(
         Rect.fromLTWH(x, bottom - currentHeight, barWidth, currentHeight),
-        Paint()..color = FullTankColors.blue,
+        Paint()..color = Color(0xFF1E40AF),
       );
       canvas.drawRect(
         Rect.fromLTWH(
@@ -37,7 +37,7 @@ class _BarChartPainter extends CustomPainter {
         canvas,
         ['MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO'][i],
         Offset(left + i * groupWidth + groupWidth * .13, bottom + 10),
-        FullTankColors.inkSoft,
+        Color(0xFF94A3B8),
         6,
       );
     }
@@ -45,14 +45,14 @@ class _BarChartPainter extends CustomPainter {
       canvas,
       'Anterior',
       Offset(left, size.height - 18),
-      FullTankColors.inkMid,
+      Color(0xFF4A5568),
       6,
     );
     _drawText(
       canvas,
       'Actual',
       Offset(left + 42, size.height - 18),
-      FullTankColors.inkMid,
+      Color(0xFF4A5568),
       6,
     );
     canvas.drawRect(
@@ -61,7 +61,7 @@ class _BarChartPainter extends CustomPainter {
     );
     canvas.drawRect(
       Rect.fromLTWH(left + 33, size.height - 20, 5, 5),
-      Paint()..color = FullTankColors.blue,
+      Paint()..color = Color(0xFF1E40AF),
     );
   }
 
@@ -82,7 +82,7 @@ void _drawText(
       text: text,
       style: TextStyle(
         color: color,
-        fontSize: size * _uiTextScale,
+        fontSize: size * 1.45,
         fontWeight: FontWeight.w700,
       ),
     ),
@@ -92,8 +92,8 @@ void _drawText(
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromLTWH(
-          offset.dx - 4 * _uiTextScale,
-          offset.dy - 3 * _uiTextScale,
+          offset.dx - 5.8,
+          offset.dy - 4.35,
           painter.width + 8,
           painter.height + 6,
         ),
@@ -111,8 +111,8 @@ class _FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) => Text(
     text,
     style: const TextStyle(
-      color: FullTankColors.inkMid,
-      fontSize: 7,
+      color: Color(0xFF4A5568),
+      fontSize: 10.15,
       fontWeight: FontWeight.w800,
     ),
   );
@@ -127,7 +127,7 @@ class _SelectField extends StatelessWidget {
     margin: const EdgeInsets.only(top: 6),
     padding: const EdgeInsets.symmetric(horizontal: 13),
     decoration: BoxDecoration(
-      color: FullTankColors.card,
+      color: Color(0xFFF3F4F6),
       borderRadius: BorderRadius.circular(9),
     ),
     child: Row(
@@ -136,16 +136,12 @@ class _SelectField extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-            color: FullTankColors.navyMid,
-            fontSize: 8,
+            color: Color(0xFF2D3748),
+            fontSize: 11.6,
             fontWeight: FontWeight.w700,
           ),
         ),
-        const Icon(
-          Icons.chevron_right,
-          size: 13,
-          color: FullTankColors.inkSoft,
-        ),
+        const Icon(Icons.chevron_right, size: 13, color: Color(0xFF94A3B8)),
       ],
     ),
   );
@@ -158,7 +154,7 @@ class _SummaryCard extends StatelessWidget {
     margin: const EdgeInsets.only(top: 6),
     padding: const EdgeInsets.all(13),
     decoration: BoxDecoration(
-      color: FullTankColors.blueSoft,
+      color: Color(0xFFEFF4FF),
       borderRadius: BorderRadius.circular(10),
     ),
     child: const Column(
@@ -168,15 +164,15 @@ class _SummaryCard extends StatelessWidget {
           children: [
             Icon(
               Icons.description_outlined,
-              color: FullTankColors.blue,
+              color: Color(0xFF1E40AF),
               size: 14,
             ),
             SizedBox(width: 6),
             Text(
               'Reporte de ventas · AGO 2026',
               style: TextStyle(
-                color: FullTankColors.navy,
-                fontSize: 8,
+                color: Color(0xFF1A202C),
+                fontSize: 11.6,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -185,7 +181,7 @@ class _SummaryCard extends StatelessWidget {
         SizedBox(height: 2),
         Text(
           'PDF · A4 · 2 páginas · 980 KB',
-          style: TextStyle(color: FullTankColors.inkMid, fontSize: 7),
+          style: TextStyle(color: Color(0xFF4A5568), fontSize: 10.15),
         ),
         SizedBox(height: 10),
         Row(

@@ -9,33 +9,28 @@ class AccountPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final showBottomBar =
         variant == AccountVariant.overview || variant == AccountVariant.help;
-    return MediaQuery(
-      data: MediaQuery.of(
-        context,
-      ).copyWith(textScaler: const TextScaler.linear(_uiTextScale)),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
-            child: switch (variant) {
-              AccountVariant.overview => const _AccountOverview(),
-              AccountVariant.profile => const _EditProfile(),
-              AccountVariant.security => const _SecuritySettings(),
-              AccountVariant.notifications => const _NotificationSettings(),
-              AccountVariant.help => _HelpSettings(
-                onSignOut: () async {
-                  await ref.read(authControllerProvider.notifier).signOut();
-                  if (context.mounted) context.go('/login');
-                },
-              ),
-            },
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
+          child: switch (variant) {
+            AccountVariant.overview => const _AccountOverview(),
+            AccountVariant.profile => const _EditProfile(),
+            AccountVariant.security => const _SecuritySettings(),
+            AccountVariant.notifications => const _NotificationSettings(),
+            AccountVariant.help => _HelpSettings(
+              onSignOut: () async {
+                await ref.read(authControllerProvider.notifier).signOut();
+                if (context.mounted) context.go('/login');
+              },
+            ),
+          },
         ),
-        bottomNavigationBar: showBottomBar
-            ? const FullTankBottomNav(active: 4)
-            : null,
       ),
+      bottomNavigationBar: showBottomBar
+          ? const FullTankBottomNav(active: 4)
+          : null,
     );
   }
 }
@@ -63,8 +58,8 @@ class _AccountOverview extends StatelessWidget {
             child: _QuickAccess(
               icon: Icons.edit_outlined,
               label: 'Editar\nperfil',
-              color: FullTankColors.blue,
-              softColor: FullTankColors.blueSoft,
+              color: Color(0xFF1E40AF),
+              softColor: Color(0xFFEFF4FF),
               onTap: () => context.push('/account/profile'),
             ),
           ),
@@ -105,14 +100,14 @@ class _ProfileSummary extends StatelessWidget {
         height: 47,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: FullTankColors.navy,
+          color: Color(0xFF1A202C),
           borderRadius: BorderRadius.circular(13),
         ),
         child: const Text(
           'PE',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 14,
+            fontSize: 20.3,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -125,16 +120,16 @@ class _ProfileSummary extends StatelessWidget {
             Text(
               'PetroAndes',
               style: TextStyle(
-                color: FullTankColors.navy,
-                fontSize: 15,
+                color: Color(0xFF1A202C),
+                fontSize: 21.75,
                 fontWeight: FontWeight.w800,
               ),
             ),
             Text(
               'Solicitante · Operaciones de flota',
               style: TextStyle(
-                color: FullTankColors.inkMid,
-                fontSize: 9,
+                color: Color(0xFF4A5568),
+                fontSize: 13.05,
                 fontWeight: FontWeight.w500,
               ),
             ),

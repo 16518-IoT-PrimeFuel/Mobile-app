@@ -8,25 +8,20 @@ class ReportsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const active = 3;
-    return MediaQuery(
-      data: MediaQuery.of(
-        context,
-      ).copyWith(textScaler: const TextScaler.linear(_uiTextScale)),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
-            child: switch (variant) {
-              ReportVariant.consumption => const _ConsumptionReport(),
-              ReportVariant.sales => const _SalesReport(),
-              ReportVariant.export => const _ExportReport(),
-              ReportVariant.industry => const _IndustryReport(),
-            },
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
+          child: switch (variant) {
+            ReportVariant.consumption => const _ConsumptionReport(),
+            ReportVariant.sales => const _SalesReport(),
+            ReportVariant.export => const _ExportReport(),
+            ReportVariant.industry => const _IndustryReport(),
+          },
         ),
-        bottomNavigationBar: FullTankBottomNav(active: active),
       ),
+      bottomNavigationBar: FullTankBottomNav(active: active),
     );
   }
 }
@@ -176,7 +171,7 @@ class _ReportFrame extends StatelessWidget {
             onPressed: () => context.pop(),
             icon: const Icon(Icons.arrow_back, size: 18),
             style: IconButton.styleFrom(
-              backgroundColor: FullTankColors.card,
+              backgroundColor: Color(0xFFF3F4F6),
               fixedSize: const Size(47, 47),
               padding: EdgeInsets.zero,
             ),
@@ -189,8 +184,8 @@ class _ReportFrame extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    color: FullTankColors.navy,
-                    fontSize: 19,
+                    color: Color(0xFF1A202C),
+                    fontSize: 27.55,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -.5,
                   ),
@@ -198,8 +193,8 @@ class _ReportFrame extends StatelessWidget {
                 Text(
                   subtitle,
                   style: const TextStyle(
-                    color: FullTankColors.inkMid,
-                    fontSize: 9.5,
+                    color: Color(0xFF4A5568),
+                    fontSize: 13.775,
                   ),
                 ),
               ],
@@ -210,7 +205,7 @@ class _ReportFrame extends StatelessWidget {
               onPressed: () {},
               icon: Icon(trailing, size: 16),
               style: IconButton.styleFrom(
-                backgroundColor: FullTankColors.card,
+                backgroundColor: Color(0xFFF3F4F6),
                 fixedSize: const Size(42, 42),
                 padding: EdgeInsets.zero,
               ),
