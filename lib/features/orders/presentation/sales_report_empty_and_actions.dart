@@ -102,7 +102,7 @@ class _SalesAction extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: _OrangeButton(
-              label: '⌄  Download PDF',
+              label: '⌄  Descargar PDF',
               onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Reporte listo para descargar')),
               ),
@@ -148,7 +148,7 @@ class _SalesAction extends StatelessWidget {
       child: _OrangeButton(
         label: state == SalesReportState.generating
             ? '◷  Generando reporte...'
-            : '▥  Generate Report  →',
+            : '▥  Generar reporte  →',
         onPressed: state == SalesReportState.generating ? null : onGenerate,
       ),
     );
@@ -167,10 +167,10 @@ class _OrangeButton extends StatelessWidget {
       disabledBackgroundColor: const Color(0xFFFFD0A7),
       foregroundColor: _ink,
       disabledForegroundColor: Colors.white,
-      minimumSize: const Size.fromHeight(34),
+      minimumSize: Size.fromHeight(52 * _uiScale),
       shape: const StadiumBorder(),
       elevation: 2,
-      textStyle: const TextStyle(fontSize: 9, fontWeight: FontWeight.w800),
+      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
     ),
     child: Text(label),
   );
@@ -193,8 +193,8 @@ class _SmallButton extends StatelessWidget {
     style: OutlinedButton.styleFrom(
       foregroundColor: _ink,
       side: const BorderSide(color: _line),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      textStyle: const TextStyle(fontSize: 7, fontWeight: FontWeight.w700),
+      padding: EdgeInsets.symmetric(vertical: 10 * _uiScale),
+      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
     ),
   );
 }

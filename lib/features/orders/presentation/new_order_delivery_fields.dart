@@ -30,7 +30,7 @@ class _TankCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'DESTINATION',
+                'DESTINO',
                 style: TextStyle(
                   color: _muted,
                   fontSize: 6,
@@ -38,7 +38,7 @@ class _TankCard extends StatelessWidget {
                 ),
               ),
               Text(
-                'Diesel Tank A-102',
+                'Tanque de diésel A-102',
                 style: TextStyle(
                   color: _ink,
                   fontSize: 9,
@@ -46,7 +46,7 @@ class _TankCard extends StatelessWidget {
                 ),
               ),
               Text(
-                'Sector 4 · Current 12% (1,440 L)',
+                'Sector 4 · Actual 12% (1,440 L)',
                 style: TextStyle(color: _muted, fontSize: 7),
               ),
             ],
@@ -55,7 +55,7 @@ class _TankCard extends StatelessWidget {
         TextButton(
           onPressed: () {},
           child: const Text(
-            'Change',
+            'Cambiar',
             style: TextStyle(
               color: _blue,
               fontSize: 8,
@@ -98,7 +98,7 @@ class _SupplierCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'FAVORITE',
+                'PROVEEDOR PREFERIDO',
                 style: TextStyle(
                   color: _muted,
                   fontSize: 6,
@@ -121,7 +121,7 @@ class _SupplierCard extends StatelessWidget {
           ),
         ),
         const Text(
-          '• Available',
+          '• Disponible',
           style: TextStyle(
             color: _green,
             fontSize: 8,
@@ -187,7 +187,7 @@ class _ConnectionErrorCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Connection error',
+                'Error de conexión',
                 style: TextStyle(
                   color: _red,
                   fontSize: 8,
@@ -195,7 +195,7 @@ class _ConnectionErrorCard extends StatelessWidget {
                 ),
               ),
               Text(
-                "Couldn't reach the supplier service. Check your connection and retry.",
+                'No pudimos conectar con el proveedor. Revisa tu conexión e inténtalo de nuevo.',
                 style: TextStyle(color: _muted, fontSize: 7, height: 1.3),
               ),
             ],
@@ -204,7 +204,7 @@ class _ConnectionErrorCard extends StatelessWidget {
         TextButton(
           onPressed: onRetry,
           child: const Text(
-            '↻ Retry',
+            '↻ Reintentar',
             style: TextStyle(
               color: _red,
               fontSize: 8,

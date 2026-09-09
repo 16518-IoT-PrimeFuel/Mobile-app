@@ -19,27 +19,37 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
     final body = widget.history ? _historyBody(context) : _activeBody(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-          child: body,
+    return withFullTankUiScale(
+      context,
+      Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(
+              20 * _uiScale,
+              14 * _uiScale,
+              20 * _uiScale,
+              28 * _uiScale,
+            ),
+            child: body,
+          ),
         ),
+        floatingActionButton:
+            !widget.history && _state == OrderPageState.content
+            ? Semantics(
+                button: true,
+                label: 'Crear nuevo pedido',
+                child: FloatingActionButton(
+                  onPressed: () => context.push('/orders/new'),
+                  tooltip: 'Crear nuevo pedido',
+                  backgroundColor: _orange,
+                  foregroundColor: _ink,
+                  child: const Icon(Icons.add),
+                ),
+              )
+            : null,
+        bottomNavigationBar: const FullTankBottomNav(active: 1),
       ),
-      floatingActionButton: !widget.history && _state == OrderPageState.content
-          ? Semantics(
-              button: true,
-              label: 'Crear nuevo pedido',
-              child: FloatingActionButton(
-                onPressed: () => context.push('/orders/new'),
-                tooltip: 'Crear nuevo pedido',
-                backgroundColor: _orange,
-                foregroundColor: _ink,
-                child: const Icon(Icons.add),
-              ),
-            )
-          : null,
     );
   }
 
@@ -58,7 +68,7 @@ class _OrdersPageState extends State<OrdersPage> {
             _HeaderIcon(
               icon: Icons.search,
               label: 'Buscar en historial',
-              onTap: () {},
+              onTap: () => context.push('/orders/search'),
             ),
             _HeaderIcon(
               icon: Icons.download_outlined,
@@ -102,12 +112,12 @@ class _OrdersPageState extends State<OrdersPage> {
             _HeaderIcon(
               icon: Icons.search,
               label: 'Buscar pedidos',
-              onTap: () {},
+              onTap: () => context.push('/orders/search'),
             ),
             _HeaderIcon(
               icon: Icons.tune,
               label: 'Filtrar pedidos',
-              onTap: () {},
+              onTap: () => context.push('/orders/filter'),
             ),
           ],
         ),
@@ -115,10 +125,15 @@ class _OrdersPageState extends State<OrdersPage> {
         const _ActiveMetrics(),
         const SizedBox(height: 12),
         _Filters(
-          selected: _filter == 'Todos' ? 'All 5' : _filter,
-          labels: const ['All 5', 'Pendiente 1', 'Aprobado 1', 'En tránsito 1'],
+          selected: _filter == 'Todos' ? 'Todos 5' : _filter,
+          labels: const [
+            'Todos 5',
+            'Pendiente 1',
+            'Aprobado 1',
+            'En tránsito 1',
+          ],
           onSelected: (value) =>
-              setState(() => _filter = value == 'All 5' ? 'Todos' : value),
+              setState(() => _filter = value == 'Todos 5' ? 'Todos' : value),
         ),
         const SizedBox(height: 10),
         _ActiveOrders(filter: _filter),
@@ -134,7 +149,11 @@ class _OrdersPageState extends State<OrdersPage> {
             title: title,
             subtitle: subtitle,
             actions: [
-              _HeaderIcon(icon: Icons.search, label: 'Buscar', onTap: () {}),
+              _HeaderIcon(
+                icon: Icons.search,
+                label: 'Buscar',
+                onTap: () => context.push('/orders/search'),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -150,7 +169,11 @@ class _OrdersPageState extends State<OrdersPage> {
         title: history ? 'Historial' : 'Mis pedidos',
         subtitle: history ? 'Sin registros' : 'Sin pedidos activos',
         actions: [
-          _HeaderIcon(icon: Icons.search, label: 'Buscar', onTap: () {}),
+          _HeaderIcon(
+            icon: Icons.search,
+            label: 'Buscar',
+            onTap: () => context.push('/orders/search'),
+          ),
         ],
       ),
       const SizedBox(height: 88),
@@ -209,7 +232,7 @@ class _OrdersPageState extends State<OrdersPage> {
       const _ErrorIllustration(),
       const SizedBox(height: 16),
       const Text(
-        'CONNECTION ERROR',
+        'ERROR DE CONEXIÓN',
         style: TextStyle(color: _red, fontSize: 8, fontWeight: FontWeight.w800),
       ),
       const SizedBox(height: 8),

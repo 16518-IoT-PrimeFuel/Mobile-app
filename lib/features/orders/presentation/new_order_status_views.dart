@@ -32,7 +32,7 @@ class _CreationLoading extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Checking availability',
+                  'Comprobando disponibilidad',
                   style: TextStyle(
                     color: _ink,
                     fontSize: 8,
@@ -40,7 +40,7 @@ class _CreationLoading extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Verifying supplier fleet · route ETA · fuel stock',
+                  'Verificando flota · ETA de ruta · stock',
                   style: TextStyle(color: _muted, fontSize: 7),
                 ),
               ],
@@ -49,15 +49,15 @@ class _CreationLoading extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 14),
-      const _FieldCaption(label: 'FUEL TYPE'),
+      const _FieldCaption(label: 'TIPO DE COMBUSTIBLE'),
       const SizedBox(height: 6),
       const _LoadingGrid(),
       const SizedBox(height: 12),
-      const _FieldCaption(label: 'ASSOCIATED TANK'),
+      const _FieldCaption(label: 'TANQUE ASOCIADO'),
       const SizedBox(height: 6),
       const _LoadingBlock(height: 52),
       const SizedBox(height: 12),
-      const _FieldCaption(label: 'VALIDATING SUPPLIER'),
+      const _FieldCaption(label: 'VALIDANDO PROVEEDOR'),
       const SizedBox(height: 6),
       const _LoadingBlock(height: 52),
     ],
@@ -111,7 +111,7 @@ class _SuccessDetails extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'ORDER NUMBER',
+                    'NÚMERO DE PEDIDO',
                     style: TextStyle(
                       color: _subtle,
                       fontSize: 7,
@@ -150,17 +150,17 @@ class _SuccessDetails extends StatelessWidget {
         const Align(
           alignment: Alignment.centerRight,
           child: Text(
-            '▧ Copy ID',
+            '▧ Copiar ID',
             style: TextStyle(color: _muted, fontSize: 7),
           ),
         ),
         const Divider(height: 14, color: _line),
-        const _SuccessRow(label: 'Fuel type', value: 'Diesel · ULSD B5'),
-        const _SuccessRow(label: 'Quantity', value: '6,000 L'),
-        const _SuccessRow(label: 'Tank', value: 'A-102 · Sector 4'),
-        const _SuccessRow(label: 'Supplier', value: 'Global Fuel Corp'),
-        const _SuccessRow(label: 'Required', value: 'Sep 5, 08:00 – 12:00'),
-        const _SuccessRow(label: 'Estimated', value: '\$9,274.80'),
+        const _SuccessRow(label: 'Combustible', value: 'Diésel · ULSD B5'),
+        const _SuccessRow(label: 'Cantidad', value: '6,000 L'),
+        const _SuccessRow(label: 'Tanque', value: 'A-102 · Sector 4'),
+        const _SuccessRow(label: 'Proveedor', value: 'Global Fuel Corp'),
+        const _SuccessRow(label: 'Requerido', value: '5 sep, 08:00 – 12:00'),
+        const _SuccessRow(label: 'Estimado', value: '\$9,274.80'),
       ],
     ),
   );

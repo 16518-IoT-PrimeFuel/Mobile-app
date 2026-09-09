@@ -41,15 +41,15 @@ class _ActiveMetrics extends StatelessWidget {
   Widget build(BuildContext context) => const Row(
     children: [
       Expanded(
-        child: _MetricCard(label: 'PENDING', value: '01', accent: _orange),
+        child: _MetricCard(label: 'PENDIENTES', value: '01', accent: _orange),
       ),
       SizedBox(width: 6),
       Expanded(
-        child: _MetricCard(label: 'APPROVED', value: '01', accent: _blue),
+        child: _MetricCard(label: 'APROBADOS', value: '01', accent: _blue),
       ),
       SizedBox(width: 6),
       Expanded(
-        child: _MetricCard(label: 'TRANSIT', value: '01', accent: _orange),
+        child: _MetricCard(label: 'EN TRÁNSITO', value: '01', accent: _orange),
       ),
     ],
   );

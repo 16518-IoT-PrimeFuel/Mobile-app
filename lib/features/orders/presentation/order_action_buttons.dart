@@ -10,8 +10,8 @@ class _DarkButton extends StatelessWidget {
     style: ElevatedButton.styleFrom(
       backgroundColor: _ink,
       foregroundColor: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      textStyle: const TextStyle(fontSize: 7, fontWeight: FontWeight.w700),
+      padding: EdgeInsets.symmetric(vertical: 10 * _uiScale),
+      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
     ),
     child: Text(label),
   );
@@ -28,8 +28,8 @@ class _LightButton extends StatelessWidget {
     style: OutlinedButton.styleFrom(
       foregroundColor: _blue,
       side: const BorderSide(color: Color(0xFFBCD4FF)),
-      padding: const EdgeInsets.symmetric(vertical: 11),
-      textStyle: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700),
+      padding: EdgeInsets.symmetric(vertical: 12 * _uiScale),
+      textStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700),
     ),
   );
 }

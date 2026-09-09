@@ -9,13 +9,22 @@ class OrderDetailPage extends StatelessWidget {
   final bool history;
   final String orderId;
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.white,
-    body: SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-        child: history ? _historyDetail(context) : _activeDetail(context),
+  Widget build(BuildContext context) => withFullTankUiScale(
+    context,
+    Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(
+            20 * _uiScale,
+            14 * _uiScale,
+            20 * _uiScale,
+            28 * _uiScale,
+          ),
+          child: history ? _historyDetail(context) : _activeDetail(context),
+        ),
       ),
+      bottomNavigationBar: const FullTankBottomNav(active: 1),
     ),
   );
 
@@ -60,7 +69,7 @@ class OrderDetailPage extends StatelessWidget {
           Expanded(
             child: _FuelMetric(
               label: 'COMBUSTIBLE',
-              value: 'Diesel',
+              value: 'Diésel',
               detail: 'ULSD B5',
               icon: Icons.opacity_outlined,
               color: _blue,
@@ -103,7 +112,7 @@ class OrderDetailPage extends StatelessWidget {
     children: [
       _Header(
         title: '#${orderId.replaceFirst('#', '')}',
-        subtitle: 'Order tracking',
+        subtitle: 'Seguimiento del pedido',
         actions: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
@@ -126,7 +135,7 @@ class OrderDetailPage extends StatelessWidget {
       const _CurrentStateBanner(),
       const SizedBox(height: 13),
       const Text(
-        'DELIVERY TIMELINE',
+        'SEGUIMIENTO DE ENTREGA',
         style: TextStyle(
           color: _subtle,
           fontSize: 8,
@@ -138,11 +147,11 @@ class OrderDetailPage extends StatelessWidget {
       const _DeliveryTimeline(),
       const SizedBox(height: 12),
       const _DetailTable(
-        title: 'ORDER DETAILS',
+        title: 'DETALLES DEL PEDIDO',
         rows: [
-          ('Fuel type', 'Diesel · ULSD B5'),
-          ('Quantity', '6,000 L'),
-          ('Supplier', 'Global Fuel Corp'),
+          ('Combustible', 'Diésel · ULSD B5'),
+          ('Cantidad', '6,000 L'),
+          ('Proveedor', 'Global Fuel Corp'),
         ],
       ),
       const SizedBox(height: 14),
@@ -150,13 +159,16 @@ class OrderDetailPage extends StatelessWidget {
         children: [
           Expanded(
             child: _LightButton(
-              label: 'Support',
+              label: 'Soporte',
               onTap: () => context.push('/account/help'),
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _OrangeButton(label: 'Live tracking  →', onPressed: () {}),
+            child: _OrangeButton(
+              label: 'Seguimiento en vivo  →',
+              onPressed: () {},
+            ),
           ),
         ],
       ),
@@ -178,27 +190,41 @@ class NewOrderPage extends StatefulWidget {
 
 class _NewOrderPageState extends State<NewOrderPage> {
   late NewOrderState _state = widget.initialState;
-  String _fuel = 'Diesel';
+  String _fuel = 'Diésel';
 
   @override
   Widget build(BuildContext context) {
     final loading = _state == NewOrderState.loading;
     final success = _state == NewOrderState.success;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
-          child: success
-              ? _successBody(context)
-              : _formBody(context, loading: loading),
+    return withFullTankUiScale(
+      context,
+      Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(
+              20 * _uiScale,
+              14 * _uiScale,
+              20 * _uiScale,
+              96 * _uiScale,
+            ),
+            child: success
+                ? _successBody(context)
+                : _formBody(context, loading: loading),
+          ),
         ),
-      ),
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
-          child: _NewOrderAction(state: _state, onCreate: _create),
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+                child: _NewOrderAction(state: _state, onCreate: _create),
+              ),
+            ),
+            const FullTankBottomNav(active: 1),
+          ],
         ),
       ),
     );
@@ -210,12 +236,12 @@ class _NewOrderPageState extends State<NewOrderPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _Header(
-          title: loading ? 'Creating order' : 'New Order',
+          title: loading ? 'Creando pedido' : 'Nuevo pedido',
           subtitle: loading
-              ? 'Validating supplier availability...'
+              ? 'Validando disponibilidad del proveedor...'
               : error
-              ? 'Fix the errors below to continue'
-              : 'Register a new fuel request',
+              ? 'Corrige los errores para continuar'
+              : 'Registra una nueva solicitud de combustible',
           actions: [
             if (loading)
               _HeaderIcon(
@@ -242,7 +268,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
                   setState(() => _state = NewOrderState.defaultState),
             ),
           if (error) const SizedBox(height: 10),
-          _FieldCaption(label: 'FUEL TYPE', error: error),
+          _FieldCaption(label: 'TIPO DE COMBUSTIBLE', error: error),
           const SizedBox(height: 6),
           _FuelGrid(
             selected: _fuel,
@@ -256,7 +282,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
           if (error) ...[
             const SizedBox(height: 5),
             const Text(
-              'ⓘ  Select a fuel type to continue.',
+              'ⓘ  Selecciona un combustible para continuar.',
               style: TextStyle(
                 color: _red,
                 fontSize: 8,
@@ -269,15 +295,15 @@ class _NewOrderPageState extends State<NewOrderPage> {
           const SizedBox(height: 6),
           const _MoneyCard(),
           const SizedBox(height: 12),
-          const _FieldCaption(label: 'ASSOCIATED TANK'),
+          const _FieldCaption(label: 'TANQUE ASOCIADO'),
           const SizedBox(height: 6),
           const _TankCard(),
           const SizedBox(height: 12),
-          const _FieldCaption(label: 'PREFERRED SUPPLIER'),
+          const _FieldCaption(label: 'PROVEEDOR PREFERIDO'),
           const SizedBox(height: 6),
           const _SupplierCard(),
           const SizedBox(height: 12),
-          const _FieldCaption(label: 'DELIVERY WINDOW'),
+          const _FieldCaption(label: 'HORARIO DE ENTREGA'),
           const SizedBox(height: 6),
           const _DeliveryField(),
         ],

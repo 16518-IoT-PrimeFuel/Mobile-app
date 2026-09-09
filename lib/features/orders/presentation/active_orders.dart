@@ -9,7 +9,7 @@ class _ActiveOrders extends StatelessWidget {
       _ActiveOrderData(
         id: '#FT-88421',
         status: 'En tránsito',
-        fuel: 'Diesel · ULSD B5',
+        fuel: 'Diésel · ULSD B5',
         quantity: '6,000 L',
         supplier: 'Global Fuel Corp',
         eta: '~1h 20m',
@@ -18,19 +18,19 @@ class _ActiveOrders extends StatelessWidget {
       _ActiveOrderData(
         id: '#FT-88418',
         status: 'Aprobado',
-        fuel: 'Gasoline · 95',
+        fuel: 'Gasolina · 95',
         quantity: '3,200 L',
         supplier: 'Midwest PetroLink',
-        eta: 'Dispatch 14:00',
+        eta: 'Despacho 14:00',
         color: _blue,
       ),
       _ActiveOrderData(
         id: '#FT-88415',
         status: 'Pendiente',
-        fuel: 'Diesel · ULSD B5',
+        fuel: 'Diésel · ULSD B5',
         quantity: '4,000 L',
         supplier: 'Global Fuel Corp',
-        eta: 'Pending approval',
+        eta: 'Pendiente de aprobación',
         color: _orange,
       ),
     ];
@@ -126,14 +126,14 @@ class _ActiveOrderCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: _MiniData(
-                          label: 'FUEL',
+                          label: 'COMBUSTIBLE',
                           value: data.fuel,
                           icon: Icons.opacity_outlined,
                         ),
                       ),
                       Expanded(
                         child: _MiniData(
-                          label: 'QUANTITY',
+                          label: 'CANTIDAD',
                           value: data.quantity,
                           icon: Icons.local_gas_station_outlined,
                         ),
@@ -144,7 +144,7 @@ class _ActiveOrderCard extends StatelessWidget {
                   Row(
                     children: [
                       const Text(
-                        'SUPPLIER',
+                        'PROVEEDOR',
                         style: TextStyle(
                           color: _subtle,
                           fontSize: 6,
@@ -188,7 +188,7 @@ class _ActiveOrderCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 7),
                 const Text(
-                  'Track  ›',
+                  'Ver  ›',
                   style: TextStyle(
                     color: _blue,
                     fontSize: 7,

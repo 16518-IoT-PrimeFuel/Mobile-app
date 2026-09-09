@@ -28,10 +28,10 @@ class _FuelGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const fuels = [
-      ('Diesel', 'ULSD B5', Icons.opacity_outlined),
-      ('Gasoline', '95 · 97', Icons.receipt_long_outlined),
-      ('LPG', 'Propano', Icons.local_fire_department_outlined),
-      ('Other', 'Custom', Icons.storage_outlined),
+      ('Diésel', 'ULSD B5', Icons.opacity_outlined),
+      ('Gasolina', '95 · 97', Icons.receipt_long_outlined),
+      ('GLP', 'Propano', Icons.local_fire_department_outlined),
+      ('Otro', 'Personalizado', Icons.storage_outlined),
     ];
     return Container(
       padding: const EdgeInsets.all(6),

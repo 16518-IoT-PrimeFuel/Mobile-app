@@ -83,7 +83,7 @@ class _CurrentStateBanner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'CURRENT STATE',
+              'ESTADO ACTUAL',
               style: TextStyle(
                 color: _orange,
                 fontSize: 7,
@@ -100,7 +100,7 @@ class _CurrentStateBanner extends StatelessWidget {
               ),
             ),
             Text(
-              'ETA en ~1h 20m · 12 km remaining',
+              'ETA en ~1h 20m · 12 km restantes',
               style: TextStyle(color: _muted, fontSize: 7),
             ),
           ],
@@ -117,19 +117,19 @@ class _DeliveryTimeline extends StatelessWidget {
     children: [
       _TimelineStep(
         label: 'Pedido creado',
-        detail: 'Today, 09:12',
+        detail: 'Hoy, 09:12',
         color: _orange,
         icon: Icons.check,
       ),
       _TimelineStep(
         label: 'Aprobado',
-        detail: 'Today, 09:34',
+        detail: 'Hoy, 09:34',
         color: _blue,
         icon: Icons.check,
       ),
       _TimelineStep(
         label: 'En tránsito',
-        detail: 'Today, 10:05',
+        detail: 'Hoy, 10:05',
         color: _muted,
         icon: Icons.local_shipping_outlined,
       ),

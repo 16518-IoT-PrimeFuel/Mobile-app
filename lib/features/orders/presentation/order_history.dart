@@ -94,7 +94,7 @@ class _HistoryOrders extends StatelessWidget {
       const _OrderData(
         id: '#FT-88421',
         status: 'En tránsito',
-        fuel: 'Diesel · ULSD B5',
+        fuel: 'Diésel · ULSD B5',
         amount: '6,000 L',
         supplier: 'Global Fuel Corp',
         total: 'S/ 9,274.80',

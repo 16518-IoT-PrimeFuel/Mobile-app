@@ -4,6 +4,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_app/features/orders/presentation/order_pages.dart';
 
 void main() {
+  testWidgets('orders flows keep the shared bottom navigation', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: OrdersPage(history: false)),
+    );
+    await tester.pump();
+    expect(find.text('Pedidos'), findsOneWidget);
+
+    await tester.pumpWidget(const MaterialApp(home: SalesReportPage()));
+    await tester.pump();
+    expect(find.text('Reportes'), findsOneWidget);
+  });
+
   testWidgets('renders order list states and detail', (tester) async {
     for (final state in OrderPageState.values) {
       await tester.pumpWidget(
@@ -56,14 +68,14 @@ void main() {
     expect(find.text('Reportes de ventas'), findsOneWidget);
     expect(find.text('S/ 148,320'), findsOneWidget);
 
-    final generate = find.textContaining('Generate Report');
+    final generate = find.textContaining('Generar reporte');
     await tester.ensureVisible(generate);
     await tester.tap(generate);
     await tester.pump();
     expect(find.text('Generando reporte'), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 800));
     expect(find.text('Reporte listo'), findsWidgets);
-    expect(find.textContaining('Download PDF'), findsOneWidget);
+    expect(find.textContaining('Descargar PDF'), findsOneWidget);
   });
 
   testWidgets('renders new order states and creates an order', (tester) async {
@@ -77,11 +89,11 @@ void main() {
 
     await tester.pumpWidget(const MaterialApp(home: NewOrderPage()));
     await tester.pump();
-    expect(find.text('New Order'), findsOneWidget);
-    expect(find.text('Create Order  →'), findsOneWidget);
-    await tester.tap(find.text('Create Order  →'));
+    expect(find.text('Nuevo pedido'), findsOneWidget);
+    expect(find.text('Crear pedido  →'), findsOneWidget);
+    await tester.tap(find.text('Crear pedido  →'));
     await tester.pump();
-    expect(find.text('Creating order'), findsOneWidget);
+    expect(find.text('Creando pedido'), findsOneWidget);
     await tester.pump(const Duration(milliseconds: 800));
     expect(find.text('Pedido creado\ncorrectamente'), findsOneWidget);
     expect(find.text('#FT-88421'), findsOneWidget);

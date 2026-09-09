@@ -35,7 +35,7 @@ class _ErrorMeta extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'ERROR CODE',
+              'CÓDIGO DE ERROR',
               style: TextStyle(
                 color: _subtle,
                 fontSize: 6,
@@ -56,7 +56,7 @@ class _ErrorMeta extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              'LAST SYNC',
+              'ÚLTIMA SINCRONIZACIÓN',
               style: TextStyle(
                 color: _subtle,
                 fontSize: 6,
@@ -64,7 +64,7 @@ class _ErrorMeta extends StatelessWidget {
               ),
             ),
             Text(
-              history ? 'hace 3 min' : '2 min ago',
+              history ? 'hace 3 min' : 'hace 2 min',
               style: TextStyle(
                 color: _muted,
                 fontSize: 8,
