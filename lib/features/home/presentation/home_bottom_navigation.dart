@@ -63,7 +63,7 @@ class _BottomNav extends FullTankBottomNav {
 class FullTankBottomNav extends StatelessWidget {
   const FullTankBottomNav({required this.active, this.onTap, super.key});
 
-  final int active;
+  final int? active;
   final ValueChanged<int>? onTap;
 
   @override

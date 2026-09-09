@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:mobile_app/domain/auth/auth_repository.dart';
 import 'package:mobile_app/domain/auth/auth_session.dart';
@@ -11,12 +12,21 @@ void main() {
   testWidgets('renders every requested Home-related screen', (tester) async {
     final screens = <({Widget screen, String title})>[
       (screen: const HomePage(role: HomeRole.requester), title: 'PetroAndes'),
-      (screen: const HomePage(role: HomeRole.provider), title: 'FuelMex Logistics'),
+      (
+        screen: const HomePage(role: HomeRole.provider),
+        title: 'FuelMex Logistics',
+      ),
       (screen: const GlobalSearchPage(), title: 'Búsqueda global'),
       (screen: const QuickActionsPage(), title: 'Acciones rápidas'),
       (screen: const ActivityCenterPage(), title: 'Actividad'),
-      (screen: const EmptyHomePage(role: HomeRole.requester), title: 'No hay pedidos activos'),
-      (screen: const EmptyHomePage(role: HomeRole.provider), title: 'No hay operaciones hoy'),
+      (
+        screen: const EmptyHomePage(role: HomeRole.requester),
+        title: 'No hay pedidos activos',
+      ),
+      (
+        screen: const EmptyHomePage(role: HomeRole.provider),
+        title: 'No hay operaciones hoy',
+      ),
     ];
 
     for (final entry in screens) {
@@ -31,6 +41,33 @@ void main() {
       await tester.pump();
       expect(find.text(entry.title), findsOneWidget);
     }
+  });
+
+  testWidgets('tank summary opens inventory', (tester) async {
+    final router = GoRouter(
+      initialLocation: '/home',
+      routes: [
+        GoRoute(
+          path: '/home',
+          builder: (_, __) => const HomePage(role: HomeRole.requester),
+        ),
+        GoRoute(
+          path: '/inventory',
+          builder: (_, __) => const Text('Inventario abierto'),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(child: MaterialApp.router(routerConfig: router)),
+    );
+    await tester.pump();
+    final tank = find.text('TANQUE PRINCIPAL · A-102 DIÉSEL');
+    await tester.ensureVisible(tank);
+    await tester.tap(tank);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Inventario abierto'), findsOneWidget);
   });
 }
 

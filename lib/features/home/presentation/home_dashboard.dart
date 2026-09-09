@@ -18,7 +18,7 @@ class HomePage extends ConsumerWidget {
             alignment: Alignment.topCenter,
             transform: Matrix4.diagonal3Values(1, 1.02, 1),
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 56),
               child: role == HomeRole.provider
                   ? _ProviderHome(onSignOut: () => _signOut(context, ref))
                   : _RequesterHome(
@@ -165,7 +165,7 @@ class _ProviderHome extends StatelessWidget {
         const SizedBox(height: 8),
         _ActionRequiredCard(
           color: _amber,
-          priority: 'HIGH',
+          priority: 'ALTA',
           reference: '#FT-2091',
           title: 'Asignar vehículo — Transportes Delta',
           detail: 'Bahía 2 · programado hoy 3:00 PM',

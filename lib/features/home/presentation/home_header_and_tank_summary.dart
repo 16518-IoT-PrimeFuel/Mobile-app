@@ -131,99 +131,113 @@ class _TankSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Semantics(
+      button: true,
+      label: 'Abrir inventario del tanque principal',
+      child: InkWell(
+        onTap: () => context.push('/inventory'),
+        borderRadius: BorderRadius.circular(14 * _uiTextScale),
+        child: _Card(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('TANQUE PRINCIPAL · A-102 DIÉSEL', style: _labelStyle),
-                    SizedBox(height: 3),
-                    Row(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 15,
-                          color: FullTankColors.inkMid,
+                        Text(
+                          'TANQUE PRINCIPAL · A-102 DIÉSEL',
+                          style: _labelStyle,
                         ),
-                        SizedBox(width: 4),
-                        Text('Norte · Sector 4', style: _metaStyle),
+                        SizedBox(height: 3),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              size: 15,
+                              color: FullTankColors.inkMid,
+                            ),
+                            SizedBox(width: 4),
+                            Text('Norte · Sector 4', style: _metaStyle),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                  _TinyPill(
+                    label: 'ACTIVO',
+                    color: _green,
+                    softColor: _greenSoft,
+                    dot: true,
+                  ),
+                ],
               ),
-              _TinyPill(
-                label: 'ACTIVO',
-                color: _green,
-                softColor: _greenSoft,
-                dot: true,
-              ),
-            ],
-          ),
-          const SizedBox(height: 21),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('NIVEL DE COMBUSTIBLE', style: _labelStyle),
-                    SizedBox(height: 1),
-                    Text.rich(
-                      TextSpan(
-                        text: '68',
-                        style: TextStyle(
-                          color: FullTankColors.navy,
-                          fontSize: 42,
-                          height: 1,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -1.8,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: '%',
-                            style: TextStyle(fontSize: 19, letterSpacing: -.5),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 3),
-                    Text('10.200 / 15.000 L', style: _metaStyle),
-                  ],
-                ),
-              ),
-              const _VerticalLevelBar(value: .68),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Divider(height: 1, color: FullTankColors.line),
-          const SizedBox(height: 13),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _TinyPill(
-                label: 'Normal',
-                color: _green,
-                softColor: _greenSoft,
-                dot: true,
-              ),
-              const Row(
+              const SizedBox(height: 21),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Icon(Icons.sync, size: 15, color: FullTankColors.inkSoft),
-                  SizedBox(width: 5),
-                  Text('Actualizado hace 5 min', style: _metaStyle),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('NIVEL DE COMBUSTIBLE', style: _labelStyle),
+                        SizedBox(height: 1),
+                        Text.rich(
+                          TextSpan(
+                            text: '68',
+                            style: TextStyle(
+                              color: FullTankColors.navy,
+                              fontSize: 42,
+                              height: 1,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -1.8,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: '%',
+                                style: TextStyle(
+                                  fontSize: 19,
+                                  letterSpacing: -.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 3),
+                        Text('10.200 / 15.000 L', style: _metaStyle),
+                      ],
+                    ),
+                  ),
+                  const _VerticalLevelBar(value: .68),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Divider(height: 1, color: FullTankColors.line),
+              const SizedBox(height: 13),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _TinyPill(
+                    label: 'Normal',
+                    color: _green,
+                    softColor: _greenSoft,
+                    dot: true,
+                  ),
+                  const Row(
+                    children: [
+                      Icon(Icons.sync, size: 15, color: FullTankColors.inkSoft),
+                      SizedBox(width: 5),
+                      Text('Actualizado hace 5 min', style: _metaStyle),
+                    ],
+                  ),
                 ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
