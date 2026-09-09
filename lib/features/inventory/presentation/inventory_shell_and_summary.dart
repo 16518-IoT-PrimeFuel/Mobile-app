@@ -35,10 +35,10 @@ class _InventoryShell extends StatelessWidget {
                 if (back) ...[
                   Semantics(
                     button: true,
-                    label: 'Go back',
+                    label: 'Volver',
                     child: IconButton(
                       onPressed: () => context.go('/inventory'),
-                      tooltip: 'Go back',
+                      tooltip: 'Volver',
                       icon: const Icon(Icons.arrow_back, size: 18),
                       style: IconButton.styleFrom(
                         backgroundColor: FullTankColors.card,
@@ -95,7 +95,7 @@ class _InventoryShell extends StatelessWidget {
       ),
     ),
     bottomNavigationBar: hasBottomNav
-        ? const FullTankBottomNav(active: 1)
+        ? const FullTankBottomNav(active: null)
         : null,
   );
 }

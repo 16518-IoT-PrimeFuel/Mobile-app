@@ -18,7 +18,7 @@ class TankDetailPage extends StatelessWidget {
         right: _LivePill(),
         children: [
           _GaugeCard(tank: tank, status: status),
-          _InventorySectionLabel('Real-time telemetry'),
+          _InventorySectionLabel('Telemetría en tiempo real'),
           SizedBox(height: 8 * _uiScale),
           GridView.count(
             crossAxisCount: 2,
@@ -30,27 +30,27 @@ class TankDetailPage extends StatelessWidget {
             children: const [
               _MetricCard(
                 icon: Icons.thermostat_outlined,
-                label: 'Temperature',
+                label: 'Temperatura',
                 value: '24.3',
                 unit: '°C',
               ),
               _MetricCard(
                 icon: Icons.speed_outlined,
-                label: 'Pressure',
+                label: 'Presión',
                 value: '1.02',
                 unit: 'atm',
                 trend: '+0.4%',
               ),
               _MetricCard(
                 icon: Icons.water_drop_outlined,
-                label: 'Flow rate',
+                label: 'Flujo',
                 value: '0.8',
-                unit: 'L/h out',
+                unit: 'L/h salida',
                 status: _TankStatus.warning,
               ),
               _MetricCard(
                 icon: Icons.access_time,
-                label: 'ETA to empty',
+                label: 'Tiempo al vacío',
                 value: '~4h',
                 status: _TankStatus.critical,
               ),
@@ -60,7 +60,7 @@ class TankDetailPage extends StatelessWidget {
           _SensorCard(tank: tank),
           SizedBox(height: 14 * _uiScale),
           _PrimaryButton(
-            label: 'Request Restock',
+            label: 'Solicitar reposición',
             onPressed: () => context.go('/inventory/restock/${tank.id}'),
           ),
         ],
@@ -82,39 +82,39 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
   static const _alerts = [
     _AlertData(
       tankId: 'A-102',
-      tank: 'Diesel Tank A-102',
+      tank: 'Tanque diésel A-102',
       level: 12,
       status: _TankStatus.critical,
-      location: 'North Yard · Sector 4',
-      time: '2 min ago',
-      eta: '~4h to depletion',
+      location: 'Patio norte · Sector 4',
+      time: 'hace 2 min',
+      eta: '~4 h hasta agotarse',
     ),
     _AlertData(
       tankId: 'G-11',
-      tank: 'Propane G-11',
+      tank: 'Propano G-11',
       level: 18,
       status: _TankStatus.critical,
       location: 'Sector 6',
-      time: '5 min ago',
-      eta: '~7h to depletion',
+      time: 'hace 5 min',
+      eta: '~7 h hasta agotarse',
     ),
     _AlertData(
       tankId: 'C-12',
-      tank: 'Lube Tank C-12',
+      tank: 'Tanque de lubricante C-12',
       level: 35,
       status: _TankStatus.warning,
       location: 'Sector 9',
-      time: '12 min ago',
-      eta: '~2 days',
+      time: 'hace 12 min',
+      eta: '~2 días',
     ),
     _AlertData(
       tankId: 'B-07',
-      tank: 'Coolant B-07',
+      tank: 'Refrigerante B-07',
       level: 28,
       status: _TankStatus.warning,
       location: 'Sector 1',
-      time: '18 min ago',
-      eta: '~1.5 days',
+      time: 'hace 18 min',
+      eta: '~1.5 días',
     ),
   ];
 
@@ -134,12 +134,12 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
     return _withInventoryScale(
       context,
       _InventoryShell(
-        title: 'Alerts',
-        subtitle: '4 active · 2 critical',
+        title: 'Alertas',
+        subtitle: '4 activas · 2 críticas',
         back: true,
         right: _HeaderIconButton(
           icon: Icons.filter_alt_outlined,
-          label: 'Filter alerts',
+          label: 'Filtrar alertas',
           onPressed: () async {
             final selected = await showModalBottomSheet<String>(
               context: context,
@@ -149,14 +149,14 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
                   children: [
                     const ListTile(
                       title: Text(
-                        'Filter alerts',
+                        'Filtrar alertas',
                         style: TextStyle(fontWeight: FontWeight.w800),
                       ),
                     ),
                     for (final option in const [
-                      ('all', 'All alerts'),
-                      ('critical', 'Critical only'),
-                      ('warning', 'Warnings only'),
+                      ('all', 'Todas las alertas'),
+                      ('critical', 'Solo críticas'),
+                      ('warning', 'Solo advertencias'),
                     ])
                       ListTile(
                         leading: Icon(
@@ -185,7 +185,7 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
         children: [
           _CriticalBanner(count: _alerts.where((a) => a.level < 20).length),
           if (critical.isNotEmpty) ...[
-            _AlertGroupLabel(label: 'Critical', status: _TankStatus.critical),
+            _AlertGroupLabel(label: 'Críticas', status: _TankStatus.critical),
             ...critical.map(
               (alert) => Padding(
                 padding: EdgeInsets.only(bottom: 8 * _uiScale),
@@ -195,7 +195,10 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
             SizedBox(height: 8 * _uiScale),
           ],
           if (warning.isNotEmpty) ...[
-            _AlertGroupLabel(label: 'Warning', status: _TankStatus.warning),
+            _AlertGroupLabel(
+              label: 'Advertencias',
+              status: _TankStatus.warning,
+            ),
             ...warning.map(
               (alert) => Padding(
                 padding: EdgeInsets.only(bottom: 8 * _uiScale),

@@ -79,7 +79,7 @@ class _TankRow extends StatelessWidget {
     final color = _statusColor(status);
     return Semantics(
       button: true,
-      label: '${tank.name}, ${tank.level} percent, ${_statusLabel(status)}',
+      label: '${tank.name}, ${tank.level} por ciento, ${_statusLabel(status)}',
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => context.go('/inventory/tank/${tank.id}'),
@@ -157,7 +157,7 @@ class _TankRow extends StatelessWidget {
                         ),
                         SizedBox(width: 3 * _uiScale),
                         Text(
-                          'LIVE',
+                          'EN VIVO',
                           style: TextStyle(
                             color: status == _TankStatus.critical
                                 ? color

@@ -21,7 +21,7 @@ class _TargetTankCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('TARGET TANK', style: _metaLabelStyle),
+                const Text('TANQUE DESTINO', style: _metaLabelStyle),
                 Text(
                   tank.name,
                   style: const TextStyle(
@@ -217,7 +217,7 @@ class _QuantityPicker extends StatelessWidget {
               onPressed: onQuickPick,
             ),
             _QuickQuantity(
-              label: 'Fill up',
+              label: 'Llenar',
               value: maxQuantity,
               onPressed: onQuickPick,
             ),

@@ -27,69 +27,69 @@ class TankData {
 const _tanks = [
   TankData(
     id: 'A-102',
-    name: 'Diesel Tank A-102',
-    location: 'North Yard · Sector 4',
-    type: 'Diesel',
+    name: 'Tanque diésel A-102',
+    location: 'Patio norte · Sector 4',
+    type: 'Diésel',
     level: 12,
     capacity: 12000,
     current: 1440,
     sensor: 'SN-4492',
-    updated: '2 min ago',
+    updated: 'hace 2 min',
   ),
   TankData(
     id: 'B-05',
-    name: 'Water Tank B-05',
+    name: 'Tanque de agua B-05',
     location: 'Sector 1',
-    type: 'Coolant',
+    type: 'Refrigerante',
     level: 84,
     capacity: 50000,
     current: 42000,
     sensor: 'SN-2011',
-    updated: '1 min ago',
+    updated: 'hace 1 min',
   ),
   TankData(
     id: 'C-12',
-    name: 'Lube Tank C-12',
+    name: 'Tanque de lubricante C-12',
     location: 'Sector 9',
-    type: 'Lubricant',
+    type: 'Lubricante',
     level: 35,
     capacity: 8000,
     current: 2800,
     sensor: 'SN-8821',
-    updated: '3 min ago',
+    updated: 'hace 3 min',
   ),
   TankData(
     id: 'A-204',
-    name: 'Diesel Tank A-204',
-    location: 'North Yard · Sector 4',
-    type: 'Diesel',
+    name: 'Tanque diésel A-204',
+    location: 'Patio norte · Sector 4',
+    type: 'Diésel',
     level: 72,
     capacity: 15000,
     current: 10800,
     sensor: 'SN-4499',
-    updated: 'just now',
+    updated: 'ahora mismo',
   ),
   TankData(
     id: 'G-11',
-    name: 'Propane G-11',
+    name: 'Propano G-11',
     location: 'Sector 6',
-    type: 'Propane',
+    type: 'Propano',
     level: 18,
     capacity: 6000,
     current: 1080,
     sensor: 'SN-9002',
-    updated: '5 min ago',
+    updated: 'hace 5 min',
   ),
   TankData(
     id: 'D-4',
-    name: 'Hydraulic D-4',
+    name: 'Hidráulico D-4',
     location: 'Sector 2',
-    type: 'Hydraulic',
+    type: 'Hidráulico',
     level: 58,
     capacity: 4000,
     current: 2320,
     sensor: 'SN-3355',
-    updated: '4 min ago',
+    updated: 'hace 4 min',
   ),
 ];
 
@@ -100,14 +100,14 @@ TankData _tankForId(String id) {
   if (id == 'B-07') {
     return const TankData(
       id: 'B-07',
-      name: 'Coolant B-07',
+      name: 'Refrigerante B-07',
       location: 'Sector 1',
-      type: 'Coolant',
+      type: 'Refrigerante',
       level: 28,
       capacity: 50000,
       current: 14000,
       sensor: 'SN-2018',
-      updated: '18 min ago',
+      updated: 'hace 18 min',
     );
   }
   return _tanks.first;
@@ -132,9 +132,9 @@ Color _statusSoft(_TankStatus status) => switch (status) {
 };
 
 String _statusLabel(_TankStatus status) => switch (status) {
-  _TankStatus.critical => 'Critical',
-  _TankStatus.warning => 'Warning',
-  _TankStatus.optimal => 'Optimal',
+  _TankStatus.critical => 'Crítico',
+  _TankStatus.warning => 'Advertencia',
+  _TankStatus.optimal => 'Óptimo',
 };
 
 String _liters(int value) => value.toString().replaceAllMapped(
@@ -165,14 +165,14 @@ class _InventoryPageState extends State<InventoryPage> {
     return _withInventoryScale(
       context,
       _InventoryShell(
-        title: 'Inventory',
-        subtitle: '${_tanks.length} tanks · live IoT',
+        title: 'Inventario',
+        subtitle: '${_tanks.length} tanques · IoT en vivo',
         right: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             _HeaderIconButton(
               icon: Icons.search,
-              label: 'Search tanks',
+              label: 'Buscar tanques',
               onPressed: () async {
                 final selected = await showSearch<TankData?>(
                   context: context,
@@ -185,7 +185,7 @@ class _InventoryPageState extends State<InventoryPage> {
             ),
             _HeaderIconButton(
               icon: Icons.notifications_none_outlined,
-              label: 'View alerts',
+              label: 'Ver alertas',
               badge: 3,
               onPressed: () => context.go('/inventory/alerts'),
             ),
@@ -196,7 +196,7 @@ class _InventoryPageState extends State<InventoryPage> {
             children: [
               Expanded(
                 child: _SummaryMetric(
-                  label: 'Critical',
+                  label: 'Crítico',
                   count: _tanks.where((tank) => tank.level < 20).length,
                   status: _TankStatus.critical,
                 ),
@@ -204,7 +204,7 @@ class _InventoryPageState extends State<InventoryPage> {
               SizedBox(width: 8 * _uiScale),
               Expanded(
                 child: _SummaryMetric(
-                  label: 'Warning',
+                  label: 'Advertencia',
                   count: _tanks
                       .where((tank) => tank.level >= 20 && tank.level < 40)
                       .length,
@@ -214,7 +214,7 @@ class _InventoryPageState extends State<InventoryPage> {
               SizedBox(width: 8 * _uiScale),
               Expanded(
                 child: _SummaryMetric(
-                  label: 'Optimal',
+                  label: 'Óptimo',
                   count: _tanks.where((tank) => tank.level >= 40).length,
                   status: _TankStatus.optimal,
                 ),
@@ -227,27 +227,27 @@ class _InventoryPageState extends State<InventoryPage> {
             child: Row(
               children: [
                 _FilterChip(
-                  label: 'All',
+                  label: 'Todos',
                   count: _tanks.length,
                   selected: _filter == 'all',
                   onPressed: () => setState(() => _filter = 'all'),
                 ),
                 _FilterChip(
-                  label: 'Critical',
+                  label: 'Crítico',
                   count: 2,
                   status: _TankStatus.critical,
                   selected: _filter == 'critical',
                   onPressed: () => setState(() => _filter = 'critical'),
                 ),
                 _FilterChip(
-                  label: 'Warning',
+                  label: 'Advertencia',
                   count: 1,
                   status: _TankStatus.warning,
                   selected: _filter == 'warning',
                   onPressed: () => setState(() => _filter = 'warning'),
                 ),
                 _FilterChip(
-                  label: 'Optimal',
+                  label: 'Óptimo',
                   count: 3,
                   status: _TankStatus.optimal,
                   selected: _filter == 'optimal',

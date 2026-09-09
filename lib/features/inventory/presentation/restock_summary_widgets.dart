@@ -110,7 +110,7 @@ class _OrderSummary extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'ORDER SUMMARY',
+          'RESUMEN DEL PEDIDO',
           style: TextStyle(
             color: FullTankColors.blue,
             fontSize: 10.5,
@@ -120,11 +120,11 @@ class _OrderSummary extends StatelessWidget {
         ),
         SizedBox(height: 8 * _uiScale),
         _SummaryRow(
-          label: 'Fuel (${_liters(quantity)} L × \$1.28)',
+          label: 'Combustible (${_liters(quantity)} L × \$1.28)',
           value: _money(fuel),
         ),
-        _SummaryRow(label: 'Urgent delivery', value: '+ ${_money(delivery)}'),
-        _SummaryRow(label: 'Taxes', value: _money(taxes)),
+        _SummaryRow(label: 'Entrega urgente', value: '+ ${_money(delivery)}'),
+        _SummaryRow(label: 'Impuestos', value: _money(taxes)),
         SizedBox(height: 6 * _uiScale),
         Divider(height: 1, color: FullTankColors.blue.withAlpha(56)),
         SizedBox(height: 6 * _uiScale),
@@ -132,7 +132,7 @@ class _OrderSummary extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              'Estimated total',
+              'Total estimado',
               style: TextStyle(
                 color: FullTankColors.navy,
                 fontSize: 15,

@@ -50,7 +50,7 @@ class _CriticalBanner extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '$count tanks below 20% capacity',
+                '$count tanques por debajo del 20% de capacidad',
                 style: const TextStyle(
                   color: _red,
                   fontSize: 13,
@@ -58,7 +58,7 @@ class _CriticalBanner extends StatelessWidget {
                 ),
               ),
               const Text(
-                'Immediate restock recommended',
+                'Se recomienda reponer de inmediato',
                 style: TextStyle(color: FullTankColors.inkMid, fontSize: 11),
               ),
             ],
@@ -133,7 +133,7 @@ class _AlertRow extends StatelessWidget {
     return Semantics(
       button: true,
       label:
-          '${alert.tank}, ${alert.level} percent, ${_statusLabel(alert.status)}',
+          '${alert.tank}, ${alert.level} por ciento, ${_statusLabel(alert.status)}',
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => context.go('/inventory/tank/${alert.tankId}'),
@@ -275,7 +275,7 @@ class _AlertRow extends StatelessWidget {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: const Text(
-                              'Restock',
+                              'Solicitar reposición',
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w700,

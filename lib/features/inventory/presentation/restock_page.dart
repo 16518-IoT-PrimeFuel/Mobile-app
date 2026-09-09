@@ -55,22 +55,22 @@ class _RestockPageState extends State<RestockPage> {
     return _withInventoryScale(
       context,
       _InventoryShell(
-        title: 'Restock Request',
-        subtitle: 'Order fuel replenishment',
+        title: 'Solicitud de reposición',
+        subtitle: 'Solicita combustible para el tanque',
         back: true,
         hasBottomNav: false,
         children: [
           _TargetTankCard(tank: _tank),
           SizedBox(height: 18 * _uiScale),
-          _InventorySectionLabel('Priority'),
+          _InventorySectionLabel('Prioridad'),
           SizedBox(height: 8 * _uiScale),
           Row(
             children: [
               Expanded(
                 child: _PriorityChip(
                   id: 'urgent',
-                  label: 'Urgent',
-                  detail: 'ETA < 4h',
+                  label: 'Urgente',
+                  detail: '< 4 h',
                   status: _TankStatus.critical,
                   selected: _priority == 'urgent',
                   onPressed: () => setState(() => _priority = 'urgent'),
@@ -80,8 +80,8 @@ class _RestockPageState extends State<RestockPage> {
               Expanded(
                 child: _PriorityChip(
                   id: 'standard',
-                  label: 'Standard',
-                  detail: 'ETA 24h',
+                  label: 'Estándar',
+                  detail: '24 h',
                   status: _TankStatus.warning,
                   selected: _priority == 'standard',
                   onPressed: () => setState(() => _priority = 'standard'),
@@ -91,8 +91,8 @@ class _RestockPageState extends State<RestockPage> {
               Expanded(
                 child: _PriorityChip(
                   id: 'planned',
-                  label: 'Planned',
-                  detail: '3–5 days',
+                  label: 'Programada',
+                  detail: '3–5 días',
                   status: _TankStatus.optimal,
                   selected: _priority == 'planned',
                   onPressed: () => setState(() => _priority = 'planned'),
@@ -106,9 +106,9 @@ class _RestockPageState extends State<RestockPage> {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              const _InventorySectionLabel('Quantity'),
+              const _InventorySectionLabel('Cantidad'),
               Text(
-                'max ${_liters(maxQuantity)} L',
+                'máx. ${_liters(maxQuantity)} L',
                 style: const TextStyle(
                   color: FullTankColors.inkSoft,
                   fontSize: 10.5,
@@ -133,7 +133,7 @@ class _RestockPageState extends State<RestockPage> {
           SizedBox(height: 18 * _uiScale),
           const _FormInfoRow(
             icon: Icons.local_gas_station_outlined,
-            label: 'Preferred supplier',
+            label: 'Proveedor preferido',
             value: 'Global Fuel Corp',
           ),
           SizedBox(height: 12 * _uiScale),
@@ -142,15 +142,15 @@ class _RestockPageState extends State<RestockPage> {
               const Expanded(
                 child: _FormInfoRow(
                   icon: Icons.calendar_today_outlined,
-                  label: 'Delivery date',
-                  value: 'Today',
+                  label: 'Fecha de entrega',
+                  value: 'Hoy',
                 ),
               ),
               SizedBox(width: 10 * _uiScale),
               const Expanded(
                 child: _FormInfoRow(
                   icon: Icons.access_time,
-                  label: 'Window',
+                  label: 'Horario',
                   value: '14:00 – 17:00',
                 ),
               ),
@@ -159,8 +159,8 @@ class _RestockPageState extends State<RestockPage> {
           SizedBox(height: 12 * _uiScale),
           const _FormInfoRow(
             icon: Icons.send_outlined,
-            label: 'Notes for driver',
-            value: 'Gate B, ask for shift supervisor',
+            label: 'Notas para el conductor',
+            value: 'Puerta B, preguntar al supervisor de turno',
           ),
           SizedBox(height: 18 * _uiScale),
           _OrderSummary(
@@ -172,16 +172,18 @@ class _RestockPageState extends State<RestockPage> {
           ),
           SizedBox(height: 18 * _uiScale),
           _PrimaryButton(
-            label: 'Submit Request',
+            label: 'Enviar solicitud',
             onPressed: () {
               if (_quantity <= 0) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Enter a quantity first.')),
+                  const SnackBar(
+                    content: Text('Ingresa una cantidad primero.'),
+                  ),
                 );
                 return;
               }
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Request ready to submit.')),
+                const SnackBar(content: Text('Solicitud lista para enviar.')),
               );
             },
           ),
@@ -196,7 +198,7 @@ class _RestockPageState extends State<RestockPage> {
               ),
               SizedBox(width: 5),
               Text(
-                'Encrypted transmission · SLA-guaranteed',
+                'Transmisión cifrada · SLA garantizado',
                 style: TextStyle(color: FullTankColors.inkSoft, fontSize: 11),
               ),
             ],

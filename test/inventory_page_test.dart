@@ -9,15 +9,15 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: InventoryPage()));
     await tester.pump();
 
-    expect(find.text('Inventory'), findsOneWidget);
-    expect(find.text('6 tanks · live IoT'), findsOneWidget);
-    expect(find.text('Diesel Tank A-102'), findsOneWidget);
+    expect(find.text('Inventario'), findsOneWidget);
+    expect(find.text('6 tanques · IoT en vivo'), findsOneWidget);
+    expect(find.text('Tanque diésel A-102'), findsOneWidget);
 
-    await tester.tap(find.text('Critical'));
+    await tester.tap(find.text('Crítico'));
     await tester.pump();
 
-    expect(find.text('Diesel Tank A-102'), findsOneWidget);
-    expect(find.text('Water Tank B-05'), findsNothing);
+    expect(find.text('Tanque diésel A-102'), findsOneWidget);
+    expect(find.text('Tanque de agua B-05'), findsNothing);
   });
 
   testWidgets('tank rows navigate to tank detail', (tester) async {
@@ -45,7 +45,7 @@ void main() {
       '/inventory/tank/A-102',
     );
     expect(find.text('A-102'), findsOneWidget);
-    expect(find.text('REAL-TIME TELEMETRY'), findsOneWidget);
+    expect(find.text('TELEMETRÍA EN TIEMPO REAL'), findsOneWidget);
   });
 
   testWidgets('alerts expose restock navigation', (tester) async {
@@ -66,7 +66,7 @@ void main() {
 
     await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
-    final restockButton = find.text('Restock').first;
+    final restockButton = find.text('Solicitar reposición').first;
     await tester.ensureVisible(restockButton);
     await tester.tap(restockButton);
     await tester.pumpAndSettle();
@@ -75,7 +75,7 @@ void main() {
       router.routerDelegate.currentConfiguration.uri.path,
       '/inventory/restock/A-102',
     );
-    expect(find.text('Restock Request'), findsOneWidget);
-    expect(find.text('Submit Request'), findsOneWidget);
+    expect(find.text('Solicitud de reposición'), findsOneWidget);
+    expect(find.text('Enviar solicitud'), findsOneWidget);
   });
 }

@@ -122,13 +122,13 @@ class _GaugeCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _GaugeMetric(label: 'Current', value: tank.current),
+            _GaugeMetric(label: 'Actual', value: tank.current),
             Container(
               width: 1,
               height: 36 * _uiScale,
               color: FullTankColors.line,
             ),
-            _GaugeMetric(label: 'Capacity', value: tank.capacity),
+            _GaugeMetric(label: 'Capacidad', value: tank.capacity),
           ],
         ),
       ],

@@ -136,7 +136,7 @@ class _SensorCard extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            const Text('LAST UPDATE', style: _metaLabelStyle),
+            const Text('ÚLTIMA ACTUALIZACIÓN', style: _metaLabelStyle),
             Text(
               tank.updated,
               style: const TextStyle(
