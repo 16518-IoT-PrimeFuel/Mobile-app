@@ -24,7 +24,7 @@ class _HomeHeader extends StatelessWidget {
           width: 47,
           height: 47,
           decoration: BoxDecoration(
-            color: FullTankColors.navy,
+            color: Color(0xFF1A202C),
             borderRadius: BorderRadius.circular(13),
           ),
           alignment: Alignment.center,
@@ -32,7 +32,7 @@ class _HomeHeader extends StatelessWidget {
             initials,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 12,
+              fontSize: 17.4,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -45,8 +45,8 @@ class _HomeHeader extends StatelessWidget {
               Text(
                 eyebrow,
                 style: const TextStyle(
-                  color: FullTankColors.inkSoft,
-                  fontSize: 8.5,
+                  color: Color(0xFF94A3B8),
+                  fontSize: 12.325,
                   fontWeight: FontWeight.w700,
                   letterSpacing: .25,
                 ),
@@ -55,8 +55,8 @@ class _HomeHeader extends StatelessWidget {
               Text(
                 name,
                 style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 15,
+                  color: Color(0xFF1A202C),
+                  fontSize: 21.75,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -.2,
                 ),
@@ -64,8 +64,8 @@ class _HomeHeader extends StatelessWidget {
               Text(
                 subtitle,
                 style: const TextStyle(
-                  color: FullTankColors.inkMid,
-                  fontSize: 9.5,
+                  color: Color(0xFF4A5568),
+                  fontSize: 13.775,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -87,16 +87,22 @@ class _HomeHeader extends StatelessWidget {
           itemBuilder: (context) => const [
             PopupMenuItem(
               value: 'notifications',
-              child: Text('Notificaciones'),
+              child: Text('Notificaciones', style: TextStyle(fontSize: 20.3)),
             ),
-            PopupMenuItem(value: 'activity', child: Text('Actividad')),
-            PopupMenuItem(value: 'logout', child: Text('Cerrar sesión')),
+            PopupMenuItem(
+              value: 'activity',
+              child: Text('Actividad', style: TextStyle(fontSize: 20.3)),
+            ),
+            PopupMenuItem(
+              value: 'logout',
+              child: Text('Cerrar sesión', style: TextStyle(fontSize: 20.3)),
+            ),
           ],
           icon: Container(
             width: 47,
             height: 47,
             decoration: BoxDecoration(
-              color: FullTankColors.card,
+              color: Color(0xFFF3F4F6),
               borderRadius: BorderRadius.circular(13),
             ),
             child: Stack(
@@ -136,7 +142,7 @@ class _TankSummaryCard extends StatelessWidget {
       label: 'Abrir inventario del tanque principal',
       child: InkWell(
         onTap: () => context.push('/inventory'),
-        borderRadius: BorderRadius.circular(14 * _uiTextScale),
+        borderRadius: BorderRadius.circular(20.3),
         child: _Card(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +164,7 @@ class _TankSummaryCard extends StatelessWidget {
                             Icon(
                               Icons.location_on_outlined,
                               size: 15,
-                              color: FullTankColors.inkMid,
+                              color: Color(0xFF4A5568),
                             ),
                             SizedBox(width: 4),
                             Text('Norte · Sector 4', style: _metaStyle),
@@ -189,8 +195,8 @@ class _TankSummaryCard extends StatelessWidget {
                           TextSpan(
                             text: '68',
                             style: TextStyle(
-                              color: FullTankColors.navy,
-                              fontSize: 42,
+                              color: Color(0xFF1A202C),
+                              fontSize: 60.9,
                               height: 1,
                               fontWeight: FontWeight.w800,
                               letterSpacing: -1.8,
@@ -199,7 +205,7 @@ class _TankSummaryCard extends StatelessWidget {
                               TextSpan(
                                 text: '%',
                                 style: TextStyle(
-                                  fontSize: 19,
+                                  fontSize: 27.55,
                                   letterSpacing: -.5,
                                 ),
                               ),
@@ -215,7 +221,7 @@ class _TankSummaryCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              const Divider(height: 1, color: FullTankColors.line),
+              const Divider(height: 1, color: Color(0xFFE2E8F0)),
               const SizedBox(height: 13),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -228,7 +234,7 @@ class _TankSummaryCard extends StatelessWidget {
                   ),
                   const Row(
                     children: [
-                      Icon(Icons.sync, size: 15, color: FullTankColors.inkSoft),
+                      Icon(Icons.sync, size: 15, color: Color(0xFF94A3B8)),
                       SizedBox(width: 5),
                       Text('Actualizado hace 5 min', style: _metaStyle),
                     ],

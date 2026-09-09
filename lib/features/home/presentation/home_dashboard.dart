@@ -8,28 +8,21 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authControllerProvider).session;
-    return _withHomeUiScale(
-      context,
-      Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          top: false,
-          child: Transform(
-            alignment: Alignment.topCenter,
-            transform: Matrix4.diagonal3Values(1, 1.02, 1),
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 56),
-              child: role == HomeRole.provider
-                  ? _ProviderHome(onSignOut: () => _signOut(context, ref))
-                  : _RequesterHome(
-                      guest: session?.token == 'guest',
-                      onSignOut: () => _signOut(context, ref),
-                    ),
-            ),
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 56),
+          child: role == HomeRole.provider
+              ? _ProviderHome(onSignOut: () => _signOut(context, ref))
+              : _RequesterHome(
+                  guest: session?.token == 'guest',
+                  onSignOut: () => _signOut(context, ref),
+                ),
         ),
-        bottomNavigationBar: const FullTankBottomNav(active: 0),
       ),
+      bottomNavigationBar: const FullTankBottomNav(active: 0),
     );
   }
 
@@ -68,8 +61,8 @@ class _RequesterHome extends StatelessWidget {
               child: _QuickAction(
                 icon: Icons.note_add_outlined,
                 label: 'Crear\npedido',
-                color: FullTankColors.blue,
-                softColor: FullTankColors.blueSoft,
+                color: Color(0xFF1E40AF),
+                softColor: Color(0xFFEFF4FF),
                 onTap: () => context.push('/home/quick-actions'),
               ),
             ),
@@ -114,7 +107,10 @@ class _RequesterHome extends StatelessWidget {
           Center(
             child: TextButton(
               onPressed: onSignOut,
-              child: const Text('Salir de vista previa'),
+              child: const Text(
+                'Salir de vista previa',
+                style: TextStyle(fontSize: 20.3),
+              ),
             ),
           ),
         ],

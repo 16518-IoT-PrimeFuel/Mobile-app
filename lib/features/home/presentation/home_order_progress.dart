@@ -63,8 +63,8 @@ class _OrderStatusCard extends StatelessWidget {
                     Text(
                       'Ver detalles',
                       style: TextStyle(
-                        color: FullTankColors.blue,
-                        fontSize: 9,
+                        color: Color(0xFF1E40AF),
+                        fontSize: 13.05,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -72,7 +72,7 @@ class _OrderStatusCard extends StatelessWidget {
                     Icon(
                       Icons.chevron_right,
                       size: 16,
-                      color: FullTankColors.blue,
+                      color: Color(0xFF1E40AF),
                     ),
                   ],
                 ),
@@ -82,17 +82,17 @@ class _OrderStatusCard extends StatelessWidget {
           const SizedBox(height: 14),
           const _OrderProgress(),
           const SizedBox(height: 13),
-          const Divider(height: 1, color: FullTankColors.line),
+          const Divider(height: 1, color: Color(0xFFE2E8F0)),
           const SizedBox(height: 10),
           const Row(
             children: [
-              Icon(Icons.schedule, size: 13, color: FullTankColors.inkMid),
+              Icon(Icons.schedule, size: 13, color: Color(0xFF4A5568)),
               SizedBox(width: 4),
               Text(
                 'ETA Hoy · 4:30 PM',
                 style: TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 10,
+                  color: Color(0xFF1A202C),
+                  fontSize: 14.5,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -125,13 +125,11 @@ class _OrderProgress extends StatelessWidget {
         color: _green,
         active: true,
       ),
-      const Expanded(
-        child: Divider(color: FullTankColors.line, thickness: 1.5),
-      ),
+      const Expanded(child: Divider(color: Color(0xFFE2E8F0), thickness: 1.5)),
       _ProgressNode(
         label: 'ENTREGADO',
         icon: Icons.flag_outlined,
-        color: FullTankColors.inkSoft,
+        color: Color(0xFF94A3B8),
         active: false,
       ),
     ],
@@ -168,8 +166,8 @@ class _ProgressNode extends StatelessWidget {
       Text(
         label,
         style: TextStyle(
-          color: active ? FullTankColors.inkMid : FullTankColors.inkSoft,
-          fontSize: 8.5,
+          color: active ? Color(0xFF4A5568) : Color(0xFF94A3B8),
+          fontSize: 12.325,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -194,8 +192,8 @@ class _SummaryGrid extends StatelessWidget {
         label: 'PEDIDOS PENDIENTES',
         value: '12',
         trend: '+8%',
-        color: FullTankColors.blue,
-        softColor: FullTankColors.blueSoft,
+        color: Color(0xFF1E40AF),
+        softColor: Color(0xFFEFF4FF),
       ),
       _SummaryMetric(
         icon: Icons.local_shipping_outlined,

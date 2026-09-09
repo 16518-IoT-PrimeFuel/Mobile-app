@@ -19,7 +19,7 @@ class _GradientAction extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [FullTankColors.ctaFrom, FullTankColors.ctaTo],
+          colors: [Color(0xFFFFB300), Color(0xFFFFA500)],
         ),
         borderRadius: BorderRadius.circular(999),
         boxShadow: const [
@@ -39,7 +39,7 @@ class _GradientAction extends StatelessWidget {
             label,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 11,
+              fontSize: 15.95,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -84,8 +84,8 @@ class _SheetAction extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 10,
+                  color: Color(0xFF1A202C),
+                  fontSize: 14.5,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -93,11 +93,7 @@ class _SheetAction extends StatelessWidget {
             ],
           ),
         ),
-        const Icon(
-          Icons.chevron_right,
-          size: 16,
-          color: FullTankColors.inkSoft,
-        ),
+        const Icon(Icons.chevron_right, size: 16, color: Color(0xFF94A3B8)),
       ],
     ),
   );
@@ -143,7 +139,7 @@ class _ActivityItem extends StatelessWidget {
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: FullTankColors.line),
+      border: Border.all(color: Color(0xFFE2E8F0)),
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
@@ -158,8 +154,8 @@ class _ActivityItem extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 10.5,
+                  color: Color(0xFF1A202C),
+                  fontSize: 15.225,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -167,8 +163,8 @@ class _ActivityItem extends StatelessWidget {
               Text(
                 detail,
                 style: const TextStyle(
-                  color: FullTankColors.inkMid,
-                  fontSize: 8.5,
+                  color: Color(0xFF4A5568),
+                  fontSize: 12.325,
                 ),
               ),
             ],

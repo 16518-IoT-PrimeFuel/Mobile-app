@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/theme/fulltank_theme.dart';
+import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 import '../../auth/application/auth_providers.dart';
 part 'home_dashboard.dart';
 part 'home_header_and_tank_summary.dart';
@@ -24,11 +24,3 @@ const _red = Color(0xFFEF4444);
 const _redSoft = Color(0xFFFEF2F2);
 const _purple = Color(0xFF8B5CF6);
 const _purpleSoft = Color(0xFFF5F3FF);
-const _uiTextScale = fullTankUiScale;
-
-Widget _withHomeUiScale(BuildContext context, Widget child) => MediaQuery(
-  data: MediaQuery.of(
-    context,
-  ).copyWith(textScaler: const TextScaler.linear(_uiTextScale)),
-  child: child,
-);

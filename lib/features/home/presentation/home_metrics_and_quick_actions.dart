@@ -33,7 +33,7 @@ class _SummaryMetric extends StatelessWidget {
               '↑ $trend',
               style: const TextStyle(
                 color: _green,
-                fontSize: 9,
+                fontSize: 13.05,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -51,8 +51,8 @@ class _SummaryMetric extends StatelessWidget {
                 TextSpan(
                   text: ' $unit',
                   style: const TextStyle(
-                    color: FullTankColors.inkSoft,
-                    fontSize: 10,
+                    color: Color(0xFF94A3B8),
+                    fontSize: 14.5,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -90,7 +90,7 @@ class _ActionRequiredCard extends StatelessWidget {
       color: Colors.white,
       border: Border(
         left: BorderSide(color: color, width: 3),
-        bottom: const BorderSide(color: FullTankColors.line),
+        bottom: const BorderSide(color: Color(0xFFE2E8F0)),
       ),
     ),
     child: Row(
@@ -122,8 +122,8 @@ class _ActionRequiredCard extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 11.5,
+                  color: Color(0xFF1A202C),
+                  fontSize: 16.675,
                   height: 1.12,
                   fontWeight: FontWeight.w800,
                 ),
@@ -132,8 +132,8 @@ class _ActionRequiredCard extends StatelessWidget {
               Text(
                 detail,
                 style: const TextStyle(
-                  color: FullTankColors.inkMid,
-                  fontSize: 9,
+                  color: Color(0xFF4A5568),
+                  fontSize: 13.05,
                   height: 1.2,
                 ),
               ),
@@ -168,22 +168,19 @@ class _QuickAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) => InkWell(
     onTap: onTap,
-    borderRadius: BorderRadius.circular(12 * _uiTextScale),
+    borderRadius: BorderRadius.circular(17.4),
     child: Container(
-      height: 70 * _uiTextScale,
-      padding: EdgeInsets.symmetric(
-        horizontal: 3 * _uiTextScale,
-        vertical: 8 * _uiTextScale,
-      ),
+      height: 101.5,
+      padding: EdgeInsets.symmetric(horizontal: 4.35, vertical: 11.6),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: const Color(0xFFF0F2F5)),
-        borderRadius: BorderRadius.circular(12 * _uiTextScale),
+        borderRadius: BorderRadius.circular(17.4),
         boxShadow: [
           BoxShadow(
             color: const Color(0x0D1A202C),
-            blurRadius: 10 * _uiTextScale,
-            offset: Offset(0, 4 * _uiTextScale),
+            blurRadius: 14.5,
+            offset: const Offset(0, 5.8),
           ),
         ],
       ),
@@ -196,8 +193,8 @@ class _QuickAction extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 2,
             style: const TextStyle(
-              color: FullTankColors.navyMid,
-              fontSize: 8.5,
+              color: Color(0xFF2D3748),
+              fontSize: 12.325,
               height: 1.05,
               fontWeight: FontWeight.w700,
             ),
