@@ -56,7 +56,7 @@ class _SalesDashboard extends StatelessWidget {
         'Filtros del reporte',
         style: TextStyle(
           color: _ink,
-          fontSize: 11,
+          fontSize: 15.95,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -65,7 +65,7 @@ class _SalesDashboard extends StatelessWidget {
         'RANGO DE FECHAS',
         style: TextStyle(
           color: _subtle,
-          fontSize: 7,
+          fontSize: 10.15,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -102,7 +102,7 @@ class _SalesBars extends StatelessWidget {
               'VENTAS POR SEMANA',
               style: TextStyle(
                 color: _muted,
-                fontSize: 7,
+                fontSize: 10.15,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -118,7 +118,7 @@ class _SalesBars extends StatelessWidget {
                     '30d',
                     style: TextStyle(
                       color: _muted,
-                      fontSize: 7,
+                      fontSize: 10.15,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -172,7 +172,7 @@ class _SelectField extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: _muted,
-                fontSize: 8,
+                fontSize: 11.6,
                 fontWeight: FontWeight.w700,
               ),
             ),

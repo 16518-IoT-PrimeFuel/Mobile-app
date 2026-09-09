@@ -9,7 +9,7 @@ class _FieldCaption extends StatelessWidget {
     error ? '$label · REQUIRED' : label,
     style: TextStyle(
       color: error ? _red : _subtle,
-      fontSize: 7,
+      fontSize: 10.15,
       fontWeight: FontWeight.w800,
       letterSpacing: .35,
     ),
@@ -113,13 +113,13 @@ class _FuelChoice extends StatelessWidget {
                     name,
                     style: TextStyle(
                       color: selected ? _blue : _ink,
-                      fontSize: 9,
+                      fontSize: 13.05,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                   Text(
                     detail,
-                    style: const TextStyle(color: _muted, fontSize: 7),
+                    style: const TextStyle(color: _muted, fontSize: 10.15),
                   ),
                 ],
               ),
@@ -153,7 +153,7 @@ class _MoneyCard extends StatelessWidget {
                 text: 'S/ ',
                 style: TextStyle(
                   color: _muted,
-                  fontSize: 13,
+                  fontSize: 18.85,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -161,7 +161,7 @@ class _MoneyCard extends StatelessWidget {
                 text: '6,000',
                 style: TextStyle(
                   color: _ink,
-                  fontSize: 23,
+                  fontSize: 33.35,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -173,7 +173,7 @@ class _MoneyCard extends StatelessWidget {
           '✓ Coincide con el total del pedido',
           style: TextStyle(
             color: _green,
-            fontSize: 8,
+            fontSize: 11.6,
             fontWeight: FontWeight.w700,
           ),
         ),

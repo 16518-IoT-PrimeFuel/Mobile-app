@@ -92,7 +92,7 @@ class _MetricCard extends StatelessWidget {
                 badge!,
                 style: TextStyle(
                   color: accent,
-                  fontSize: 7,
+                  fontSize: 10.15,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -103,7 +103,7 @@ class _MetricCard extends StatelessWidget {
           label,
           style: const TextStyle(
             color: _subtle,
-            fontSize: 7,
+            fontSize: 10.15,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -112,7 +112,7 @@ class _MetricCard extends StatelessWidget {
           value,
           style: const TextStyle(
             color: _ink,
-            fontSize: 12,
+            fontSize: 17.4,
             height: 1.05,
             fontWeight: FontWeight.w800,
           ),
@@ -142,7 +142,7 @@ class _WeeklyBars extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: _muted,
-                fontSize: 7,
+                fontSize: 10.15,
                 fontWeight: FontWeight.w800,
                 letterSpacing: .3,
               ),
@@ -151,7 +151,7 @@ class _WeeklyBars extends StatelessWidget {
               action,
               style: const TextStyle(
                 color: _blue,
-                fontSize: 7,
+                fontSize: 10.15,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -200,7 +200,7 @@ class _Bar extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 4),
-      Text(label, style: const TextStyle(color: _subtle, fontSize: 6)),
+      Text(label, style: const TextStyle(color: _subtle, fontSize: 8.7)),
     ],
   );
 }

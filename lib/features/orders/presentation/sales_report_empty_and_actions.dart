@@ -13,7 +13,7 @@ class _SalesEmpty extends StatelessWidget {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: _ink,
-          fontSize: 16,
+          fontSize: 23.2,
           height: 1.1,
           fontWeight: FontWeight.w800,
         ),
@@ -22,7 +22,7 @@ class _SalesEmpty extends StatelessWidget {
       const Text(
         'Ajusta el rango de fechas o los filtros para\nver datos históricos. También puedes\niniciar operaciones nuevas para poblar el\nreporte.',
         textAlign: TextAlign.center,
-        style: TextStyle(color: _muted, fontSize: 9, height: 1.45),
+        style: TextStyle(color: _muted, fontSize: 13.05, height: 1.45),
       ),
       const SizedBox(height: 15),
       Container(
@@ -42,7 +42,7 @@ class _SalesEmpty extends StatelessWidget {
                   'RANGO',
                   style: TextStyle(
                     color: _subtle,
-                    fontSize: 6,
+                    fontSize: 8.7,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -50,7 +50,7 @@ class _SalesEmpty extends StatelessWidget {
                   'Ago 01',
                   style: TextStyle(
                     color: _ink,
-                    fontSize: 8,
+                    fontSize: 11.6,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -63,7 +63,7 @@ class _SalesEmpty extends StatelessWidget {
                   'HASTA',
                   style: TextStyle(
                     color: _subtle,
-                    fontSize: 6,
+                    fontSize: 8.7,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -71,7 +71,7 @@ class _SalesEmpty extends StatelessWidget {
                   'Ago 07',
                   style: TextStyle(
                     color: _ink,
-                    fontSize: 8,
+                    fontSize: 11.6,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -118,7 +118,7 @@ class _SalesAction extends StatelessWidget {
             ),
             child: const Text(
               'Compartir por email',
-              style: TextStyle(color: _muted, fontSize: 8),
+              style: TextStyle(color: _muted, fontSize: 11.6),
             ),
           ),
         ],
@@ -138,7 +138,7 @@ class _SalesAction extends StatelessWidget {
             onPressed: onReset,
             child: const Text(
               'Restablecer filtros',
-              style: TextStyle(color: _muted, fontSize: 8),
+              style: TextStyle(color: _muted, fontSize: 11.6),
             ),
           ),
         ],
@@ -167,10 +167,10 @@ class _OrangeButton extends StatelessWidget {
       disabledBackgroundColor: const Color(0xFFFFD0A7),
       foregroundColor: _ink,
       disabledForegroundColor: Colors.white,
-      minimumSize: Size.fromHeight(52 * _uiScale),
+      minimumSize: Size.fromHeight(75.4),
       shape: const StadiumBorder(),
       elevation: 2,
-      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
+      textStyle: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w800),
     ),
     child: Text(label),
   );
@@ -193,8 +193,8 @@ class _SmallButton extends StatelessWidget {
     style: OutlinedButton.styleFrom(
       foregroundColor: _ink,
       side: const BorderSide(color: _line),
-      padding: EdgeInsets.symmetric(vertical: 10 * _uiScale),
-      textStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
+      padding: EdgeInsets.symmetric(vertical: 14.5),
+      textStyle: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700),
     ),
   );
 }

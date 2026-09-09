@@ -38,7 +38,7 @@ class _ErrorMeta extends StatelessWidget {
               'CÓDIGO DE ERROR',
               style: TextStyle(
                 color: _subtle,
-                fontSize: 6,
+                fontSize: 8.7,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -46,7 +46,7 @@ class _ErrorMeta extends StatelessWidget {
               history ? 'HIST_ERR_503' : 'NET_ERR_502',
               style: TextStyle(
                 color: _muted,
-                fontSize: 8,
+                fontSize: 11.6,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -59,7 +59,7 @@ class _ErrorMeta extends StatelessWidget {
               'ÚLTIMA SINCRONIZACIÓN',
               style: TextStyle(
                 color: _subtle,
-                fontSize: 6,
+                fontSize: 8.7,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -67,7 +67,7 @@ class _ErrorMeta extends StatelessWidget {
               history ? 'hace 3 min' : 'hace 2 min',
               style: TextStyle(
                 color: _muted,
-                fontSize: 8,
+                fontSize: 11.6,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -108,7 +108,7 @@ class _DeliveredBanner extends StatelessWidget {
                 'ENTREGADO CON ÉXITO',
                 style: TextStyle(
                   color: _green,
-                  fontSize: 7,
+                  fontSize: 10.15,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -117,13 +117,13 @@ class _DeliveredBanner extends StatelessWidget {
                 'Ayer, 17:45',
                 style: TextStyle(
                   color: _ink,
-                  fontSize: 9,
+                  fontSize: 13.05,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               Text(
                 'Recibido por M. Sánchez · Sector 4',
-                style: TextStyle(color: _muted, fontSize: 7),
+                style: TextStyle(color: _muted, fontSize: 10.15),
               ),
             ],
           ),
@@ -161,7 +161,7 @@ class _FuelMetric extends StatelessWidget {
           label,
           style: const TextStyle(
             color: _subtle,
-            fontSize: 7,
+            fontSize: 10.15,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -170,11 +170,11 @@ class _FuelMetric extends StatelessWidget {
           value,
           style: const TextStyle(
             color: _ink,
-            fontSize: 13,
+            fontSize: 18.85,
             fontWeight: FontWeight.w800,
           ),
         ),
-        Text(detail, style: const TextStyle(color: _muted, fontSize: 7)),
+        Text(detail, style: const TextStyle(color: _muted, fontSize: 10.15)),
       ],
     ),
   );

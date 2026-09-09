@@ -20,7 +20,7 @@ class _MiniData extends StatelessWidget {
             label,
             style: const TextStyle(
               color: _subtle,
-              fontSize: 6,
+              fontSize: 8.7,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -28,7 +28,7 @@ class _MiniData extends StatelessWidget {
             value,
             style: const TextStyle(
               color: _ink,
-              fontSize: 7,
+              fontSize: 10.15,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -51,7 +51,11 @@ class _StatusTag extends StatelessWidget {
     ),
     child: Text(
       label,
-      style: TextStyle(color: color, fontSize: 7, fontWeight: FontWeight.w800),
+      style: TextStyle(
+        color: color,
+        fontSize: 10.15,
+        fontWeight: FontWeight.w800,
+      ),
     ),
   );
 }
@@ -185,7 +189,7 @@ class _TipBox extends StatelessWidget {
             history
                 ? 'Tip: Podrás filtrar por fecha, tipo de combustible y estado para revisar tu consumo mensual.'
                 : 'Tip: puedes crear un pedido rápido desde la lista de tanques cuando el nivel esté bajo.',
-            style: const TextStyle(color: _muted, fontSize: 8, height: 1.4),
+            style: const TextStyle(color: _muted, fontSize: 11.6, height: 1.4),
           ),
         ),
       ],

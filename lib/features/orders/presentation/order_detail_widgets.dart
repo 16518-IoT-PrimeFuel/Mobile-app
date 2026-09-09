@@ -18,7 +18,7 @@ class _DetailTable extends StatelessWidget {
           title,
           style: const TextStyle(
             color: _subtle,
-            fontSize: 7,
+            fontSize: 10.15,
             fontWeight: FontWeight.w800,
             letterSpacing: .3,
           ),
@@ -31,7 +31,7 @@ class _DetailTable extends StatelessWidget {
               Expanded(
                 child: Text(
                   rows[i].$1,
-                  style: const TextStyle(color: _muted, fontSize: 8),
+                  style: const TextStyle(color: _muted, fontSize: 11.6),
                 ),
               ),
               Expanded(
@@ -40,7 +40,7 @@ class _DetailTable extends StatelessWidget {
                   textAlign: TextAlign.right,
                   style: const TextStyle(
                     color: _ink,
-                    fontSize: 8,
+                    fontSize: 11.6,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -86,7 +86,7 @@ class _CurrentStateBanner extends StatelessWidget {
               'ESTADO ACTUAL',
               style: TextStyle(
                 color: _orange,
-                fontSize: 7,
+                fontSize: 10.15,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -95,13 +95,13 @@ class _CurrentStateBanner extends StatelessWidget {
               'En tránsito',
               style: TextStyle(
                 color: _ink,
-                fontSize: 12,
+                fontSize: 17.4,
                 fontWeight: FontWeight.w800,
               ),
             ),
             Text(
               'ETA en ~1h 20m · 12 km restantes',
-              style: TextStyle(color: _muted, fontSize: 7),
+              style: TextStyle(color: _muted, fontSize: 10.15),
             ),
           ],
         ),
@@ -190,11 +190,14 @@ class _TimelineStep extends StatelessWidget {
               label,
               style: const TextStyle(
                 color: _ink,
-                fontSize: 9,
+                fontSize: 13.05,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            Text(detail, style: const TextStyle(color: _muted, fontSize: 7)),
+            Text(
+              detail,
+              style: const TextStyle(color: _muted, fontSize: 10.15),
+            ),
           ],
         ),
       ],

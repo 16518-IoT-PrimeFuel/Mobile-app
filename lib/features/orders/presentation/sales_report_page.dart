@@ -41,82 +41,74 @@ class _SalesReportPageState extends State<SalesReportPage> {
     final dashboard = _state == SalesReportState.dashboard;
     final generating = _state == SalesReportState.generating;
     final ready = _state == SalesReportState.ready;
-    return withFullTankUiScale(
-      context,
-      Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(
-              20 * _uiScale,
-              14 * _uiScale,
-              20 * _uiScale,
-              100 * _uiScale,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (ready)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: _HeaderIcon(
-                      icon: Icons.close,
-                      label: 'Cerrar reporte',
-                      onTap: () =>
-                          setState(() => _state = SalesReportState.dashboard),
-                    ),
-                  )
-                else
-                  _Header(
-                    title: generating
-                        ? 'Generando reporte'
-                        : 'Reportes de ventas',
-                    subtitle: generating
-                        ? 'Compilando 30 días...'
-                        : _state == SalesReportState.empty
-                        ? 'Sin datos en el rango'
-                        : 'Análisis de operaciones',
-                    actions: [
-                      _HeaderIcon(
-                        icon: dashboard
-                            ? Icons.download_outlined
-                            : Icons.more_horiz,
-                        label: dashboard ? 'Exportar' : 'Opciones',
-                        onTap: () {},
-                      ),
-                    ],
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(29.0, 20.3, 29.0, 145.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (ready)
+                Align(
+                  alignment: Alignment.topRight,
+                  child: _HeaderIcon(
+                    icon: Icons.close,
+                    label: 'Cerrar reporte',
+                    onTap: () =>
+                        setState(() => _state = SalesReportState.dashboard),
                   ),
-                const SizedBox(height: 12),
-                if (dashboard)
-                  const _SalesDashboard()
-                else if (generating)
-                  const _SalesGenerating()
-                else if (ready)
-                  const _SalesReady()
-                else
-                  const _SalesEmpty(),
-              ],
-            ),
+                )
+              else
+                _Header(
+                  title: generating
+                      ? 'Generando reporte'
+                      : 'Reportes de ventas',
+                  subtitle: generating
+                      ? 'Compilando 30 días...'
+                      : _state == SalesReportState.empty
+                      ? 'Sin datos en el rango'
+                      : 'Análisis de operaciones',
+                  actions: [
+                    _HeaderIcon(
+                      icon: dashboard
+                          ? Icons.download_outlined
+                          : Icons.more_horiz,
+                      label: dashboard ? 'Exportar' : 'Opciones',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 12),
+              if (dashboard)
+                const _SalesDashboard()
+              else if (generating)
+                const _SalesGenerating()
+              else if (ready)
+                const _SalesReady()
+              else
+                const _SalesEmpty(),
+            ],
           ),
         ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
-                child: _SalesAction(
-                  state: _state,
-                  onGenerate: _generate,
-                  onReset: () =>
-                      setState(() => _state = SalesReportState.dashboard),
-                ),
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+              child: _SalesAction(
+                state: _state,
+                onGenerate: _generate,
+                onReset: () =>
+                    setState(() => _state = SalesReportState.dashboard),
               ),
             ),
-            const FullTankBottomNav(active: 3),
-          ],
-        ),
+          ),
+          const FullTankBottomNav(active: 3),
+        ],
       ),
     );
   }
@@ -157,7 +149,7 @@ class _Header extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, size: 17),
           style: IconButton.styleFrom(
             backgroundColor: _panel,
-            fixedSize: Size.square(44 * _uiScale),
+            fixedSize: Size.square(63.8),
             padding: EdgeInsets.zero,
           ),
         ),
@@ -173,7 +165,7 @@ class _Header extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: _ink,
-                fontSize: 14,
+                fontSize: 20.3,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -.2,
               ),
@@ -183,7 +175,7 @@ class _Header extends StatelessWidget {
                 subtitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: _muted, fontSize: 9),
+                style: const TextStyle(color: _muted, fontSize: 13.05),
               ),
           ],
         ),
@@ -205,17 +197,17 @@ class _HeaderIcon extends StatelessWidget {
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.only(left: 6 * _uiScale),
+    padding: EdgeInsets.only(left: 8.7),
     child: Semantics(
       button: true,
       label: label,
       child: IconButton(
         onPressed: onTap,
         tooltip: label,
-        icon: Icon(icon, size: 19 * _uiScale, color: _muted),
+        icon: Icon(icon, size: 27.55, color: _muted),
         style: IconButton.styleFrom(
           backgroundColor: _panel,
-          fixedSize: Size.square(44 * _uiScale),
+          fixedSize: Size.square(63.8),
           padding: EdgeInsets.zero,
         ),
       ),

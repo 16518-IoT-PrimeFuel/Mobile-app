@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/theme/fulltank_theme.dart';
-import '../../home/presentation/home_page.dart';
+import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 part 'orders_list_page.dart';
 part 'order_detail_and_creation_pages.dart';
 part 'new_order_fuel_fields.dart';
@@ -30,7 +29,6 @@ const _orange = Color(0xFFFF8A0A);
 const _green = Color(0xFF10B981);
 const _greenSoft = Color(0xFFE9FBF4);
 const _red = Color(0xFFEF4444);
-const _uiScale = fullTankUiScale;
 
 enum OrderPageState { content, loading, empty, error }
 

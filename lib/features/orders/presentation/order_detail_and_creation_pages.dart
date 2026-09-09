@@ -9,23 +9,15 @@ class OrderDetailPage extends StatelessWidget {
   final bool history;
   final String orderId;
   @override
-  Widget build(BuildContext context) => withFullTankUiScale(
-    context,
-    Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(
-            20 * _uiScale,
-            14 * _uiScale,
-            20 * _uiScale,
-            28 * _uiScale,
-          ),
-          child: history ? _historyDetail(context) : _activeDetail(context),
-        ),
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: Colors.white,
+    body: SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(29.0, 20.3, 29.0, 40.6),
+        child: history ? _historyDetail(context) : _activeDetail(context),
       ),
-      bottomNavigationBar: const FullTankBottomNav(active: 1),
     ),
+    bottomNavigationBar: const FullTankBottomNav(active: 1),
   );
 
   Widget _historyDetail(BuildContext context) => Column(
@@ -124,7 +116,7 @@ class OrderDetailPage extends StatelessWidget {
               '● LIVE',
               style: TextStyle(
                 color: _green,
-                fontSize: 8,
+                fontSize: 11.6,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -138,7 +130,7 @@ class OrderDetailPage extends StatelessWidget {
         'SEGUIMIENTO DE ENTREGA',
         style: TextStyle(
           color: _subtle,
-          fontSize: 8,
+          fontSize: 11.6,
           fontWeight: FontWeight.w800,
           letterSpacing: .4,
         ),
@@ -196,36 +188,28 @@ class _NewOrderPageState extends State<NewOrderPage> {
   Widget build(BuildContext context) {
     final loading = _state == NewOrderState.loading;
     final success = _state == NewOrderState.success;
-    return withFullTankUiScale(
-      context,
-      Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(
-              20 * _uiScale,
-              14 * _uiScale,
-              20 * _uiScale,
-              96 * _uiScale,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(29.0, 20.3, 29.0, 139.2),
+          child: success
+              ? _successBody(context)
+              : _formBody(context, loading: loading),
+        ),
+      ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
+              child: _NewOrderAction(state: _state, onCreate: _create),
             ),
-            child: success
-                ? _successBody(context)
-                : _formBody(context, loading: loading),
           ),
-        ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SafeArea(
-              top: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
-                child: _NewOrderAction(state: _state, onCreate: _create),
-              ),
-            ),
-            const FullTankBottomNav(active: 1),
-          ],
-        ),
+          const FullTankBottomNav(active: 1),
+        ],
       ),
     );
   }
@@ -285,7 +269,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
               'ⓘ  Selecciona un combustible para continuar.',
               style: TextStyle(
                 color: _red,
-                fontSize: 8,
+                fontSize: 11.6,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -344,7 +328,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
         textAlign: TextAlign.center,
         style: TextStyle(
           color: _ink,
-          fontSize: 17,
+          fontSize: 24.65,
           height: 1.1,
           fontWeight: FontWeight.w800,
         ),
@@ -353,7 +337,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
       const Text(
         'Tu solicitud fue enviada al proveedor.\nRecibirás una notificación cuando sea\naprobada.',
         textAlign: TextAlign.center,
-        style: TextStyle(color: _muted, fontSize: 9, height: 1.45),
+        style: TextStyle(color: _muted, fontSize: 13.05, height: 1.45),
       ),
       const SizedBox(height: 20),
       const _SuccessDetails(),

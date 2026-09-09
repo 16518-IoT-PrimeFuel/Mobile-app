@@ -74,7 +74,7 @@ class _Chip extends StatelessWidget {
               label,
               style: TextStyle(
                 color: selected ? Colors.white : _muted,
-                fontSize: 8,
+                fontSize: 11.6,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -178,7 +178,7 @@ class _HistoryOrderCard extends StatelessWidget {
                     item.id,
                     style: const TextStyle(
                       color: _ink,
-                      fontSize: 10,
+                      fontSize: 14.5,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -189,7 +189,7 @@ class _HistoryOrderCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               '${item.fuel}  ·  ${item.amount}  ·  ${item.supplier}',
-              style: const TextStyle(color: _muted, fontSize: 7.5),
+              style: const TextStyle(color: _muted, fontSize: 10.875),
             ),
             const Divider(height: 13, color: _line),
             Row(
@@ -202,7 +202,7 @@ class _HistoryOrderCard extends StatelessWidget {
                       'TOTAL',
                       style: TextStyle(
                         color: _subtle,
-                        fontSize: 6,
+                        fontSize: 8.7,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -210,7 +210,7 @@ class _HistoryOrderCard extends StatelessWidget {
                       item.total,
                       style: const TextStyle(
                         color: _ink,
-                        fontSize: 9,
+                        fontSize: 13.05,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -220,7 +220,7 @@ class _HistoryOrderCard extends StatelessWidget {
                   'Ver detalle  ›',
                   style: TextStyle(
                     color: _blue,
-                    fontSize: 7,
+                    fontSize: 10.15,
                     fontWeight: FontWeight.w800,
                   ),
                 ),

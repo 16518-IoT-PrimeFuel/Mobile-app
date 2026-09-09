@@ -19,37 +19,28 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
     final body = widget.history ? _historyBody(context) : _activeBody(context);
-    return withFullTankUiScale(
-      context,
-      Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(
-              20 * _uiScale,
-              14 * _uiScale,
-              20 * _uiScale,
-              28 * _uiScale,
-            ),
-            child: body,
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(29.0, 20.3, 29.0, 40.6),
+          child: body,
         ),
-        floatingActionButton:
-            !widget.history && _state == OrderPageState.content
-            ? Semantics(
-                button: true,
-                label: 'Crear nuevo pedido',
-                child: FloatingActionButton(
-                  onPressed: () => context.push('/orders/new'),
-                  tooltip: 'Crear nuevo pedido',
-                  backgroundColor: _orange,
-                  foregroundColor: _ink,
-                  child: const Icon(Icons.add),
-                ),
-              )
-            : null,
-        bottomNavigationBar: const FullTankBottomNav(active: 1),
       ),
+      floatingActionButton: !widget.history && _state == OrderPageState.content
+          ? Semantics(
+              button: true,
+              label: 'Crear nuevo pedido',
+              child: FloatingActionButton(
+                onPressed: () => context.push('/orders/new'),
+                tooltip: 'Crear nuevo pedido',
+                backgroundColor: _orange,
+                foregroundColor: _ink,
+                child: const Icon(Icons.add),
+              ),
+            )
+          : null,
+      bottomNavigationBar: const FullTankBottomNav(active: 1),
     );
   }
 
@@ -189,7 +180,7 @@ class _OrdersPageState extends State<OrdersPage> {
         textAlign: TextAlign.center,
         style: const TextStyle(
           color: _ink,
-          fontSize: 16,
+          fontSize: 23.2,
           height: 1.15,
           fontWeight: FontWeight.w800,
         ),
@@ -200,7 +191,7 @@ class _OrdersPageState extends State<OrdersPage> {
             ? 'Cuando registres tu primer pedido de\ncombustible, aparecerá aquí con todo el\nhistórico de consumo empresarial.'
             : 'Cuando registres una solicitud de\ncombustible, aparecerá aquí con su\nestado actualizado en tiempo real.',
         textAlign: TextAlign.center,
-        style: const TextStyle(color: _muted, fontSize: 10, height: 1.5),
+        style: const TextStyle(color: _muted, fontSize: 14.5, height: 1.5),
       ),
       const SizedBox(height: 14),
       _TipBox(history: history),
@@ -233,7 +224,11 @@ class _OrdersPageState extends State<OrdersPage> {
       const SizedBox(height: 16),
       const Text(
         'ERROR DE CONEXIÓN',
-        style: TextStyle(color: _red, fontSize: 8, fontWeight: FontWeight.w800),
+        style: TextStyle(
+          color: _red,
+          fontSize: 11.6,
+          fontWeight: FontWeight.w800,
+        ),
       ),
       const SizedBox(height: 8),
       Text(
@@ -243,7 +238,7 @@ class _OrdersPageState extends State<OrdersPage> {
         textAlign: TextAlign.center,
         style: const TextStyle(
           color: _ink,
-          fontSize: 16,
+          fontSize: 23.2,
           height: 1.1,
           fontWeight: FontWeight.w800,
         ),
@@ -252,7 +247,7 @@ class _OrdersPageState extends State<OrdersPage> {
       const Text(
         'Verifica tu conexión a internet y vuelve a intentarlo.\nTus pedidos se sincronizarán en cuanto\nrestablezcamos la conexión.',
         textAlign: TextAlign.center,
-        style: TextStyle(color: _muted, fontSize: 10, height: 1.45),
+        style: TextStyle(color: _muted, fontSize: 14.5, height: 1.45),
       ),
       const SizedBox(height: 18),
       _ErrorMeta(history: history),
@@ -269,7 +264,7 @@ class _OrdersPageState extends State<OrdersPage> {
         onPressed: () => context.push('/account/help'),
         child: const Text(
           'Contactar soporte',
-          style: TextStyle(color: _muted, fontSize: 9),
+          style: TextStyle(color: _muted, fontSize: 13.05),
         ),
       ),
     ],

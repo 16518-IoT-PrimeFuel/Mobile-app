@@ -39,13 +39,13 @@ class _SalesGenerating extends StatelessWidget {
                       'Compilando datos',
                       style: TextStyle(
                         color: _ink,
-                        fontSize: 9,
+                        fontSize: 13.05,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     Text(
                       '24 pedidos · 18 clientes · 42.8k L',
-                      style: TextStyle(color: _muted, fontSize: 7),
+                      style: TextStyle(color: _muted, fontSize: 10.15),
                     ),
                   ],
                 ),
@@ -67,11 +67,11 @@ class _SalesGenerating extends StatelessWidget {
               children: [
                 Text(
                   '68% completado',
-                  style: TextStyle(color: _muted, fontSize: 7),
+                  style: TextStyle(color: _muted, fontSize: 10.15),
                 ),
                 Text(
                   '~12s restantes',
-                  style: TextStyle(color: _muted, fontSize: 7),
+                  style: TextStyle(color: _muted, fontSize: 10.15),
                 ),
               ],
             ),
@@ -93,7 +93,7 @@ class _SalesGenerating extends StatelessWidget {
               'PROGRESO',
               style: TextStyle(
                 color: _subtle,
-                fontSize: 7,
+                fontSize: 10.15,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -152,7 +152,7 @@ class _CheckRow extends StatelessWidget {
           label,
           style: TextStyle(
             color: active ? _ink : _muted,
-            fontSize: 8,
+            fontSize: 11.6,
             fontWeight: active ? FontWeight.w800 : FontWeight.w500,
           ),
         ),
@@ -188,7 +188,7 @@ class _SalesReady extends StatelessWidget {
         'Reporte listo',
         style: TextStyle(
           color: _ink,
-          fontSize: 16,
+          fontSize: 23.2,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -196,7 +196,7 @@ class _SalesReady extends StatelessWidget {
       const Text(
         'Generamos el reporte completo con\nmétricas, gráficos y desglose por cliente.',
         textAlign: TextAlign.center,
-        style: TextStyle(color: _muted, fontSize: 9, height: 1.4),
+        style: TextStyle(color: _muted, fontSize: 13.05, height: 1.4),
       ),
       const SizedBox(height: 15),
       Container(
@@ -232,13 +232,13 @@ class _SalesReady extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: _ink,
-                          fontSize: 8,
+                          fontSize: 11.6,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                       Text(
                         '2.4 MB · 24 páginas · Generado hoy',
-                        style: TextStyle(color: _muted, fontSize: 7),
+                        style: TextStyle(color: _muted, fontSize: 10.15),
                       ),
                     ],
                   ),
@@ -262,13 +262,13 @@ class _SalesReady extends StatelessWidget {
                   children: [
                     Text(
                       'VENTAS',
-                      style: TextStyle(color: _subtle, fontSize: 6),
+                      style: TextStyle(color: _subtle, fontSize: 8.7),
                     ),
                     Text(
                       'S/148.3k',
                       style: TextStyle(
                         color: _ink,
-                        fontSize: 8,
+                        fontSize: 11.6,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -278,13 +278,13 @@ class _SalesReady extends StatelessWidget {
                   children: [
                     Text(
                       'PEDIDOS',
-                      style: TextStyle(color: _subtle, fontSize: 6),
+                      style: TextStyle(color: _subtle, fontSize: 8.7),
                     ),
                     Text(
                       '24',
                       style: TextStyle(
                         color: _ink,
-                        fontSize: 8,
+                        fontSize: 11.6,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -294,13 +294,13 @@ class _SalesReady extends StatelessWidget {
                   children: [
                     Text(
                       'CLIENTES',
-                      style: TextStyle(color: _subtle, fontSize: 6),
+                      style: TextStyle(color: _subtle, fontSize: 8.7),
                     ),
                     Text(
                       '18',
                       style: TextStyle(
                         color: _ink,
-                        fontSize: 8,
+                        fontSize: 11.6,
                         fontWeight: FontWeight.w800,
                       ),
                     ),

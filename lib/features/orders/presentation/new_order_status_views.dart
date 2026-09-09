@@ -35,13 +35,13 @@ class _CreationLoading extends StatelessWidget {
                   'Comprobando disponibilidad',
                   style: TextStyle(
                     color: _ink,
-                    fontSize: 8,
+                    fontSize: 11.6,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
                 Text(
                   'Verificando flota · ETA de ruta · stock',
-                  style: TextStyle(color: _muted, fontSize: 7),
+                  style: TextStyle(color: _muted, fontSize: 10.15),
                 ),
               ],
             ),
@@ -114,7 +114,7 @@ class _SuccessDetails extends StatelessWidget {
                     'NÚMERO DE PEDIDO',
                     style: TextStyle(
                       color: _subtle,
-                      fontSize: 7,
+                      fontSize: 10.15,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -122,7 +122,7 @@ class _SuccessDetails extends StatelessWidget {
                     '#FT-88421',
                     style: TextStyle(
                       color: _ink,
-                      fontSize: 12,
+                      fontSize: 17.4,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -139,7 +139,7 @@ class _SuccessDetails extends StatelessWidget {
                 '• Pendiente',
                 style: TextStyle(
                   color: _orange,
-                  fontSize: 7,
+                  fontSize: 10.15,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -151,7 +151,7 @@ class _SuccessDetails extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: Text(
             '▧ Copiar ID',
-            style: TextStyle(color: _muted, fontSize: 7),
+            style: TextStyle(color: _muted, fontSize: 10.15),
           ),
         ),
         const Divider(height: 14, color: _line),
@@ -177,14 +177,14 @@ class _SuccessRow extends StatelessWidget {
         Expanded(
           child: Text(
             label,
-            style: const TextStyle(color: _muted, fontSize: 8),
+            style: const TextStyle(color: _muted, fontSize: 11.6),
           ),
         ),
         Text(
           value,
           style: const TextStyle(
             color: _ink,
-            fontSize: 8,
+            fontSize: 11.6,
             fontWeight: FontWeight.w700,
           ),
         ),

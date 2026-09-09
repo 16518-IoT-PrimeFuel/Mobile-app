@@ -33,7 +33,7 @@ class _TankCard extends StatelessWidget {
                 'DESTINO',
                 style: TextStyle(
                   color: _muted,
-                  fontSize: 6,
+                  fontSize: 8.7,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -41,13 +41,13 @@ class _TankCard extends StatelessWidget {
                 'Tanque de diésel A-102',
                 style: TextStyle(
                   color: _ink,
-                  fontSize: 9,
+                  fontSize: 13.05,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               Text(
                 'Sector 4 · Actual 12% (1,440 L)',
-                style: TextStyle(color: _muted, fontSize: 7),
+                style: TextStyle(color: _muted, fontSize: 10.15),
               ),
             ],
           ),
@@ -58,7 +58,7 @@ class _TankCard extends StatelessWidget {
             'Cambiar',
             style: TextStyle(
               color: _blue,
-              fontSize: 8,
+              fontSize: 11.6,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -101,7 +101,7 @@ class _SupplierCard extends StatelessWidget {
                 'PROVEEDOR PREFERIDO',
                 style: TextStyle(
                   color: _muted,
-                  fontSize: 6,
+                  fontSize: 8.7,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -109,13 +109,13 @@ class _SupplierCard extends StatelessWidget {
                 'Global Fuel Corp',
                 style: TextStyle(
                   color: _ink,
-                  fontSize: 9,
+                  fontSize: 13.05,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               Text(
                 '98.4% reliability · ETA 2.5h',
-                style: TextStyle(color: _muted, fontSize: 7),
+                style: TextStyle(color: _muted, fontSize: 10.15),
               ),
             ],
           ),
@@ -124,7 +124,7 @@ class _SupplierCard extends StatelessWidget {
           '• Disponible',
           style: TextStyle(
             color: _green,
-            fontSize: 8,
+            fontSize: 11.6,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -151,7 +151,7 @@ class _DeliveryField extends StatelessWidget {
             'Sep 5, 08:00 – 12:00',
             style: TextStyle(
               color: _ink,
-              fontSize: 9,
+              fontSize: 13.05,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -190,13 +190,13 @@ class _ConnectionErrorCard extends StatelessWidget {
                 'Error de conexión',
                 style: TextStyle(
                   color: _red,
-                  fontSize: 8,
+                  fontSize: 11.6,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               Text(
                 'No pudimos conectar con el proveedor. Revisa tu conexión e inténtalo de nuevo.',
-                style: TextStyle(color: _muted, fontSize: 7, height: 1.3),
+                style: TextStyle(color: _muted, fontSize: 10.15, height: 1.3),
               ),
             ],
           ),
@@ -207,7 +207,7 @@ class _ConnectionErrorCard extends StatelessWidget {
             '↻ Reintentar',
             style: TextStyle(
               color: _red,
-              fontSize: 8,
+              fontSize: 11.6,
               fontWeight: FontWeight.w800,
             ),
           ),

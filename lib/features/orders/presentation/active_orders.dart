@@ -104,7 +104,7 @@ class _ActiveOrderCard extends StatelessWidget {
                     data.id,
                     style: const TextStyle(
                       color: _ink,
-                      fontSize: 10,
+                      fontSize: 14.5,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -147,7 +147,7 @@ class _ActiveOrderCard extends StatelessWidget {
                         'PROVEEDOR',
                         style: TextStyle(
                           color: _subtle,
-                          fontSize: 6,
+                          fontSize: 8.7,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -156,7 +156,7 @@ class _ActiveOrderCard extends StatelessWidget {
                         data.supplier,
                         style: const TextStyle(
                           color: _ink,
-                          fontSize: 7,
+                          fontSize: 10.15,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -184,14 +184,14 @@ class _ActiveOrderCard extends StatelessWidget {
                 const SizedBox(width: 7),
                 Text(
                   data.eta,
-                  style: const TextStyle(color: _muted, fontSize: 7),
+                  style: const TextStyle(color: _muted, fontSize: 10.15),
                 ),
                 const SizedBox(width: 7),
                 const Text(
                   'Ver  ›',
                   style: TextStyle(
                     color: _blue,
-                    fontSize: 7,
+                    fontSize: 10.15,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
