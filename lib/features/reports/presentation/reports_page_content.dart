@@ -7,10 +7,7 @@ class ReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final active =
-        variant == ReportVariant.sales || variant == ReportVariant.industry
-        ? 2
-        : 3;
+    const active = 3;
     return MediaQuery(
       data: MediaQuery.of(
         context,

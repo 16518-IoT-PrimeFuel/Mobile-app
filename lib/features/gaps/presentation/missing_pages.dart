@@ -40,7 +40,7 @@ class MissingPageShell extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -98,7 +98,7 @@ class _Panel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     width: double.infinity,
-    padding: const EdgeInsets.all(14),
+    padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
       color: color,
       borderRadius: BorderRadius.circular(14),
@@ -139,7 +139,7 @@ class _PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       style: FilledButton.styleFrom(
         backgroundColor: _blue,
-        minimumSize: const Size.fromHeight(48),
+        minimumSize: const Size.fromHeight(52),
         shape: const StadiumBorder(),
       ),
       child: Text(label),
@@ -1054,6 +1054,7 @@ class _SearchOrdersPageState extends State<SearchOrdersPage> {
     return MissingPageShell(
       title: 'Buscar pedidos',
       subtitle: 'Filtra por referencia, cliente o estado',
+      bottomNav: 1,
       child: Column(
         children: [
           TextField(
@@ -1452,7 +1453,6 @@ class ProductsPage extends StatelessWidget {
         tooltip: 'Agregar producto',
       ),
     ],
-    bottomNav: 2,
     child: Column(
       children: [
         _ProductTile(
