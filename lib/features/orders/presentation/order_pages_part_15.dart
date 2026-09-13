@@ -89,39 +89,18 @@ class _SalesAction extends StatelessWidget {
     required this.state,
     required this.onGenerate,
     required this.onReset,
+    required this.onExport,
   });
   final SalesReportState state;
   final VoidCallback onGenerate;
   final VoidCallback onReset;
+  final VoidCallback onExport;
   @override
   Widget build(BuildContext context) {
     if (state == SalesReportState.ready)
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: _OrangeButton(
-              label: '⌄  Download PDF',
-              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Reporte listo para descargar')),
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Compartir por email estará disponible al conectar el correo',
-                ),
-              ),
-            ),
-            child: const Text(
-              'Compartir por email',
-              style: TextStyle(color: _muted, fontSize: 8),
-            ),
-          ),
-        ],
+      return SizedBox(
+        width: double.infinity,
+        child: _OrangeButton(label: 'Copiar reporte CSV', onPressed: onExport),
       );
     if (state == SalesReportState.empty)
       return Column(
@@ -175,27 +154,3 @@ class _OrangeButton extends StatelessWidget {
     child: Text(label),
   );
 }
-
-class _SmallButton extends StatelessWidget {
-  const _SmallButton({
-    required this.label,
-    required this.icon,
-    required this.onTap,
-  });
-  final String label;
-  final IconData icon;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) => OutlinedButton.icon(
-    onPressed: onTap,
-    icon: Icon(icon, size: 11),
-    label: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-    style: OutlinedButton.styleFrom(
-      foregroundColor: _ink,
-      side: const BorderSide(color: _line),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      textStyle: const TextStyle(fontSize: 7, fontWeight: FontWeight.w700),
-    ),
-  );
-}
-

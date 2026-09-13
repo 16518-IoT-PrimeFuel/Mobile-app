@@ -82,9 +82,9 @@ class _TankRow extends StatelessWidget {
       label: '${tank.name}, ${tank.level} percent, ${_statusLabel(status)}',
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => context.go('/inventory/tank/${tank.id}'),
+        onTap: () => context.go('/inventory/tank/${tank.routeId}'),
         child: Container(
-          key: ValueKey('tank-${tank.id}'),
+          key: ValueKey('tank-${tank.routeId}'),
           padding: EdgeInsets.all(14 * _uiScale),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -148,20 +148,10 @@ class _TankRow extends StatelessWidget {
                       children: [
                         Expanded(child: _LevelBar(value: tank.level / 100)),
                         SizedBox(width: 8 * _uiScale),
-                        Icon(
-                          Icons.wifi_tethering,
-                          size: 13 * _uiScale,
-                          color: status == _TankStatus.critical
-                              ? color
-                              : FullTankColors.inkSoft,
-                        ),
-                        SizedBox(width: 3 * _uiScale),
                         Text(
-                          'LIVE',
-                          style: TextStyle(
-                            color: status == _TankStatus.critical
-                                ? color
-                                : FullTankColors.inkSoft,
+                          '${_liters(tank.current)} / ${_liters(tank.capacity)} L',
+                          style: const TextStyle(
+                            color: FullTankColors.inkMid,
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                           ),
@@ -199,4 +189,3 @@ class _TankIcon extends StatelessWidget {
     ),
   );
 }
-

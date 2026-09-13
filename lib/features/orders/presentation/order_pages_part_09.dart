@@ -1,51 +1,54 @@
 part of 'order_pages.dart';
 
 class _ActiveOrders extends StatelessWidget {
-  const _ActiveOrders({required this.filter});
+  const _ActiveOrders({
+    required this.filter,
+    required this.orders,
+    required this.providerMode,
+    required this.onAccept,
+    required this.onReject,
+  });
   final String filter;
+  final List<Order> orders;
+  final bool providerMode;
+  final ValueChanged<int> onAccept;
+  final ValueChanged<int> onReject;
   @override
   Widget build(BuildContext context) {
-    const items = [
-      _ActiveOrderData(
-        id: '#FT-88421',
-        status: 'En tránsito',
-        fuel: 'Diesel · ULSD B5',
-        quantity: '6,000 L',
-        supplier: 'Global Fuel Corp',
-        eta: '~1h 20m',
-        color: _orange,
-      ),
-      _ActiveOrderData(
-        id: '#FT-88418',
-        status: 'Aprobado',
-        fuel: 'Gasoline · 95',
-        quantity: '3,200 L',
-        supplier: 'Midwest PetroLink',
-        eta: 'Dispatch 14:00',
-        color: _blue,
-      ),
-      _ActiveOrderData(
-        id: '#FT-88415',
-        status: 'Pendiente',
-        fuel: 'Diesel · ULSD B5',
-        quantity: '4,000 L',
-        supplier: 'Global Fuel Corp',
-        eta: 'Pending approval',
-        color: _orange,
-      ),
-    ];
-    final shown = switch (filter) {
-      'Pendiente 1' => items.where((item) => item.status == 'Pendiente'),
-      'Aprobado 1' => items.where((item) => item.status == 'Aprobado'),
-      'En tránsito 1' => items.where((item) => item.status == 'En tránsito'),
-      _ => items,
-    };
+    final shown = orders
+        .where((order) {
+          if (filter.startsWith('Pendiente'))
+            return order.status == OrderStatus.pending;
+          if (filter.startsWith('Aprobado'))
+            return order.status == OrderStatus.approved;
+          if (filter.startsWith('En tránsito'))
+            return order.status == OrderStatus.inTransit;
+          return true;
+        })
+        .map(
+          (order) => _ActiveOrderData(
+            id: '#${order.id}',
+            status: _orderStatusLabel(order.status),
+            fuel: order.fuel,
+            quantity: '${order.quantity.toStringAsFixed(0)} L',
+            supplier: order.deliveryAddress.isEmpty
+                ? '—'
+                : order.deliveryAddress,
+            eta: order.deliveryAddress,
+            color: order.status == OrderStatus.approved ? _blue : _orange,
+            request: order.request,
+          ),
+        )
+        .toList();
     return Column(
       children: [
         for (final item in shown) ...[
           _ActiveOrderCard(
             data: item,
             onTap: () => context.push('/orders/${item.id.substring(1)}'),
+            showRequestActions: providerMode && item.request,
+            onAccept: () => onAccept(int.tryParse(item.id.substring(1)) ?? 0),
+            onReject: () => onReject(int.tryParse(item.id.substring(1)) ?? 0),
           ),
           if (item != shown.last) const SizedBox(height: 8),
         ],
@@ -63,15 +66,26 @@ class _ActiveOrderData {
     required this.supplier,
     required this.eta,
     required this.color,
+    this.request = false,
   });
   final String id, status, fuel, quantity, supplier, eta;
   final Color color;
+  final bool request;
 }
 
 class _ActiveOrderCard extends StatelessWidget {
-  const _ActiveOrderCard({required this.data, required this.onTap});
+  const _ActiveOrderCard({
+    required this.data,
+    required this.onTap,
+    required this.showRequestActions,
+    required this.onAccept,
+    required this.onReject,
+  });
   final _ActiveOrderData data;
   final VoidCallback onTap;
+  final bool showRequestActions;
+  final VoidCallback onAccept;
+  final VoidCallback onReject;
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
@@ -144,7 +158,7 @@ class _ActiveOrderCard extends StatelessWidget {
                   Row(
                     children: [
                       const Text(
-                        'SUPPLIER',
+                        'ENTREGA',
                         style: TextStyle(
                           color: _subtle,
                           fontSize: 6,
@@ -187,14 +201,21 @@ class _ActiveOrderCard extends StatelessWidget {
                   style: const TextStyle(color: _muted, fontSize: 7),
                 ),
                 const SizedBox(width: 7),
-                const Text(
-                  'Track  ›',
-                  style: TextStyle(
-                    color: _blue,
-                    fontSize: 7,
-                    fontWeight: FontWeight.w800,
+                if (showRequestActions) ...[
+                  TextButton(
+                    onPressed: onReject,
+                    child: const Text('Rechazar'),
                   ),
-                ),
+                  TextButton(onPressed: onAccept, child: const Text('Aceptar')),
+                ] else
+                  const Text(
+                    'Ver detalle  ›',
+                    style: TextStyle(
+                      color: _blue,
+                      fontSize: 7,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
               ],
             ),
           ],
@@ -203,4 +224,3 @@ class _ActiveOrderCard extends StatelessWidget {
     ),
   );
 }
-

@@ -8,6 +8,18 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(authControllerProvider).session;
+    final providerMode =
+        session?.roles.contains('ROLE_PROVIDER') ?? role == HomeRole.provider;
+    final orders =
+        ref.watch(ordersControllerProvider).valueOrNull ?? const <Order>[];
+    final activeOrder = orders
+        .where(
+          (order) =>
+              order.status != OrderStatus.delivered &&
+              order.status != OrderStatus.cancelled &&
+              order.status != OrderStatus.rejected,
+        )
+        .firstOrNull;
     return _withHomeUiScale(
       context,
       Scaffold(
@@ -19,10 +31,18 @@ class HomePage extends ConsumerWidget {
             transform: Matrix4.diagonal3Values(1, 1.02, 1),
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
-              child: role == HomeRole.provider
-                  ? _ProviderHome(onSignOut: () => _signOut(context, ref))
+              child: providerMode
+                  ? _ProviderHome(
+                      onSignOut: () => _signOut(context, ref),
+                      orders: orders,
+                      name: session?.username ?? 'FuelMex Logistics',
+                    )
                   : _RequesterHome(
                       guest: session?.token == 'guest',
+                      name: session?.token == 'guest'
+                          ? 'PetroAndes'
+                          : session?.username ?? 'PetroAndes',
+                      activeOrder: activeOrder,
                       onSignOut: () => _signOut(context, ref),
                     ),
             ),
@@ -40,10 +60,17 @@ class HomePage extends ConsumerWidget {
 }
 
 class _RequesterHome extends StatelessWidget {
-  const _RequesterHome({required this.onSignOut, required this.guest});
+  const _RequesterHome({
+    required this.onSignOut,
+    required this.guest,
+    required this.name,
+    required this.activeOrder,
+  });
 
   final VoidCallback onSignOut;
   final bool guest;
+  final String name;
+  final Order? activeOrder;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +80,7 @@ class _RequesterHome extends StatelessWidget {
         _HomeHeader(
           initials: 'PE',
           eyebrow: 'BUENOS DÍAS · DOMINGO, 6 SEP',
-          name: 'PetroAndes',
+          name: name,
           subtitle: 'Solicitante · Operaciones de flota',
           onSignOut: onSignOut,
         ),
@@ -108,7 +135,7 @@ class _RequesterHome extends StatelessWidget {
         const SizedBox(height: 18),
         const _SectionLabel('ESTADO DEL PEDIDO'),
         const SizedBox(height: 8),
-        const _OrderStatusCard(),
+        _OrderStatusCard(order: activeOrder),
         if (guest) ...[
           const SizedBox(height: 10),
           Center(
@@ -124,9 +151,15 @@ class _RequesterHome extends StatelessWidget {
 }
 
 class _ProviderHome extends StatelessWidget {
-  const _ProviderHome({required this.onSignOut});
+  const _ProviderHome({
+    required this.onSignOut,
+    required this.orders,
+    required this.name,
+  });
 
   final VoidCallback onSignOut;
+  final List<Order> orders;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -136,52 +169,45 @@ class _ProviderHome extends StatelessWidget {
         _HomeHeader(
           initials: 'FU',
           eyebrow: 'OPERACIONES · DOMINGO, 6 SEP',
-          name: 'FuelMex Logistics',
+          name: name,
           subtitle: 'Proveedor · Centro regional',
           onSignOut: onSignOut,
         ),
         const SizedBox(height: 18),
         const _SectionLabel('RESUMEN DE OPERACIONES'),
         const SizedBox(height: 8),
-        const _SummaryGrid(),
+        _SummaryGrid(orders: orders),
         const SizedBox(height: 18),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const _SectionLabel('ACCIONES PENDIENTES'),
-            _TinyPill(label: '2 URGENTES', color: _red, softColor: _redSoft),
+            _TinyPill(
+              label:
+                  '${orders.where((o) => o.request && o.status == OrderStatus.pending).length} PENDIENTES',
+              color: _red,
+              softColor: _redSoft,
+            ),
           ],
         ),
         const SizedBox(height: 8),
-        _ActionRequiredCard(
-          color: _red,
-          priority: 'ALTA',
-          reference: '#FT-2098',
-          title: 'Aprobar pedido — AgroNorte',
-          detail: '12.000 L Diésel B5 · hace 8 min',
-          button: 'Aprobar',
-        ),
-        const SizedBox(height: 8),
-        _ActionRequiredCard(
-          color: _amber,
-          priority: 'HIGH',
-          reference: '#FT-2091',
-          title: 'Asignar vehículo — Transportes Delta',
-          detail: 'Bahía 2 · programado hoy 3:00 PM',
-          button: 'Asignar',
-          onTap: () => context.push('/dispatches/assign'),
-        ),
-        const SizedBox(height: 8),
-        _ActionRequiredCard(
-          color: _amber,
-          priority: 'MEDIA',
-          reference: 'INV-8112',
-          title: 'Revisar pago — Cementos B',
-          detail: '\$248.500 MXN · pendiente de confirmación',
-          button: 'Revisar',
-        ),
+        for (final order
+            in orders
+                .where((o) => o.request && o.status == OrderStatus.pending)
+                .take(4)) ...[
+          _ActionRequiredCard(
+            color: _red,
+            priority: 'NUEVA',
+            reference: '#${order.id}',
+            title: 'Solicitud de ${order.fuel}',
+            detail:
+                '${order.quantity.toStringAsFixed(0)} L · ${order.deliveryAddress}',
+            button: 'Revisar',
+            onTap: () => context.push('/orders'),
+          ),
+          const SizedBox(height: 8),
+        ],
       ],
     );
   }
 }
-

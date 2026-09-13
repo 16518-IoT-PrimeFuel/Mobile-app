@@ -96,15 +96,14 @@ class _DuplicateNotice extends StatelessWidget {
 }
 
 class _StatusTag extends StatelessWidget {
-  const _StatusTag(this.label, {required this.color, this.soft});
+  const _StatusTag(this.label, {required this.color});
   final String label;
   final Color color;
-  final Color? soft;
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
     decoration: BoxDecoration(
-      color: soft ?? color.withAlpha(22),
+      color: color.withAlpha(22),
       borderRadius: BorderRadius.circular(99),
     ),
     child: Text(
@@ -192,4 +191,3 @@ class _EmptyDispatchState extends StatelessWidget {
     ],
   );
 }
-

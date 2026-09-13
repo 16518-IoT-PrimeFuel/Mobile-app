@@ -16,20 +16,3 @@ class _DarkButton extends StatelessWidget {
     child: Text(label),
   );
 }
-
-class _LightButton extends StatelessWidget {
-  const _LightButton({required this.label, required this.onTap});
-  final String label;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) => OutlinedButton(
-    onPressed: onTap,
-    child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
-    style: OutlinedButton.styleFrom(
-      foregroundColor: _blue,
-      side: const BorderSide(color: Color(0xFFBCD4FF)),
-      padding: const EdgeInsets.symmetric(vertical: 11),
-      textStyle: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700),
-    ),
-  );
-}

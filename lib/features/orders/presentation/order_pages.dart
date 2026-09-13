@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import '../../auth/application/auth_providers.dart';
+import '../../inventory/application/inventory_providers.dart';
+import '../../inventory/domain/equipment.dart';
+import '../../inventory/domain/fuel_product.dart';
+import '../../reports/application/reports_controller.dart';
+import '../../reports/domain/report.dart';
+import '../application/orders_controller.dart';
+import '../application/orders_providers.dart';
+import '../domain/order.dart';
 part 'order_pages_part_01.dart';
 part 'order_pages_part_02.dart';
 part 'order_pages_part_03.dart';
@@ -16,7 +27,6 @@ part 'order_pages_part_13.dart';
 part 'order_pages_part_14.dart';
 part 'order_pages_part_15.dart';
 part 'order_pages_part_16.dart';
-
 
 const _ink = Color(0xFF172033);
 const _muted = Color(0xFF64748B);

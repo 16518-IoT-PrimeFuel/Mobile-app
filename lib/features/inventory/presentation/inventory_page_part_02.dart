@@ -1,13 +1,42 @@
 part of 'inventory_page.dart';
 
-class TankDetailPage extends StatelessWidget {
+_AlertData _alertFromEquipment(TankData tank) => _AlertData(
+  tankId: tank.routeId,
+  tank: tank.name,
+  level: tank.level,
+  status: _statusFor(tank.level),
+  location: tank.location,
+  time: '—',
+  eta: '—',
+);
+
+class TankDetailPage extends ConsumerWidget {
   const TankDetailPage({required this.tankId, super.key});
 
   final String tankId;
 
   @override
-  Widget build(BuildContext context) {
-    final tank = _tankForId(tankId);
+  Widget build(BuildContext context, WidgetRef ref) => ref
+      .watch(inventoryEquipmentProvider)
+      .when(
+        loading: () =>
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+        error: (error, _) => Scaffold(
+          body: Center(child: Text('No se pudo cargar el equipo: $error')),
+        ),
+        data: (equipment) {
+          TankData? tank;
+          for (final item in equipment) {
+            if ('${item.id}' == tankId) {
+              tank = _tankFromEquipment(item);
+              break;
+            }
+          }
+          return _build(context, tank ?? _tankForId(tankId));
+        },
+      );
+
+  Widget _build(BuildContext context, TankData tank) {
     final status = _statusFor(tank.level);
     return _withInventoryScale(
       context,
@@ -15,10 +44,10 @@ class TankDetailPage extends StatelessWidget {
         title: tank.id,
         subtitle: tank.type,
         back: true,
-        right: _LivePill(),
+        right: _StatusPill(status: status),
         children: [
           _GaugeCard(tank: tank, status: status),
-          _InventorySectionLabel('Real-time telemetry'),
+          _InventorySectionLabel('Inventory level'),
           SizedBox(height: 8 * _uiScale),
           GridView.count(
             crossAxisCount: 2,
@@ -26,42 +55,30 @@ class TankDetailPage extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             crossAxisSpacing: 8 * _uiScale,
             mainAxisSpacing: 8 * _uiScale,
-            childAspectRatio: 1.18,
-            children: const [
-              _MetricCard(
-                icon: Icons.thermostat_outlined,
-                label: 'Temperature',
-                value: '24.3',
-                unit: '°C',
-              ),
-              _MetricCard(
-                icon: Icons.speed_outlined,
-                label: 'Pressure',
-                value: '1.02',
-                unit: 'atm',
-                trend: '+0.4%',
-              ),
+            childAspectRatio: 1.7,
+            children: [
               _MetricCard(
                 icon: Icons.water_drop_outlined,
-                label: 'Flow rate',
-                value: '0.8',
-                unit: 'L/h out',
-                status: _TankStatus.warning,
+                label: 'Current',
+                value: _liters(tank.current),
+                unit: 'L',
+                status: status,
               ),
               _MetricCard(
-                icon: Icons.access_time,
-                label: 'ETA to empty',
-                value: '~4h',
-                status: _TankStatus.critical,
+                icon: Icons.storage_outlined,
+                label: 'Capacity',
+                value: _liters(tank.capacity),
+                unit: 'L',
               ),
             ],
           ),
-          SizedBox(height: 14 * _uiScale),
-          _SensorCard(tank: tank),
+          SizedBox(height: 10 * _uiScale),
+          _TankInfoCard(tank: tank),
           SizedBox(height: 14 * _uiScale),
           _PrimaryButton(
             label: 'Request Restock',
-            onPressed: () => context.go('/inventory/restock/${tank.id}'),
+            onPressed: () =>
+                context.go('/orders/new?equipmentId=${tank.routeId}'),
           ),
         ],
       ),
@@ -69,58 +86,37 @@ class TankDetailPage extends StatelessWidget {
   }
 }
 
-class InventoryAlertsPage extends StatefulWidget {
+class InventoryAlertsPage extends ConsumerStatefulWidget {
   const InventoryAlertsPage({super.key});
 
   @override
-  State<InventoryAlertsPage> createState() => _InventoryAlertsPageState();
+  ConsumerState<InventoryAlertsPage> createState() =>
+      _InventoryAlertsPageState();
 }
 
-class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
+class _InventoryAlertsPageState extends ConsumerState<InventoryAlertsPage> {
   String _filter = 'all';
 
-  static const _alerts = [
-    _AlertData(
-      tankId: 'A-102',
-      tank: 'Diesel Tank A-102',
-      level: 12,
-      status: _TankStatus.critical,
-      location: 'North Yard · Sector 4',
-      time: '2 min ago',
-      eta: '~4h to depletion',
-    ),
-    _AlertData(
-      tankId: 'G-11',
-      tank: 'Propane G-11',
-      level: 18,
-      status: _TankStatus.critical,
-      location: 'Sector 6',
-      time: '5 min ago',
-      eta: '~7h to depletion',
-    ),
-    _AlertData(
-      tankId: 'C-12',
-      tank: 'Lube Tank C-12',
-      level: 35,
-      status: _TankStatus.warning,
-      location: 'Sector 9',
-      time: '12 min ago',
-      eta: '~2 days',
-    ),
-    _AlertData(
-      tankId: 'B-07',
-      tank: 'Coolant B-07',
-      level: 28,
-      status: _TankStatus.warning,
-      location: 'Sector 1',
-      time: '18 min ago',
-      eta: '~1.5 days',
-    ),
-  ];
-
   @override
-  Widget build(BuildContext context) {
-    final visible = _alerts.where((alert) {
+  Widget build(BuildContext context) => ref
+      .watch(inventoryEquipmentProvider)
+      .when(
+        loading: () =>
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+        error: (error, _) => Scaffold(
+          body: Center(child: Text('No se pudo cargar el inventario: $error')),
+        ),
+        data: (items) => _buildAlerts(
+          context,
+          items
+              .map((item) => _alertFromEquipment(_tankFromEquipment(item)))
+              .where((alert) => alert.level < 40)
+              .toList(),
+        ),
+      );
+
+  Widget _buildAlerts(BuildContext context, List<_AlertData> alerts) {
+    final visible = alerts.where((alert) {
       return _filter == 'all' ||
           (_filter == 'critical' && alert.status == _TankStatus.critical) ||
           (_filter == 'warning' && alert.status == _TankStatus.warning);
@@ -135,7 +131,8 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
       context,
       _InventoryShell(
         title: 'Alerts',
-        subtitle: '4 active · 2 critical',
+        subtitle:
+            '${alerts.length} active · ${alerts.where((a) => a.level < 20).length} critical',
         back: true,
         right: _HeaderIconButton(
           icon: Icons.filter_alt_outlined,
@@ -183,7 +180,7 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
           },
         ),
         children: [
-          _CriticalBanner(count: _alerts.where((a) => a.level < 20).length),
+          _CriticalBanner(count: alerts.where((a) => a.level < 20).length),
           if (critical.isNotEmpty) ...[
             _AlertGroupLabel(label: 'Critical', status: _TankStatus.critical),
             ...critical.map(
@@ -208,4 +205,3 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
     );
   }
 }
-

@@ -2,6 +2,7 @@ import '../../core/storage/token_storage.dart';
 import '../../domain/auth/auth_failure.dart';
 import '../../domain/auth/auth_repository.dart';
 import '../../domain/auth/auth_session.dart';
+import '../../domain/auth/sign_up_request.dart';
 import '../api_client.dart';
 import '../fulltank_api.dart';
 
@@ -10,6 +11,46 @@ class AuthApiRepository implements AuthRepository {
 
   final FullTankApi api;
   final TokenStorage storage;
+
+  @override
+  Future<void> signUp(SignUpRequest request) async {
+    final isBuyer = request.role == BusinessRole.buyer;
+    await api.signUp({
+      'username': request.username,
+      'password': request.password,
+      'roles': [isBuyer ? 'ROLE_BUYER' : 'ROLE_PROVIDER'],
+      'buyerCompany': isBuyer
+          ? {
+              'name': request.businessName,
+              'ruc': request.ruc,
+              'sector': request.sector,
+              'address': request.address,
+              'contactEmail': request.contactEmail,
+              'phone': request.phone,
+            }
+          : null,
+      'providerCompany': isBuyer
+          ? null
+          : {
+              'name': request.businessName,
+              'ruc': request.ruc,
+              'address': request.address,
+              'phone': request.phone,
+              'fuelTypesOffered': request.fuelTypesOffered,
+              'description': request.description,
+            },
+    });
+  }
+
+  @override
+  Future<void> requestPasswordReset(String email) async {
+    await api.requestPasswordReset(email);
+  }
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {
+    await api.resetPassword(token, newPassword);
+  }
 
   @override
   Future<AuthSession> signIn(
@@ -27,6 +68,11 @@ class AuthApiRepository implements AuthRepository {
         userId: _intValue(data['id']),
         username: data['username'] as String? ?? username,
         token: token,
+        roles: data['roles'] is List
+            ? (data['roles'] as List).whereType<String>().toList()
+            : const [],
+        companyId: _intValue(data['companyId']),
+        providerId: _intValue(data['providerId']),
       );
       api.client.token = session.token;
       if (rememberMe) {
@@ -34,6 +80,9 @@ class AuthApiRepository implements AuthRepository {
           token: session.token,
           username: session.username,
           userId: session.userId,
+          roles: session.roles,
+          companyId: session.companyId,
+          providerId: session.providerId,
         );
       } else {
         await storage.clear();
@@ -63,6 +112,9 @@ class AuthApiRepository implements AuthRepository {
       userId: saved.userId,
       username: saved.username,
       token: saved.token,
+      roles: saved.roles,
+      companyId: saved.companyId,
+      providerId: saved.providerId,
     );
   }
 

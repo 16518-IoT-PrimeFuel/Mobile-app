@@ -162,7 +162,8 @@ class _CheckRow extends StatelessWidget {
 }
 
 class _SalesReady extends StatelessWidget {
-  const _SalesReady();
+  const _SalesReady({required this.summary});
+  final ReportSummary summary;
   @override
   Widget build(BuildContext context) => Column(
     children: [
@@ -194,7 +195,7 @@ class _SalesReady extends StatelessWidget {
       ),
       const SizedBox(height: 5),
       const Text(
-        'Generamos el reporte completo con\nmétricas, gráficos y desglose por cliente.',
+        'Resumen creado con las métricas disponibles del backend.',
         textAlign: TextAlign.center,
         style: TextStyle(color: _muted, fontSize: 9, height: 1.4),
       ),
@@ -218,17 +219,17 @@ class _SalesReady extends StatelessWidget {
             Row(
               children: [
                 const Icon(
-                  Icons.picture_as_pdf_outlined,
-                  color: _red,
+                  Icons.description_outlined,
+                  color: _blue,
                   size: 18,
                 ),
                 const SizedBox(width: 7),
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Reporte_Ventas_Ago_Sep_202...',
+                      'Reporte_Ventas.csv',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: _ink,
@@ -237,7 +238,7 @@ class _SalesReady extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '2.4 MB · 24 páginas · Generado hoy',
+                        'CSV · ${summary.orders} pedidos · Generado ahora',
                         style: TextStyle(color: _muted, fontSize: 7),
                       ),
                     ],
@@ -249,13 +250,11 @@ class _SalesReady extends StatelessWidget {
             const SizedBox(height: 7),
             Row(
               children: [
-                const _StatusTag('Listo', color: _green),
-                const SizedBox(width: 5),
-                const _StatusTag('Encriptado', color: _blue),
+                const _StatusTag('CSV listo', color: _green),
               ],
             ),
             const Divider(height: 14, color: _line),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Column(
@@ -265,7 +264,7 @@ class _SalesReady extends StatelessWidget {
                       style: TextStyle(color: _subtle, fontSize: 6),
                     ),
                     Text(
-                      'S/148.3k',
+                      'S/ ${summary.revenue.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: _ink,
                         fontSize: 8,
@@ -281,7 +280,7 @@ class _SalesReady extends StatelessWidget {
                       style: TextStyle(color: _subtle, fontSize: 6),
                     ),
                     Text(
-                      '24',
+                      '${summary.orders}',
                       style: TextStyle(
                         color: _ink,
                         fontSize: 8,
@@ -297,7 +296,7 @@ class _SalesReady extends StatelessWidget {
                       style: TextStyle(color: _subtle, fontSize: 6),
                     ),
                     Text(
-                      '18',
+                      '—',
                       style: TextStyle(
                         color: _ink,
                         fontSize: 8,
@@ -314,4 +313,3 @@ class _SalesReady extends StatelessWidget {
     ],
   );
 }
-

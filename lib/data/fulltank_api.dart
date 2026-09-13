@@ -10,6 +10,13 @@ class FullTankApi {
   );
   Future<dynamic> signUp(Map<String, dynamic> body) =>
       client.post('/authentication/sign-up', body);
+  Future<dynamic> requestPasswordReset(String email) =>
+      client.post('/authentication/password-reset/request', {'email': email});
+  Future<dynamic> resetPassword(String token, String newPassword) =>
+      client.post('/authentication/password-reset/confirm', {
+        'token': token,
+        'newPassword': newPassword,
+      });
   Future<dynamic> users() => client.get('/users');
   Future<dynamic> user(int id) => client.get('/users/$id');
   Future<dynamic> buyerCompanies() => client.get('/buyer-companies');
@@ -26,20 +33,30 @@ class FullTankApi {
   Future<dynamic> updateProviderCompany(int id, Map<String, dynamic> body) =>
       client.put('/provider-companies/$id', body);
 
-  Future<dynamic> orders({int companyId = 1}) =>
+  Future<dynamic> orders({required int companyId}) =>
       client.get('/fuel-orders/company/$companyId');
+  Future<dynamic> providerOrders(int providerId) =>
+      client.get('/fuel-orders/provider/$providerId');
   Future<dynamic> order(int id) => client.get('/fuel-orders/$id');
   Future<dynamic> createOrder(Map<String, dynamic> body) =>
       client.post('/fuel-orders', body);
   Future<dynamic> confirmOrder(int id) =>
       client.post('/fuel-orders/$id/confirm');
   Future<dynamic> cancelOrder(int id) => client.post('/fuel-orders/$id/cancel');
-  Future<dynamic> fuelRequests({int? buyerCompanyId, int? providerId}) =>
-      client.get(
-        '/fuel-requests?buyerCompanyId=$buyerCompanyId&providerId=$providerId',
-      );
+  Future<dynamic> fuelRequests({int? buyerCompanyId, int? providerId}) {
+    final query = <String, String>{
+      if (buyerCompanyId != null) 'buyerCompanyId': '$buyerCompanyId',
+      if (providerId != null) 'providerId': '$providerId',
+    };
+    final suffix = query.isEmpty
+        ? ''
+        : '?${query.entries.map((e) => '${e.key}=${e.value}').join('&')}';
+    return client.get('/fuel-requests$suffix');
+  }
+
   Future<dynamic> createFuelRequest(Map<String, dynamic> body) =>
       client.post('/fuel-requests', body);
+  Future<dynamic> fuelRequest(int id) => client.get('/fuel-requests/$id');
   Future<dynamic> acceptFuelRequest(int id) =>
       client.post('/fuel-requests/$id/accept');
   Future<dynamic> rejectFuelRequest(int id, String reason) =>
@@ -70,7 +87,8 @@ class FullTankApi {
         'providerId': providerId,
       });
 
-  Future<dynamic> payments() => client.get('/payments');
+  Future<dynamic> payments({required int companyId}) =>
+      client.get('/payments/company/$companyId');
   Future<dynamic> paymentForOrder(int orderId) =>
       client.get('/payments/order/$orderId');
   Future<dynamic> createPayment(Map<String, dynamic> body) =>
@@ -81,7 +99,8 @@ class FullTankApi {
       });
   Future<dynamic> refundPayment(int id) => client.post('/payments/$id/refund');
 
-  Future<dynamic> deliveries() => client.get('/deliveries');
+  Future<dynamic> deliveries({required int providerId}) =>
+      client.get('/deliveries/provider/$providerId');
   Future<dynamic> createDelivery(Map<String, dynamic> body) =>
       client.post('/deliveries', body);
   Future<dynamic> dispatchDelivery(int id) =>
@@ -90,9 +109,8 @@ class FullTankApi {
       client.post('/deliveries/$id/complete');
   Future<dynamic> failDelivery(int id, String reason) =>
       client.post('/deliveries/$id/fail', {'reason': reason});
-  Future<dynamic> vehicles({int? providerId}) => client.get(
-    providerId == null ? '/vehicles' : '/vehicles?providerId=$providerId',
-  );
+  Future<dynamic> vehicles({required int providerId}) =>
+      client.get('/vehicles?providerId=$providerId');
   Future<dynamic> vehicle(int id) => client.get('/vehicles/$id');
   Future<dynamic> createVehicle(Map<String, dynamic> body) =>
       client.post('/vehicles', body);
@@ -108,8 +126,17 @@ class FullTankApi {
   Future<dynamic> updateDriver(int id, Map<String, dynamic> body) =>
       client.put('/drivers/$id', body);
   Future<void> deleteDriver(int id) => client.delete('/drivers/$id');
-  Future<dynamic> providerRatings({int? companyId, int? providerId}) => client
-      .get('/provider-ratings?companyId=$companyId&providerId=$providerId');
+  Future<dynamic> providerRatings({int? companyId, int? providerId}) {
+    final query = <String, String>{
+      if (companyId != null) 'companyId': '$companyId',
+      if (providerId != null) 'providerId': '$providerId',
+    };
+    final suffix = query.isEmpty
+        ? ''
+        : '?${query.entries.map((entry) => '${entry.key}=${entry.value}').join('&')}';
+    return client.get('/provider-ratings$suffix');
+  }
+
   Future<dynamic> createProviderRating(Map<String, dynamic> body) =>
       client.post('/provider-ratings', body);
   Future<dynamic> updateProviderRating(int id, Map<String, dynamic> body) =>

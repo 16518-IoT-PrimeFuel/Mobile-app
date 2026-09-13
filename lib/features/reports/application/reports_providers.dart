@@ -7,10 +7,21 @@ import '../domain/reports_repository.dart';
 
 const _useMockReports = bool.fromEnvironment(
   'USE_MOCK_REPORTS',
-  defaultValue: true,
+  defaultValue: false,
 );
 
 final reportsRepositoryProvider = Provider<ReportsRepository>((ref) {
   if (_useMockReports) return MockReportsRepository();
-  return ApiReportsRepository(ref.watch(fullTankApiProvider));
+  return ApiReportsRepository(
+    ref.watch(fullTankApiProvider),
+    providerId: ref.watch(authControllerProvider).session?.providerId,
+    companyId: ref.watch(authControllerProvider).session?.companyId,
+    providerMode:
+        ref
+            .watch(authControllerProvider)
+            .session
+            ?.roles
+            .contains('ROLE_PROVIDER') ??
+        false,
+  );
 });

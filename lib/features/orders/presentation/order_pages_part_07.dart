@@ -1,34 +1,43 @@
 part of 'order_pages.dart';
 
+String _orderStatusLabel(OrderStatus status) => switch (status) {
+  OrderStatus.pending => 'Pendiente',
+  OrderStatus.approved => 'Aprobado',
+  OrderStatus.inTransit => 'En tránsito',
+  OrderStatus.delivered => 'Entregado',
+  OrderStatus.rejected => 'Rechazado',
+  OrderStatus.cancelled => 'Cancelado',
+};
+
 class _HistoryMetrics extends StatelessWidget {
-  const _HistoryMetrics();
+  const _HistoryMetrics({required this.orders});
+  final List<Order> orders;
   @override
-  Widget build(BuildContext context) => const Row(
+  Widget build(BuildContext context) => Row(
     children: [
       Expanded(
         child: _MetricCard(
           label: 'CONSUMO',
-          value: '42.8k\nL',
+          value:
+              '${orders.fold<double>(0, (sum, order) => sum + order.quantity).toStringAsFixed(0)} L',
           accent: _blue,
-          badge: '+8%',
         ),
       ),
       SizedBox(width: 6),
       Expanded(
         child: _MetricCard(
           label: 'PEDIDOS',
-          value: '24',
+          value: '${orders.length}',
           accent: _orange,
-          badge: '+3',
         ),
       ),
       SizedBox(width: 6),
       Expanded(
         child: _MetricCard(
           label: 'TOTAL',
-          value: 'S/\n63k',
+          value:
+              'S/ ${orders.fold<double>(0, (sum, order) => sum + order.total).toStringAsFixed(2)}',
           accent: _muted,
-          badge: 'mes',
         ),
       ),
     ],
@@ -36,20 +45,36 @@ class _HistoryMetrics extends StatelessWidget {
 }
 
 class _ActiveMetrics extends StatelessWidget {
-  const _ActiveMetrics();
+  const _ActiveMetrics({required this.orders});
+  final List<Order> orders;
   @override
-  Widget build(BuildContext context) => const Row(
+  Widget build(BuildContext context) => Row(
     children: [
       Expanded(
-        child: _MetricCard(label: 'PENDING', value: '01', accent: _orange),
+        child: _MetricCard(
+          label: 'PENDING',
+          value:
+              '${orders.where((o) => o.status == OrderStatus.pending).length}',
+          accent: _orange,
+        ),
       ),
       SizedBox(width: 6),
       Expanded(
-        child: _MetricCard(label: 'APPROVED', value: '01', accent: _blue),
+        child: _MetricCard(
+          label: 'APPROVED',
+          value:
+              '${orders.where((o) => o.status == OrderStatus.approved).length}',
+          accent: _blue,
+        ),
       ),
       SizedBox(width: 6),
       Expanded(
-        child: _MetricCard(label: 'TRANSIT', value: '01', accent: _orange),
+        child: _MetricCard(
+          label: 'TRANSIT',
+          value:
+              '${orders.where((o) => o.status == OrderStatus.inTransit).length}',
+          accent: _orange,
+        ),
       ),
     ],
   );
@@ -60,11 +85,9 @@ class _MetricCard extends StatelessWidget {
     required this.label,
     required this.value,
     required this.accent,
-    this.badge,
   });
   final String label, value;
   final Color accent;
-  final String? badge;
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.fromLTRB(9, 8, 7, 8),
@@ -87,15 +110,6 @@ class _MetricCard extends StatelessWidget {
               ),
               child: Icon(Icons.insights_outlined, size: 9, color: accent),
             ),
-            if (badge != null)
-              Text(
-                badge!,
-                style: TextStyle(
-                  color: accent,
-                  fontSize: 7,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
           ],
         ),
         const SizedBox(height: 7),
@@ -204,4 +218,3 @@ class _Bar extends StatelessWidget {
     ],
   );
 }
-

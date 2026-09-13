@@ -1,72 +1,65 @@
 part of 'reports_page.dart';
 
 class _BarChartPainter extends CustomPainter {
+  _BarChartPainter(this.monthly);
+
+  final List<MonthlyReportValue> monthly;
+
   @override
   void paint(Canvas canvas, Size size) {
     final left = size.width * .1;
     final right = size.width * .97;
     final top = size.height * .15;
     final bottom = size.height * .68;
-    final groupWidth = (right - left) / 6;
+    final values = monthly.length > 6
+        ? monthly.sublist(monthly.length - 6)
+        : monthly;
+    final groupWidth = (right - left) / values.length;
     final barWidth = groupWidth * .22;
+    final maxAmount = values.fold<double>(
+      0,
+      (max, item) => item.amount > max ? item.amount : max,
+    );
     final grid = Paint()
       ..color = FullTankColors.line
       ..strokeWidth = 1;
     for (final y in [top, (top + bottom) / 2, bottom])
       canvas.drawLine(Offset(left, y), Offset(right, y), grid);
-    const current = [22, 30, 17, 42, 53, 65];
-    const previous = [18, 24, 20, 33, 43, 52];
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < values.length; i++) {
       final x = left + i * groupWidth + groupWidth * .24;
-      final currentHeight = (bottom - top) * current[i] / 65;
-      final previousHeight = (bottom - top) * previous[i] / 65;
+      final currentHeight = maxAmount == 0
+          ? 0.0
+          : (bottom - top) * values[i].amount / maxAmount;
       canvas.drawRect(
         Rect.fromLTWH(x, bottom - currentHeight, barWidth, currentHeight),
         Paint()..color = FullTankColors.blue,
       );
-      canvas.drawRect(
-        Rect.fromLTWH(
-          x + barWidth + 3,
-          bottom - previousHeight,
-          barWidth,
-          previousHeight,
-        ),
-        Paint()..color = const Color(0xFFB7C2D4),
-      );
       _drawText(
         canvas,
-        ['MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO'][i],
+        values[i].month.length > 3
+            ? values[i].month.substring(0, 3).toUpperCase()
+            : values[i].month.toUpperCase(),
         Offset(left + i * groupWidth + groupWidth * .13, bottom + 10),
         FullTankColors.inkSoft,
         6,
       );
     }
-    _drawText(
-      canvas,
-      'Anterior',
-      Offset(left, size.height - 18),
-      FullTankColors.inkMid,
-      6,
-    );
-    _drawText(
-      canvas,
-      'Actual',
-      Offset(left + 42, size.height - 18),
-      FullTankColors.inkMid,
-      6,
-    );
     canvas.drawRect(
       Rect.fromLTWH(left - 9, size.height - 20, 5, 5),
-      Paint()..color = const Color(0xFFB7C2D4),
-    );
-    canvas.drawRect(
-      Rect.fromLTWH(left + 33, size.height - 20, 5, 5),
       Paint()..color = FullTankColors.blue,
+    );
+    _drawText(
+      canvas,
+      'Ingresos',
+      Offset(left, size.height - 20),
+      FullTankColors.inkMid,
+      6,
     );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _BarChartPainter oldDelegate) =>
+      oldDelegate.monthly != monthly;
 }
 
 void _drawText(
@@ -104,55 +97,9 @@ void _drawText(
   painter.paint(canvas, offset);
 }
 
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.text);
-  final String text;
-  @override
-  Widget build(BuildContext context) => Text(
-    text,
-    style: const TextStyle(
-      color: FullTankColors.inkMid,
-      fontSize: 7,
-      fontWeight: FontWeight.w800,
-    ),
-  );
-}
-
-class _SelectField extends StatelessWidget {
-  const _SelectField(this.text);
-  final String text;
-  @override
-  Widget build(BuildContext context) => Container(
-    height: 38,
-    margin: const EdgeInsets.only(top: 6),
-    padding: const EdgeInsets.symmetric(horizontal: 13),
-    decoration: BoxDecoration(
-      color: FullTankColors.card,
-      borderRadius: BorderRadius.circular(9),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          text,
-          style: const TextStyle(
-            color: FullTankColors.navyMid,
-            fontSize: 8,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const Icon(
-          Icons.chevron_right,
-          size: 13,
-          color: FullTankColors.inkSoft,
-        ),
-      ],
-    ),
-  );
-}
-
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard();
+  const _SummaryCard({required this.summary});
+  final ReportSummary summary;
   @override
   Widget build(BuildContext context) => Container(
     margin: const EdgeInsets.only(top: 6),
@@ -161,7 +108,7 @@ class _SummaryCard extends StatelessWidget {
       color: FullTankColors.blueSoft,
       borderRadius: BorderRadius.circular(10),
     ),
-    child: const Column(
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -173,7 +120,7 @@ class _SummaryCard extends StatelessWidget {
             ),
             SizedBox(width: 6),
             Text(
-              'Reporte de ventas · AGO 2026',
+              'Reporte operacional',
               style: TextStyle(
                 color: FullTankColors.navy,
                 fontSize: 8,
@@ -184,19 +131,28 @@ class _SummaryCard extends StatelessWidget {
         ),
         SizedBox(height: 2),
         Text(
-          'PDF · A4 · 2 páginas · 980 KB',
-          style: TextStyle(color: FullTankColors.inkMid, fontSize: 7),
+          'Datos actuales desde FullTank API',
+          style: const TextStyle(color: FullTankColors.inkMid, fontSize: 7),
         ),
         SizedBox(height: 10),
         Row(
           children: [
-            Expanded(child: _SummaryMetric('INGRESOS', '\$31.200K')),
-            Expanded(child: _SummaryMetric('LITROS VENDIDOS', '1.240.000')),
-            Expanded(child: _SummaryMetric('TICKET PROM.', '\$98.1K')),
+            Expanded(
+              child: _SummaryMetric(
+                'INGRESOS',
+                'S/ ${summary.revenue.toStringAsFixed(2)}',
+              ),
+            ),
+            Expanded(
+              child: _SummaryMetric(
+                'LITROS',
+                summary.liters.toStringAsFixed(0),
+              ),
+            ),
+            Expanded(child: _SummaryMetric('PEDIDOS', '${summary.orders}')),
           ],
         ),
       ],
     ),
   );
 }
-

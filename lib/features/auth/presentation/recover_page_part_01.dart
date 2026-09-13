@@ -1,16 +1,18 @@
 part of 'recover_page.dart';
 
-class RecoverPage extends StatefulWidget {
+class RecoverPage extends ConsumerStatefulWidget {
   const RecoverPage({super.key});
 
   @override
-  State<RecoverPage> createState() => _RecoverPageState();
+  ConsumerState<RecoverPage> createState() => _RecoverPageState();
 }
 
-class _RecoverPageState extends State<RecoverPage> {
+class _RecoverPageState extends ConsumerState<RecoverPage> {
   final _emailController = TextEditingController();
   _RecoverStage _stage = _RecoverStage.form;
   bool _submitted = false;
+  bool _loading = false;
+  String? _requestError;
 
   @override
   void dispose() {
@@ -20,9 +22,8 @@ class _RecoverPageState extends State<RecoverPage> {
 
   @override
   Widget build(BuildContext context) {
-    final sent = _stage == _RecoverStage.sent;
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: sent ? SystemUiOverlayStyle.dark : SystemUiOverlayStyle.light,
+      value: SystemUiOverlayStyle.light,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: LayoutBuilder(
@@ -30,7 +31,7 @@ class _RecoverPageState extends State<RecoverPage> {
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: sent ? _buildSentState(context) : _buildFormState(context),
+                child: _buildFormState(context),
               ),
             );
           },
@@ -41,14 +42,15 @@ class _RecoverPageState extends State<RecoverPage> {
 
   Widget _buildFormState(BuildContext context) {
     final errorText = switch (_stage) {
-      _RecoverStage.notFound => 'No encontramos ninguna cuenta con este email',
-      _ => !_submitted
-          ? null
-          : _emailController.text.trim().isEmpty
-              ? 'Ingresa tu email corporativo'
-              : !_isValidEmail(_emailController.text.trim())
-                  ? 'Ingresa un email válido'
-                  : null,
+      _RecoverStage.sent => null,
+      _ =>
+        !_submitted
+            ? null
+            : _emailController.text.trim().isEmpty
+            ? 'Ingresa tu email corporativo'
+            : !_isValidEmail(_emailController.text.trim())
+            ? 'Ingresa un email válido'
+            : null,
     };
 
     return Column(
@@ -90,7 +92,7 @@ class _RecoverPageState extends State<RecoverPage> {
                   keyboardType: TextInputType.emailAddress,
                   errorText: errorText,
                   onChanged: (_) {
-                    if (_stage != _RecoverStage.form || _submitted) {
+                    if (_stage != _RecoverStage.form) {
                       setState(() {
                         _stage = _RecoverStage.form;
                         _submitted = false;
@@ -99,11 +101,29 @@ class _RecoverPageState extends State<RecoverPage> {
                   },
                 ),
                 const SizedBox(height: 14),
-                const _InboxInfoCard(),
+                if (_stage == _RecoverStage.sent)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      'Si la cuenta existe, recibirás instrucciones en tu correo.',
+                      style: TextStyle(color: FullTankColors.blue),
+                    ),
+                  )
+                else
+                  const _InboxInfoCard(),
+                if (_requestError != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      _requestError!,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
                 const SizedBox(height: 8),
                 PrimaryAuthButton(
-                  label: 'Enviar enlace de recuperación',
-                  onPressed: _submit,
+                  label: _loading ? 'Enviando…' : 'Enviar instrucciones',
+                  onPressed: _loading ? null : _submit,
+                  loading: _loading,
                 ),
                 SizedBox(
                   width: double.infinity,
@@ -130,74 +150,29 @@ class _RecoverPageState extends State<RecoverPage> {
     );
   }
 
-  Widget _buildSentState(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              _LightBackButton(onPressed: () => context.pop()),
-              const SizedBox(width: 14),
-              Image.asset(
-                'assets/fulltank-logo.png',
-                height: 22,
-                fit: BoxFit.contain,
-              ),
-            ],
-          ),
-          const SizedBox(height: 72),
-          const _SentEnvelope(),
-          const SizedBox(height: 24),
-          const Text(
-            'Revisa tu bandeja',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: FullTankColors.navy,
-              fontSize: 23,
-              fontWeight: FontWeight.w700,
-              letterSpacing: -0.4,
-            ),
-          ),
-          const SizedBox(height: 8),
-          _SentCopy(email: _emailController.text.trim()),
-          const SizedBox(height: 22),
-          _SentEmailCard(email: _emailController.text.trim()),
-          const SizedBox(height: 16),
-          PrimaryAuthButton(
-            label: 'Abrir mi correo',
-            onPressed: () {},
-          ),
-          TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              foregroundColor: FullTankColors.blue,
-              minimumSize: const Size(double.infinity, 44),
-              textStyle: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            child: const Text('Reenviar en 60s'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _submit() {
+  Future<void> _submit() async {
     final email = _emailController.text.trim();
     setState(() => _submitted = true);
     if (email.isEmpty || !_isValidEmail(email)) return;
-
     setState(() {
-      _stage = email.toLowerCase() == 'noexiste@empresa.com'
-          ? _RecoverStage.notFound
-          : _RecoverStage.sent;
+      _loading = true;
+      _requestError = null;
     });
+    try {
+      await ref.read(authRepositoryProvider).requestPasswordReset(email);
+      if (mounted) setState(() => _stage = _RecoverStage.sent);
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => _requestError =
+              'No se pudo enviar la solicitud. Intenta nuevamente.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   bool _isValidEmail(String value) =>
       RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(value);
 }
-

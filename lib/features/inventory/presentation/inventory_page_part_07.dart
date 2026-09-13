@@ -7,7 +7,6 @@ class _MetricCard extends StatelessWidget {
     required this.value,
     this.unit,
     this.status = _TankStatus.optimal,
-    this.trend,
   });
 
   final IconData icon;
@@ -15,7 +14,6 @@ class _MetricCard extends StatelessWidget {
   final String value;
   final String? unit;
   final _TankStatus status;
-  final String? trend;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -45,15 +43,6 @@ class _MetricCard extends StatelessWidget {
                 color: _statusColor(status),
               ),
             ),
-            if (trend != null)
-              Text(
-                trend!,
-                style: TextStyle(
-                  color: _statusColor(status),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
           ],
         ),
         const Spacer(),
@@ -93,8 +82,8 @@ class _MetricCard extends StatelessWidget {
   );
 }
 
-class _SensorCard extends StatelessWidget {
-  const _SensorCard({required this.tank});
+class _TankInfoCard extends StatelessWidget {
+  const _TankInfoCard({required this.tank});
   final TankData tank;
 
   @override
@@ -104,48 +93,27 @@ class _SensorCard extends StatelessWidget {
       color: FullTankColors.card,
       borderRadius: BorderRadius.circular(8 * _uiScale),
     ),
-    child: Row(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 32 * _uiScale,
-          height: 32 * _uiScale,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8 * _uiScale),
-          ),
-          alignment: Alignment.center,
-          child: const Icon(Icons.wifi_tethering, color: FullTankColors.blue),
-        ),
-        SizedBox(width: 10 * _uiScale),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('SENSOR', style: _metaLabelStyle),
-              Text(
-                tank.sensor,
-                style: const TextStyle(
-                  color: FullTankColors.navy,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
+        const Text('LOCATION', style: _metaLabelStyle),
+        Text(
+          tank.location,
+          style: const TextStyle(
+            color: FullTankColors.navy,
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            const Text('LAST UPDATE', style: _metaLabelStyle),
-            Text(
-              tank.updated,
-              style: const TextStyle(
-                color: FullTankColors.navy,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+        SizedBox(height: 8 * _uiScale),
+        const Text('FUEL TYPE', style: _metaLabelStyle),
+        Text(
+          tank.type,
+          style: const TextStyle(
+            color: FullTankColors.navy,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     ),
@@ -195,4 +163,3 @@ class _StatusPill extends StatelessWidget {
     ),
   );
 }
-

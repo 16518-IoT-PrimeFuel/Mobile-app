@@ -7,10 +7,13 @@ import '../domain/dispatch_repository.dart';
 
 const _useMockDispatch = bool.fromEnvironment(
   'USE_MOCK_DISPATCH',
-  defaultValue: true,
+  defaultValue: false,
 );
 
 final dispatchRepositoryProvider = Provider<DispatchRepository>((ref) {
   if (_useMockDispatch) return MockDispatchRepository();
-  return ApiDispatchRepository(ref.watch(fullTankApiProvider));
+  return ApiDispatchRepository(
+    ref.watch(fullTankApiProvider),
+    providerId: ref.watch(authControllerProvider).session?.providerId,
+  );
 });

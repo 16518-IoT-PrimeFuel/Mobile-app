@@ -1,29 +1,51 @@
 part of 'reports_page.dart';
 
-class ReportsPage extends StatelessWidget {
+class ReportsPage extends ConsumerWidget {
   const ReportsPage({required this.variant, super.key});
 
   final ReportVariant variant;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final report = ref.watch(reportsControllerProvider);
     final active =
         variant == ReportVariant.sales || variant == ReportVariant.industry
         ? 2
         : 3;
     return MediaQuery(
-      data: MediaQuery.of(context)
-          .copyWith(textScaler: const TextScaler.linear(_uiTextScale)),
+      data: MediaQuery.of(
+        context,
+      ).copyWith(textScaler: const TextScaler.linear(_uiTextScale)),
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
             child: switch (variant) {
-              ReportVariant.consumption => const _ConsumptionReport(),
-              ReportVariant.sales => const _SalesReport(),
-              ReportVariant.export => const _ExportReport(),
-              ReportVariant.industry => const _IndustryReport(),
+              ReportVariant.consumption => report.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) =>
+                    Text('No se pudo cargar el reporte: $error'),
+                data: (summary) => _ConsumptionReport(summary: summary),
+              ),
+              ReportVariant.sales => report.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) =>
+                    Text('No se pudo cargar el reporte: $error'),
+                data: (summary) => _SalesReport(summary: summary),
+              ),
+              ReportVariant.export => report.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) =>
+                    Text('No se pudo cargar el reporte: $error'),
+                data: (summary) => _ExportReport(summary: summary),
+              ),
+              ReportVariant.industry => report.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) =>
+                    Text('No se pudo cargar el reporte: $error'),
+                data: (summary) => _IndustryReport(summary: summary),
+              ),
             },
           ),
         ),
@@ -34,40 +56,38 @@ class ReportsPage extends StatelessWidget {
 }
 
 class _ConsumptionReport extends StatelessWidget {
-  const _ConsumptionReport();
+  const _ConsumptionReport({required this.summary});
+  final ReportSummary summary;
 
   @override
-  Widget build(BuildContext context) => const _ReportFrame(
+  Widget build(BuildContext context) => _ReportFrame(
     title: 'Consumo',
     subtitle: 'Uso de combustible a lo largo del tiempo',
-    trailing: Icons.filter_alt_outlined,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _PeriodCard(
-          label: 'ÚLTIMO PERÍODO · AGO',
-          value: '74.0k L',
-          detail: 'Acumulado 335.000 L en el período seleccionado',
+          label: 'VOLUMEN TOTAL',
+          value: '${summary.liters.toStringAsFixed(0)} L',
+          detail: '${summary.orders} pedidos en total',
         ),
-        SizedBox(height: 8),
-        _Segmented(items: ['Mensual', 'Trimestral']),
         SizedBox(height: 18),
-        _ChartHeading(label: 'VOLUMEN · LITROS', trailing: 'Últimos 6 meses'),
-        SizedBox(height: 8),
-        _ChartBox(child: _ConsumptionChart()),
+        _ChartHeading(label: 'VOLUMEN MENSUAL', trailing: ''),
+        const SizedBox(height: 8),
+        const Text('El backend aún no ofrece litros agrupados por mes.'),
       ],
     ),
   );
 }
 
 class _SalesReport extends StatelessWidget {
-  const _SalesReport();
+  const _SalesReport({required this.summary});
+  final ReportSummary summary;
 
   @override
-  Widget build(BuildContext context) => const _ReportFrame(
+  Widget build(BuildContext context) => _ReportFrame(
     title: 'Ventas',
     subtitle: 'Rendimiento vs. período anterior',
-    trailing: Icons.calendar_today_outlined,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -76,80 +96,80 @@ class _SalesReport extends StatelessWidget {
             Expanded(
               child: _MetricCard(
                 label: 'INGRESOS',
-                value: '\$31.200',
-                detail: 'K MXN',
+                value: 'S/ ${summary.revenue.toStringAsFixed(2)}',
+                detail: 'S/',
               ),
             ),
             SizedBox(width: 6),
             Expanded(
               child: _MetricCard(
                 label: 'LITROS VENDIDOS',
-                value: '1,24M',
+                value: summary.liters.toStringAsFixed(0),
                 detail: 'L',
               ),
             ),
             SizedBox(width: 6),
             Expanded(
-              child: _MetricCard(label: 'PEDIDOS', value: '318', detail: ''),
+              child: _MetricCard(
+                label: 'PEDIDOS',
+                value: '${summary.orders}',
+                detail: '',
+              ),
             ),
           ],
         ),
-        SizedBox(height: 8),
-        _CurrentPeriodCard(),
         SizedBox(height: 18),
-        _ChartHeading(label: 'INGRESOS MENSUALES · K MXN', trailing: ''),
+        _ChartHeading(label: 'INGRESOS MENSUALES · S/', trailing: ''),
         SizedBox(height: 8),
-        _ChartBox(child: _SalesChart()),
+        _ChartBox(child: _SalesChart(monthly: summary.monthly)),
       ],
     ),
   );
 }
 
 class _ExportReport extends StatelessWidget {
-  const _ExportReport();
+  const _ExportReport({required this.summary});
+  final ReportSummary summary;
 
   @override
-  Widget build(BuildContext context) => const _ReportFrame(
+  Widget build(BuildContext context) => _ReportFrame(
     title: 'Exportar reporte',
-    subtitle: 'Resumen operacional como PDF',
+    subtitle: 'Resumen operacional del backend',
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _FieldLabel('PERÍODO'),
-        _SelectField('AGO 2026'),
+        _SummaryCard(summary: summary),
         SizedBox(height: 12),
-        _FieldLabel('TIPO DE REPORTE'),
-        _Segmented(items: ['Pedidos', 'Ventas', 'Consumo'], selected: 1),
-        SizedBox(height: 12),
-        _FieldLabel('RESUMEN GENERADO'),
-        _SummaryCard(),
-        SizedBox(height: 12),
-        _DownloadButton(),
+        _DownloadButton(summary: summary),
       ],
     ),
   );
 }
 
 class _IndustryReport extends StatelessWidget {
-  const _IndustryReport();
+  const _IndustryReport({required this.summary});
+  final ReportSummary summary;
 
   @override
-  Widget build(BuildContext context) => const _ReportFrame(
-    title: 'Ventas por industria',
-    subtitle: 'De dónde proviene tu volumen',
-    trailing: Icons.calendar_today_outlined,
+  Widget build(BuildContext context) => _ReportFrame(
+    title: 'Resumen de actividad',
+    subtitle: 'Volumen y pedidos registrados',
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _PeriodCard(
-          label: 'VOLUMEN TOTAL · AGO 2026',
-          value: '440.000 L',
-          detail: 'Distribuido entre 4 sectores',
+          label: 'VOLUMEN TOTAL',
+          value: '${summary.liters.toStringAsFixed(0)} L',
+          detail: '${summary.orders} pedidos registrados',
         ),
         SizedBox(height: 18),
         _ChartHeading(label: 'DISTRIBUCIÓN', trailing: ''),
         SizedBox(height: 8),
-        _IndustryRows(),
+        _PeriodCard(
+          label: 'INGRESOS',
+          value: 'S/ ${summary.revenue.toStringAsFixed(2)}',
+          detail: 'Total acumulado',
+        ),
       ],
     ),
   );
@@ -160,13 +180,11 @@ class _ReportFrame extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.child,
-    this.trailing,
   });
 
   final String title;
   final String subtitle;
   final Widget child;
-  final IconData? trailing;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -207,16 +225,6 @@ class _ReportFrame extends StatelessWidget {
               ],
             ),
           ),
-          if (trailing != null)
-            IconButton(
-              onPressed: () {},
-              icon: Icon(trailing, size: 16),
-              style: IconButton.styleFrom(
-                backgroundColor: FullTankColors.card,
-                fixedSize: const Size(42, 42),
-                padding: EdgeInsets.zero,
-              ),
-            ),
         ],
       ),
       const SizedBox(height: 20),
@@ -224,4 +232,3 @@ class _ReportFrame extends StatelessWidget {
     ],
   );
 }
-

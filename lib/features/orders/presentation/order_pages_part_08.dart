@@ -86,31 +86,31 @@ class _Chip extends StatelessWidget {
 }
 
 class _HistoryOrders extends StatelessWidget {
-  const _HistoryOrders({required this.filter});
+  const _HistoryOrders({required this.filter, required this.orders});
   final String filter;
+  final List<Order> orders;
   @override
   Widget build(BuildContext context) {
-    final items = [
-      const _OrderData(
-        id: '#FT-88421',
-        status: 'En tránsito',
-        fuel: 'Diesel · ULSD B5',
-        amount: '6,000 L',
-        supplier: 'Global Fuel Corp',
-        total: 'S/ 9,274.80',
-        color: _orange,
-      ),
-      const _OrderData(
-        id: '#FT-88418',
-        status: 'Aprobado',
-        fuel: 'Gasolina · 95',
-        amount: '3,200 L',
-        supplier: 'Midwest PetroLink',
-        total: 'S/ 5,120.00',
-        color: _blue,
-      ),
-    ];
-    final shown = filter == 'Entregado' ? const <_OrderData>[] : items;
+    final shown = orders
+        .where((order) {
+          if (filter == 'Entregado')
+            return order.status == OrderStatus.delivered;
+          if (filter == 'En tránsito')
+            return order.status == OrderStatus.inTransit;
+          return true;
+        })
+        .map(
+          (order) => _OrderData(
+            id: '#${order.id}',
+            status: _orderStatusLabel(order.status),
+            fuel: order.fuel,
+            amount: '${order.quantity.toStringAsFixed(0)} L',
+            supplier: order.deliveryAddress,
+            total: 'S/ ${order.total.toStringAsFixed(2)}',
+            color: order.status == OrderStatus.approved ? _blue : _orange,
+          ),
+        )
+        .toList();
     return Column(
       children: [
         for (final item in shown)
@@ -232,4 +232,3 @@ class _HistoryOrderCard extends StatelessWidget {
     ),
   );
 }
-

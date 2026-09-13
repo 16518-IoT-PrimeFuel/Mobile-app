@@ -93,7 +93,8 @@ class _LoadingBlock extends StatelessWidget {
 }
 
 class _SuccessDetails extends StatelessWidget {
-  const _SuccessDetails();
+  const _SuccessDetails({required this.order});
+  final Order? order;
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
@@ -106,7 +107,7 @@ class _SuccessDetails extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -119,7 +120,7 @@ class _SuccessDetails extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '#FT-88421',
+                    '#${order?.id ?? ''}',
                     style: TextStyle(
                       color: _ink,
                       fontSize: 12,
@@ -135,8 +136,8 @@ class _SuccessDetails extends StatelessWidget {
                 color: Color(0xFFFFF7DF),
                 borderRadius: BorderRadius.all(Radius.circular(99)),
               ),
-              child: const Text(
-                '• Pendiente',
+              child: Text(
+                '• ${order == null ? 'Pendiente' : _orderStatusLabel(order!.status)}',
                 style: TextStyle(
                   color: _orange,
                   fontSize: 7,
@@ -155,12 +156,16 @@ class _SuccessDetails extends StatelessWidget {
           ),
         ),
         const Divider(height: 14, color: _line),
-        const _SuccessRow(label: 'Fuel type', value: 'Diesel · ULSD B5'),
-        const _SuccessRow(label: 'Quantity', value: '6,000 L'),
-        const _SuccessRow(label: 'Tank', value: 'A-102 · Sector 4'),
-        const _SuccessRow(label: 'Supplier', value: 'Global Fuel Corp'),
-        const _SuccessRow(label: 'Required', value: 'Sep 5, 08:00 – 12:00'),
-        const _SuccessRow(label: 'Estimated', value: '\$9,274.80'),
+        _SuccessRow(label: 'Fuel type', value: order?.fuel ?? ''),
+        _SuccessRow(
+          label: 'Quantity',
+          value: '${order?.quantity.toStringAsFixed(0) ?? ''} L',
+        ),
+        _SuccessRow(label: 'Delivery', value: order?.deliveryAddress ?? ''),
+        _SuccessRow(
+          label: 'Estimated',
+          value: 'S/ ${order?.total.toStringAsFixed(2) ?? '0.00'}',
+        ),
       ],
     ),
   );
@@ -192,4 +197,3 @@ class _SuccessRow extends StatelessWidget {
     ),
   );
 }
-

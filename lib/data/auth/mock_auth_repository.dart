@@ -2,6 +2,7 @@ import '../../core/storage/token_storage.dart';
 import '../../domain/auth/auth_failure.dart';
 import '../../domain/auth/auth_repository.dart';
 import '../../domain/auth/auth_session.dart';
+import '../../domain/auth/sign_up_request.dart';
 
 class MockAuthRepository implements AuthRepository {
   const MockAuthRepository(this.storage);
@@ -10,6 +11,15 @@ class MockAuthRepository implements AuthRepository {
   static const demoPassword = 'FullTank123!';
 
   final TokenStorage storage;
+
+  @override
+  Future<void> signUp(SignUpRequest request) async {}
+
+  @override
+  Future<void> requestPasswordReset(String email) async {}
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {}
 
   @override
   Future<AuthSession> signIn(
@@ -25,12 +35,17 @@ class MockAuthRepository implements AuthRepository {
       userId: 1,
       username: demoUsername,
       token: 'mock-fulltank-jwt',
+      roles: ['ROLE_PROVIDER'],
+      providerId: 1,
     );
     if (rememberMe) {
       await storage.save(
         token: session.token,
         username: session.username,
         userId: session.userId,
+        roles: session.roles,
+        companyId: session.companyId,
+        providerId: session.providerId,
       );
     } else {
       await storage.clear();
@@ -46,6 +61,9 @@ class MockAuthRepository implements AuthRepository {
       userId: saved.userId,
       username: saved.username,
       token: saved.token,
+      roles: saved.roles,
+      companyId: saved.companyId,
+      providerId: saved.providerId,
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_app/domain/auth/auth_failure.dart';
 import 'package:mobile_app/domain/auth/auth_repository.dart';
 import 'package:mobile_app/domain/auth/auth_session.dart';
+import 'package:mobile_app/domain/auth/sign_up_request.dart';
 import 'package:mobile_app/features/auth/application/auth_controller.dart';
 import 'package:mobile_app/features/auth/application/auth_providers.dart';
 
@@ -38,7 +39,9 @@ void main() {
   test('invalid credentials expose a user-facing failure', () async {
     final container = ProviderContainer(
       overrides: [
-        authRepositoryProvider.overrideWithValue(_FakeAuthRepository(fails: true)),
+        authRepositoryProvider.overrideWithValue(
+          _FakeAuthRepository(fails: true),
+        ),
       ],
     );
     addTearDown(container.dispose);
@@ -63,6 +66,15 @@ class _FakeAuthRepository implements AuthRepository {
   _FakeAuthRepository({this.fails = false});
 
   final bool fails;
+
+  @override
+  Future<void> signUp(SignUpRequest request) async {}
+
+  @override
+  Future<void> requestPasswordReset(String email) async {}
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {}
 
   @override
   Future<AuthSession> signIn(

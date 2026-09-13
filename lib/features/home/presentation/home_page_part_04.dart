@@ -29,14 +29,15 @@ class _SummaryMetric extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _IconTile(icon: icon, color: color, softColor: softColor, size: 27),
-            Text(
-              '↑ $trend',
-              style: const TextStyle(
-                color: _green,
-                fontSize: 9,
-                fontWeight: FontWeight.w800,
+            if (trend.isNotEmpty)
+              Text(
+                '↑ $trend',
+                style: const TextStyle(
+                  color: _green,
+                  fontSize: 9,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
-            ),
           ],
         ),
         const Spacer(),
@@ -207,4 +208,3 @@ class _QuickAction extends StatelessWidget {
     ),
   );
 }
-

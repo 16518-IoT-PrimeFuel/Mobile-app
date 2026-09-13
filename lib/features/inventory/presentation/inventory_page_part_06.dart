@@ -19,36 +19,6 @@ class _LevelBar extends StatelessWidget {
   }
 }
 
-class _LivePill extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.symmetric(
-      horizontal: 10 * _uiScale,
-      vertical: 5 * _uiScale,
-    ),
-    decoration: BoxDecoration(
-      color: _greenSoft,
-      borderRadius: BorderRadius.circular(999),
-    ),
-    child: const Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(Icons.circle, size: 6, color: _green),
-        SizedBox(width: 5),
-        Text(
-          'LIVE',
-          style: TextStyle(
-            color: _green,
-            fontSize: 10.5,
-            fontWeight: FontWeight.w700,
-            letterSpacing: .4,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
 class _GaugeCard extends StatelessWidget {
   const _GaugeCard({required this.tank, required this.status});
   final TankData tank;
@@ -207,4 +177,3 @@ class _GaugePainter extends CustomPainter {
   bool shouldRepaint(covariant _GaugePainter oldDelegate) =>
       oldDelegate.value != value || oldDelegate.color != color;
 }
-

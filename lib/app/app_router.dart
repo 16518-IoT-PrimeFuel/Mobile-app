@@ -3,13 +3,15 @@ import 'package:go_router/go_router.dart';
 
 import '../features/auth/application/auth_providers.dart';
 import '../features/auth/presentation/login_page.dart';
-import '../features/auth/presentation/out_of_scope_page.dart';
 import '../features/auth/presentation/recover_page.dart';
+import '../features/auth/presentation/reset_password_page.dart';
+import '../features/auth/presentation/sign_up_page.dart';
 import '../features/account/presentation/account_page.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/inventory/presentation/inventory_page.dart';
 import '../features/orders/presentation/order_pages.dart';
 import '../features/dispatches/presentation/dispatch_pages.dart';
+import '../features/dispatches/domain/driver.dart';
 import '../features/reports/presentation/reports_page.dart';
 import '../features/public/domain/public_content.dart';
 import '../features/public/presentation/public_pages.dart';
@@ -98,7 +100,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/orders/history',
         builder: (context, state) => OrdersPage(
           history: true,
-          state: orderPageStateFromQuery(state.uri.queryParameters['state']),
+          state: state.uri.queryParameters.containsKey('state')
+              ? orderPageStateFromQuery(state.uri.queryParameters['state'])
+              : null,
         ),
       ),
       GoRoute(
@@ -112,7 +116,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/orders',
         builder: (context, state) => OrdersPage(
           history: false,
-          state: orderPageStateFromQuery(state.uri.queryParameters['state']),
+          state: state.uri.queryParameters.containsKey('state')
+              ? orderPageStateFromQuery(state.uri.queryParameters['state'])
+              : null,
         ),
       ),
       GoRoute(
@@ -120,6 +126,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => NewOrderPage(
           initialState: newOrderStateFromQuery(
             state.uri.queryParameters['state'],
+          ),
+          initialEquipmentId: int.tryParse(
+            state.uri.queryParameters['equipmentId'] ?? '',
+          ),
+          initialQuantity: double.tryParse(
+            state.uri.queryParameters['quantity'] ?? '',
           ),
         ),
       ),
@@ -161,7 +173,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           initialState: state.uri.queryParameters['state'] == 'duplicate'
               ? DriverFormState.duplicate
               : DriverFormState.normal,
-          editing: state.uri.queryParameters['edit'] == 'true',
+          driver: state.extra is Driver ? state.extra as Driver : null,
         ),
       ),
       GoRoute(
@@ -250,12 +262,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RecoverPage(),
       ),
       GoRoute(
-        path: '/signup',
-        builder: (context, state) => const OutOfScopePage(
-          title: 'Crear cuenta empresarial',
-          message: 'Esta pantalla pertenece a US-40 y se implementará después.',
-        ),
+        path: '/reset-password',
+        builder: (context, state) =>
+            ResetPasswordPage(token: state.uri.queryParameters['token'] ?? ''),
       ),
+      GoRoute(path: '/signup', builder: (context, state) => const SignUpPage()),
     ],
   );
 });

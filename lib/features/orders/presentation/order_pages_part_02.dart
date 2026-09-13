@@ -1,6 +1,6 @@
 part of 'order_pages.dart';
 
-class OrderDetailPage extends StatelessWidget {
+class OrderDetailPage extends ConsumerWidget {
   const OrderDetailPage({
     required this.history,
     required this.orderId,
@@ -9,176 +9,184 @@ class OrderDetailPage extends StatelessWidget {
   final bool history;
   final String orderId;
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.white,
-    body: SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-        child: history ? _historyDetail(context) : _activeDetail(context),
-      ),
-    ),
-  );
-
-  Widget _historyDetail(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _Header(
-        title: '#${orderId.replaceFirst('#', '')}',
-        subtitle: 'Detalle del pedido',
-        actions: [
-          _HeaderIcon(
-            icon: Icons.more_horiz,
-            label: 'Más opciones',
-            onTap: () {},
-          ),
-        ],
-      ),
-      const SizedBox(height: 10),
-      const _DeliveredBanner(),
-      const SizedBox(height: 8),
-      Row(
-        children: [
-          Expanded(
-            child: _SmallButton(
-              label: 'Descargar factura',
-              icon: Icons.download_outlined,
-              onTap: () {},
-            ),
-          ),
-          const SizedBox(width: 7),
-          Expanded(
-            child: _DarkButton(
-              label: 'Repetir pedido',
-              onTap: () => context.push('/orders/new'),
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 12),
-      const Row(
-        children: [
-          Expanded(
-            child: _FuelMetric(
-              label: 'COMBUSTIBLE',
-              value: 'Diesel',
-              detail: 'ULSD B5',
-              icon: Icons.opacity_outlined,
-              color: _blue,
-            ),
-          ),
-          SizedBox(width: 8),
-          Expanded(
-            child: _FuelMetric(
-              label: 'CANTIDAD',
-              value: '10,500',
-              detail: 'L',
-              icon: Icons.local_gas_station_outlined,
-              color: _orange,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 12),
-      const _DetailTable(
-        title: 'DETALLES DEL PEDIDO',
-        rows: [
-          ('Número', '#FT-88402'),
-          ('Fecha de creación', 'Ayer, 09:30'),
-          ('Fecha de entrega', 'Ayer, 17:45'),
-          ('Proveedor', 'Global Fuel Corp'),
-          ('Tanque destino', 'A-102 · Sector 4'),
-          ('Vehículo', 'ABC-921 · M. Ríos'),
-        ],
-      ),
-      const SizedBox(height: 12),
-      const _DetailTable(
-        title: 'PAGO',
-        rows: [('Estado', 'Aprobado'), ('Payment ID', 'PAY-88402-A')],
-      ),
-    ],
-  );
-
-  Widget _activeDetail(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _Header(
-        title: '#${orderId.replaceFirst('#', '')}',
-        subtitle: 'Order tracking',
-        actions: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-            decoration: const BoxDecoration(
-              color: _greenSoft,
-              borderRadius: BorderRadius.all(Radius.circular(99)),
-            ),
-            child: const Text(
-              '● LIVE',
-              style: TextStyle(
-                color: _green,
-                fontSize: 8,
-                fontWeight: FontWeight.w800,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final detail = ref.watch(orderDetailProvider(orderId));
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Header(
+                title: '#${orderId.replaceFirst('#', '')}',
+                subtitle: history ? 'Detalle del pedido' : 'Estado del pedido',
+                actions: [
+                  _HeaderIcon(
+                    icon: Icons.refresh,
+                    label: 'Actualizar pedido',
+                    onTap: () => ref.invalidate(orderDetailProvider(orderId)),
+                  ),
+                ],
               ),
-            ),
+              const SizedBox(height: 12),
+              detail.when(
+                loading: () => const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                error: (error, _) => _DetailMessage(
+                  message: 'No se pudo cargar el pedido: $error',
+                  onRetry: () => ref.invalidate(orderDetailProvider(orderId)),
+                ),
+                data: (order) => order == null
+                    ? const _DetailMessage(message: 'No se encontró el pedido.')
+                    : _orderDetails(context, order),
+              ),
+            ],
           ),
-        ],
-      ),
-      const SizedBox(height: 11),
-      const _CurrentStateBanner(),
-      const SizedBox(height: 13),
-      const Text(
-        'DELIVERY TIMELINE',
-        style: TextStyle(
-          color: _subtle,
-          fontSize: 8,
-          fontWeight: FontWeight.w800,
-          letterSpacing: .4,
         ),
       ),
-      const SizedBox(height: 8),
-      const _DeliveryTimeline(),
+    );
+  }
+
+  Widget _orderDetails(BuildContext context, Order order) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _StatusTag(
+        _orderStatusLabel(order.status),
+        color: order.status == OrderStatus.delivered
+            ? _green
+            : order.status == OrderStatus.rejected ||
+                  order.status == OrderStatus.cancelled
+            ? _red
+            : _blue,
+      ),
       const SizedBox(height: 12),
-      const _DetailTable(
-        title: 'ORDER DETAILS',
+      _DetailTable(
+        title: 'DETALLES DEL PEDIDO',
         rows: [
-          ('Fuel type', 'Diesel · ULSD B5'),
-          ('Quantity', '6,000 L'),
-          ('Supplier', 'Global Fuel Corp'),
+          ('Número', '#${order.id.replaceFirst('#', '')}'),
+          ('Estado', _orderStatusLabel(order.status)),
+          ('Combustible', order.fuel),
+          ('Cantidad', '${order.quantity.toStringAsFixed(0)} L'),
+          ('Total', 'S/ ${order.total.toStringAsFixed(2)}'),
+          if (order.deliveryAddress.isNotEmpty)
+            ('Dirección', order.deliveryAddress),
         ],
       ),
-      const SizedBox(height: 14),
-      Row(
-        children: [
-          Expanded(
-            child: _LightButton(
-              label: 'Support',
-              onTap: () => context.push('/account/help'),
-            ),
+      if (history) ...[
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: _DarkButton(
+            label: 'Repetir pedido',
+            onTap: () => context.push('/orders/new'),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _OrangeButton(label: 'Live tracking  →', onPressed: () {}),
-          ),
-        ],
-      ),
+        ),
+      ],
     ],
   );
 }
 
-class NewOrderPage extends StatefulWidget {
+class _DetailMessage extends StatelessWidget {
+  const _DetailMessage({required this.message, this.onRetry});
+  final String message;
+  final VoidCallback? onRetry;
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: Column(
+      children: [
+        Text(message, textAlign: TextAlign.center),
+        if (onRetry != null)
+          TextButton(onPressed: onRetry, child: const Text('Reintentar')),
+      ],
+    ),
+  );
+}
+
+class NewOrderPage extends ConsumerStatefulWidget {
   const NewOrderPage({
     this.initialState = NewOrderState.defaultState,
+    this.initialEquipmentId,
+    this.initialQuantity,
     super.key,
   });
 
   final NewOrderState initialState;
+  final int? initialEquipmentId;
+  final double? initialQuantity;
 
   @override
-  State<NewOrderPage> createState() => _NewOrderPageState();
+  ConsumerState<NewOrderPage> createState() => _NewOrderPageState();
 }
 
-class _NewOrderPageState extends State<NewOrderPage> {
+class _NewOrderPageState extends ConsumerState<NewOrderPage> {
   late NewOrderState _state = widget.initialState;
-  String _fuel = 'Diesel';
+  late final _quantityController = TextEditingController(
+    text: '${widget.initialQuantity ?? 100}',
+  );
+  final _addressController = TextEditingController();
+  List<FuelProduct> _products = const [];
+  List<Equipment> _equipment = const [];
+  int? _productId;
+  int? _equipmentId;
+  DateTime _deliveryDate = DateTime.now().add(const Duration(days: 1));
+  Order? _createdOrder;
+  bool _loadingOptions = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOptions();
+  }
+
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadOptions() async {
+    try {
+      final session = ref.read(authControllerProvider).session;
+      final inventory = ref.read(inventoryRepositoryProvider);
+      final products = await inventory.list();
+      final equipment = await inventory.equipment(
+        companyId: session?.companyId,
+      );
+      if (!mounted) return;
+      setState(() {
+        _products = products
+            .where((p) => p.availability != ProductAvailability.inactive)
+            .toList();
+        _equipment = equipment;
+        _productId = _products.isEmpty ? null : _products.first.id;
+        _equipmentId =
+            _equipment.any((item) => item.id == widget.initialEquipmentId)
+            ? widget.initialEquipmentId
+            : _equipment.isEmpty
+            ? null
+            : _equipment.first.id;
+        if (_addressController.text.isEmpty && _equipment.isNotEmpty) {
+          _addressController.text = _equipment.first.location;
+        }
+        _loadingOptions = false;
+      });
+    } catch (error) {
+      if (mounted)
+        setState(() {
+          _loadingOptions = false;
+          _errorMessage = '$error';
+        });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +206,10 @@ class _NewOrderPageState extends State<NewOrderPage> {
         top: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
-          child: _NewOrderAction(state: _state, onCreate: _create),
+          child: _NewOrderAction(
+            state: _loadingOptions ? NewOrderState.loading : _state,
+            onCreate: _create,
+          ),
         ),
       ),
     );
@@ -242,44 +253,100 @@ class _NewOrderPageState extends State<NewOrderPage> {
                   setState(() => _state = NewOrderState.defaultState),
             ),
           if (error) const SizedBox(height: 10),
-          _FieldCaption(label: 'FUEL TYPE', error: error),
+          _FieldCaption(label: 'PRODUCTO', error: error),
           const SizedBox(height: 6),
-          _FuelGrid(
-            selected: _fuel,
-            error: error,
-            onSelected: (fuel) => setState(() {
-              _fuel = fuel;
-              if (_state == NewOrderState.error)
-                _state = NewOrderState.defaultState;
-            }),
-          ),
-          if (error) ...[
-            const SizedBox(height: 5),
+          if (_loadingOptions)
+            const LinearProgressIndicator()
+          else if (_products.isEmpty)
             const Text(
-              'ⓘ  Select a fuel type to continue.',
-              style: TextStyle(
-                color: _red,
-                fontSize: 8,
-                fontWeight: FontWeight.w700,
+              'No hay productos activos disponibles.',
+              style: TextStyle(color: _red),
+            )
+          else
+            DropdownButtonFormField<int>(
+              initialValue: _productId,
+              items: [
+                for (final p in _products)
+                  DropdownMenuItem(
+                    value: p.id,
+                    child: Text(
+                      '${p.name} · ${p.price.toStringAsFixed(2)} / ${p.unit}',
+                    ),
+                  ),
+              ],
+              onChanged: (value) => setState(() => _productId = value),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                isDense: true,
               ),
             ),
+          const SizedBox(height: 12),
+          const _FieldCaption(label: 'CANTIDAD'),
+          const SizedBox(height: 6),
+          TextField(
+            controller: _quantityController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              suffixText: 'L',
+            ),
+          ),
+          const SizedBox(height: 12),
+          const _FieldCaption(label: 'EQUIPO DESTINO'),
+          const SizedBox(height: 6),
+          if (_equipment.isEmpty)
+            const Text(
+              'No hay equipos asociados a esta empresa.',
+              style: TextStyle(color: _red),
+            )
+          else
+            DropdownButtonFormField<int>(
+              initialValue: _equipmentId,
+              items: [
+                for (final e in _equipment)
+                  DropdownMenuItem(
+                    value: e.id,
+                    child: Text('${e.name} · ${e.location}'),
+                  ),
+              ],
+              onChanged: (value) => setState(() => _equipmentId = value),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+            ),
+          const SizedBox(height: 12),
+          const _FieldCaption(label: 'DIRECCIÓN DE ENTREGA'),
+          const SizedBox(height: 6),
+          TextField(
+            controller: _addressController,
+            decoration: const InputDecoration(border: OutlineInputBorder()),
+          ),
+          const SizedBox(height: 12),
+          const _FieldCaption(label: 'FECHA DE ENTREGA'),
+          const SizedBox(height: 6),
+          OutlinedButton.icon(
+            onPressed: () async {
+              final date = await showDatePicker(
+                context: context,
+                initialDate: _deliveryDate,
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(const Duration(days: 365)),
+              );
+              if (date != null) setState(() => _deliveryDate = date);
+            },
+            icon: const Icon(Icons.calendar_today_outlined),
+            label: Text(
+              '${_deliveryDate.year}-${_deliveryDate.month.toString().padLeft(2, '0')}-${_deliveryDate.day.toString().padLeft(2, '0')}',
+            ),
+          ),
+          if (_errorMessage != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              _errorMessage!,
+              style: const TextStyle(color: _red, fontSize: 10),
+            ),
           ],
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'MONTO DEPOSITADO'),
-          const SizedBox(height: 6),
-          const _MoneyCard(),
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'ASSOCIATED TANK'),
-          const SizedBox(height: 6),
-          const _TankCard(),
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'PREFERRED SUPPLIER'),
-          const SizedBox(height: 6),
-          const _SupplierCard(),
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'DELIVERY WINDOW'),
-          const SizedBox(height: 6),
-          const _DeliveryField(),
         ],
       ],
     );
@@ -330,15 +397,55 @@ class _NewOrderPageState extends State<NewOrderPage> {
         style: TextStyle(color: _muted, fontSize: 9, height: 1.45),
       ),
       const SizedBox(height: 20),
-      const _SuccessDetails(),
+      _SuccessDetails(order: _createdOrder),
     ],
   );
 
   void _create() {
-    setState(() => _state = NewOrderState.loading);
-    Future<void>.delayed(const Duration(milliseconds: 700), () {
-      if (mounted) setState(() => _state = NewOrderState.success);
+    final product = _products.where((p) => p.id == _productId).firstOrNull;
+    final equipment = _equipment.where((e) => e.id == _equipmentId).firstOrNull;
+    final quantity = double.tryParse(
+      _quantityController.text.replaceAll(',', ''),
+    );
+    if (product == null ||
+        equipment == null ||
+        product.providerId == null ||
+        quantity == null ||
+        quantity <= 0 ||
+        _addressController.text.trim().isEmpty) {
+      setState(() {
+        _state = NewOrderState.error;
+        _errorMessage =
+            'Completa producto, equipo, proveedor, cantidad y dirección.';
+      });
+      return;
+    }
+    setState(() {
+      _state = NewOrderState.loading;
+      _errorMessage = null;
     });
+    ref
+        .read(ordersControllerProvider.notifier)
+        .create(
+          fuelProductId: product.id,
+          equipmentId: equipment.id,
+          providerId: product.providerId!,
+          fuel: product.name,
+          quantity: quantity,
+          unit: product.unit,
+          deliveryAddress: _addressController.text.trim(),
+          deliveryDate: _deliveryDate,
+        )
+        .then((order) {
+          if (mounted)
+            setState(() {
+              _state = order == null
+                  ? NewOrderState.error
+                  : NewOrderState.success;
+              _createdOrder = order;
+              if (order == null)
+                _errorMessage = 'No se pudo enviar la solicitud.';
+            });
+        });
   }
 }
-

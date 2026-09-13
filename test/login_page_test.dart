@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile_app/domain/auth/auth_failure.dart';
 import 'package:mobile_app/domain/auth/auth_repository.dart';
 import 'package:mobile_app/domain/auth/auth_session.dart';
+import 'package:mobile_app/domain/auth/sign_up_request.dart';
 import 'package:mobile_app/features/auth/application/auth_providers.dart';
 import 'package:mobile_app/features/auth/presentation/login_page.dart';
 import 'package:mobile_app/features/home/presentation/home_page.dart';
@@ -32,8 +33,13 @@ void main() {
 
   testWidgets('shows loading while credentials are verified', (tester) async {
     final pending = Completer<AuthSession>();
-    await tester.pumpWidget(_TestApp(repository: _FakeRepository(pending: pending)));
-    await tester.enterText(find.byType(TextField).at(0), 'operador@combustibles.mx');
+    await tester.pumpWidget(
+      _TestApp(repository: _FakeRepository(pending: pending)),
+    );
+    await tester.enterText(
+      find.byType(TextField).at(0),
+      'operador@combustibles.mx',
+    );
     await tester.enterText(find.byType(TextField).at(1), 'FullTank123!');
     await tester.tap(find.text('Iniciar sesión'));
     await tester.pump();
@@ -45,7 +51,10 @@ void main() {
 
   testWidgets('shows incorrect credentials banner', (tester) async {
     await tester.pumpWidget(_TestApp(repository: _FakeRepository(fails: true)));
-    await tester.enterText(find.byType(TextField).at(0), 'operador@combustibles.mx');
+    await tester.enterText(
+      find.byType(TextField).at(0),
+      'operador@combustibles.mx',
+    );
     await tester.enterText(find.byType(TextField).at(1), 'wrong');
     await tester.tap(find.text('Iniciar sesión'));
     await tester.pumpAndSettle();
@@ -58,7 +67,9 @@ void main() {
     );
   });
 
-  testWidgets('temporary guest access opens home and can return to login', (tester) async {
+  testWidgets('temporary guest access opens home and can return to login', (
+    tester,
+  ) async {
     await tester.pumpWidget(_TestApp(repository: _FakeRepository()));
     final guestButton = find.text('Ingresar como invitado');
     await tester.ensureVisible(guestButton);
@@ -89,17 +100,15 @@ class _TestApp extends StatelessWidget {
       child: MaterialApp.router(
         routerConfig: GoRouter(
           routes: [
-            GoRoute(
-              path: '/',
-              builder: (context, state) => const LoginPage(),
-            ),
+            GoRoute(path: '/', builder: (context, state) => const LoginPage()),
             GoRoute(
               path: '/login',
               builder: (context, state) => const LoginPage(),
             ),
             GoRoute(
               path: '/home',
-              builder: (context, state) => const HomePage(role: HomeRole.requester),
+              builder: (context, state) =>
+                  const HomePage(role: HomeRole.requester),
             ),
           ],
         ),
@@ -113,6 +122,15 @@ class _FakeRepository implements AuthRepository {
 
   final bool fails;
   final Completer<AuthSession>? pending;
+
+  @override
+  Future<void> signUp(SignUpRequest request) async {}
+
+  @override
+  Future<void> requestPasswordReset(String email) async {}
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {}
 
   @override
   Future<AuthSession> signIn(

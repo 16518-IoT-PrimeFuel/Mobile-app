@@ -31,7 +31,8 @@ class _VerticalLevelBar extends StatelessWidget {
 }
 
 class _OrderStatusCard extends StatelessWidget {
-  const _OrderStatusCard();
+  const _OrderStatusCard({required this.order});
+  final Order? order;
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +43,24 @@ class _OrderStatusCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('PEDIDO ACTIVO', style: _labelStyle),
                   SizedBox(height: 2),
-                  Text('#FT-2041', style: _valueStyle),
-                  Text('8.000 L · Diésel B5', style: _metaStyle),
+                  Text('#${order?.id ?? '—'}', style: _valueStyle),
+                  Text(
+                    order == null
+                        ? 'Sin pedidos activos'
+                        : '${order!.quantity.toStringAsFixed(0)} L · ${order!.fuel}',
+                    style: _metaStyle,
+                  ),
                 ],
               ),
               TextButton(
-                onPressed: () => context.push('/orders/FT-88421'),
+                onPressed: order == null
+                    ? null
+                    : () => context.push('/orders/${order!.id}'),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(0, 32),
@@ -178,7 +186,8 @@ class _ProgressNode extends StatelessWidget {
 }
 
 class _SummaryGrid extends StatelessWidget {
-  const _SummaryGrid();
+  const _SummaryGrid({required this.orders});
+  final List<Order> orders;
 
   @override
   Widget build(BuildContext context) => GridView.count(
@@ -188,41 +197,44 @@ class _SummaryGrid extends StatelessWidget {
     childAspectRatio: 1.65,
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
-    children: const [
+    children: [
       _SummaryMetric(
         icon: Icons.description_outlined,
         label: 'PEDIDOS PENDIENTES',
-        value: '12',
-        trend: '+8%',
+        value:
+            '${orders.where((o) => o.request && o.status == OrderStatus.pending).length}',
+        trend: '',
         color: FullTankColors.blue,
         softColor: FullTankColors.blueSoft,
       ),
       _SummaryMetric(
         icon: Icons.local_shipping_outlined,
         label: 'ENTREGAS ACTIVAS',
-        value: '7',
-        trend: '+2%',
+        value:
+            '${orders.where((o) => o.status == OrderStatus.inTransit).length}',
+        trend: '',
         color: _amber,
         softColor: _amberSoft,
       ),
       _SummaryMetric(
         icon: Icons.business_center_outlined,
         label: 'CLIENTES',
-        value: '48',
-        trend: '+4%',
+        value:
+            '${orders.where((o) => o.status == OrderStatus.approved).length}',
+        trend: '',
         color: Color(0xFF0F9B91),
         softColor: Color(0xFFEAFBF8),
       ),
       _SummaryMetric(
         icon: Icons.opacity_outlined,
         label: 'COMBUSTIBLE VENDIDO',
-        value: '74',
+        value:
+            '${orders.fold<double>(0, (sum, order) => sum + order.quantity).toStringAsFixed(0)}',
         unit: 'kL',
-        trend: '+15%',
+        trend: '',
         color: Color(0xFFE06B2D),
         softColor: Color(0xFFFFF1E8),
       ),
     ],
   );
 }
-

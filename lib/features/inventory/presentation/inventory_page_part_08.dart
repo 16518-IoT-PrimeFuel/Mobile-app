@@ -262,7 +262,7 @@ class _AlertRow extends StatelessWidget {
                           ).copyWith(textScaler: TextScaler.noScaling),
                           child: TextButton(
                             onPressed: () => context.go(
-                              '/inventory/restock/${alert.tankId}',
+                              '/orders/new?equipmentId=${alert.tankId}',
                             ),
                             style: TextButton.styleFrom(
                               backgroundColor: FullTankColors.navy,
@@ -303,4 +303,3 @@ class _AlertRow extends StatelessWidget {
     );
   }
 }
-

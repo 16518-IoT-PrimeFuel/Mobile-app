@@ -1,6 +1,6 @@
 part of 'dispatch_pages.dart';
 
-class FleetFormPage extends StatefulWidget {
+class FleetFormPage extends ConsumerStatefulWidget {
   const FleetFormPage({
     this.initialState = VehicleFormState.normal,
     this.editingPlate,
@@ -9,28 +9,74 @@ class FleetFormPage extends StatefulWidget {
   final VehicleFormState initialState;
   final String? editingPlate;
   @override
-  State<FleetFormPage> createState() => _FleetFormPageState();
+  ConsumerState<FleetFormPage> createState() => _FleetFormPageState();
 }
 
-class _FleetFormPageState extends State<FleetFormPage> {
+class _FleetFormPageState extends ConsumerState<FleetFormPage> {
   late final _plate = TextEditingController(
     text: widget.initialState == VehicleFormState.duplicate
         ? 'TK-3812'
-        : widget.editingPlate ?? 'TK-4421',
+        : widget.editingPlate ?? '',
   );
-  var _type = 'Cisterna 20k';
+  final _brand = TextEditingController();
+  final _model = TextEditingController();
+  final _capacity = TextEditingController();
+  var _saving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editingPlate != null) _loadExisting();
+  }
+
+  Future<void> _loadExisting() async {
+    try {
+      final vehicles = await ref.read(dispatchRepositoryProvider).vehicles();
+      final vehicle = vehicles
+          .where((item) => item.plate == widget.editingPlate)
+          .firstOrNull;
+      if (!mounted || vehicle == null) return;
+      _brand.text = vehicle.brand;
+      _model.text = vehicle.model;
+      _capacity.text = vehicle.capacity.toStringAsFixed(0);
+      setState(() {});
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No se pudo cargar el vehículo: $error')),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _plate.dispose();
+    _brand.dispose();
+    _model.dispose();
+    _capacity.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final existing = ref
+        .read(dispatchControllerProvider)
+        .valueOrNull
+        ?.where((vehicle) => vehicle.plate == widget.editingPlate)
+        .firstOrNull;
     final duplicate =
         widget.initialState == VehicleFormState.duplicate ||
-        (widget.editingPlate == null &&
-            _plate.text.trim().toUpperCase() == 'TK-3812');
+        (ref
+                .read(dispatchControllerProvider)
+                .valueOrNull
+                ?.any(
+                  (vehicle) =>
+                      vehicle.plate.toUpperCase() ==
+                          _plate.text.trim().toUpperCase() &&
+                      vehicle.id != existing?.id,
+                ) ??
+            false);
     return Scaffold(
       body: SafeArea(
         child: _DispatchShell(
@@ -59,57 +105,30 @@ class _FleetFormPageState extends State<FleetFormPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: _TextField(
-                        label: 'MARCA',
-                        value: 'International',
-                        icon: Icons.dns_outlined,
+                      child: _editableField(
+                        'MARCA',
+                        _brand,
+                        Icons.dns_outlined,
                       ),
                     ),
                     const SizedBox(width: 6),
                     Expanded(
-                      child: _TextField(
-                        label: 'MODELO',
-                        value: 'DuraStar',
-                        icon: Icons.edit_outlined,
+                      child: _editableField(
+                        'MODELO',
+                        _model,
+                        Icons.edit_outlined,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                _TextField(
-                  label: 'CAPACIDAD',
-                  value: '15,000',
+                _editableField(
+                  'CAPACIDAD',
+                  _capacity,
+                  Icons.speed_outlined,
                   suffix: 'L',
-                  icon: Icons.speed_outlined,
                 ),
                 const SizedBox(height: 10),
-                const _FormLabel('TIPO DE VEHÍCULO'),
-                Wrap(
-                  spacing: 5,
-                  runSpacing: 5,
-                  children:
-                      [
-                            'Cisterna 10k',
-                            'Cisterna 15k',
-                            'Cisterna 20k',
-                            'Cisterna 25k',
-                            'Cisterna 30k+',
-                          ]
-                          .map(
-                            (item) => ChoiceChip(
-                              label: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              selected: _type == item,
-                              onSelected: (_) => setState(() => _type = item),
-                            ),
-                          )
-                          .toList(),
-                ),
                 const SizedBox(height: 14),
                 if (duplicate)
                   _DuplicateNotice(
@@ -129,7 +148,7 @@ class _FleetFormPageState extends State<FleetFormPage> {
                   label: widget.editingPlate == null
                       ? 'Guardar vehículo'
                       : 'Guardar cambios',
-                  onPressed: duplicate ? null : () => context.pop(true),
+                  onPressed: duplicate || _saving ? null : _save,
                 ),
               ],
             ),
@@ -137,6 +156,90 @@ class _FleetFormPageState extends State<FleetFormPage> {
         ),
       ),
     );
+  }
+
+  Widget _editableField(
+    String label,
+    TextEditingController controller,
+    IconData icon, {
+    String? suffix,
+  }) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      _FormLabel(label),
+      TextField(
+        controller: controller,
+        keyboardType: label == 'CAPACIDAD' ? TextInputType.number : null,
+        decoration: InputDecoration(
+          prefixIcon: Icon(icon, size: 15, color: _subtle),
+          suffixText: suffix,
+          filled: true,
+          fillColor: _panel,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none,
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
+          ),
+        ),
+      ),
+    ],
+  );
+
+  Future<void> _save() async {
+    final capacity = double.tryParse(
+      _capacity.text.replaceAll(',', '').replaceAll('.', ''),
+    );
+    final brand = _brand.text.trim();
+    final model = _model.text.trim();
+    final plate = _plate.text.trim().toUpperCase();
+    if (plate.isEmpty ||
+        brand.isEmpty ||
+        model.isEmpty ||
+        capacity == null ||
+        capacity <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Completa placa, marca, modelo y capacidad válida.'),
+        ),
+      );
+      return;
+    }
+    setState(() => _saving = true);
+    try {
+      final repository = ref.read(dispatchRepositoryProvider);
+      final existing = (await repository.vehicles())
+          .where((vehicle) => vehicle.plate == widget.editingPlate)
+          .firstOrNull;
+      if (existing == null && widget.editingPlate != null) {
+        throw StateError('No se encontró el vehículo que quieres editar');
+      } else if (existing == null) {
+        await repository.createVehicle(
+          plate: plate,
+          brand: brand,
+          model: model,
+          capacity: capacity,
+        );
+      } else {
+        await repository.updateVehicle(
+          existing.id,
+          plate: plate,
+          brand: brand,
+          model: model,
+          capacity: capacity,
+        );
+      }
+      if (mounted) context.pop(true);
+    } catch (error) {
+      if (mounted) {
+        setState(() => _saving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No se pudo guardar el vehículo: $error')),
+        );
+      }
+    }
   }
 
   InputDecoration _fieldDecoration(
@@ -165,14 +268,35 @@ class _FleetFormPageState extends State<FleetFormPage> {
   );
 }
 
-class DriverPage extends StatefulWidget {
+class DriverPage extends ConsumerStatefulWidget {
   const DriverPage({super.key});
   @override
-  State<DriverPage> createState() => _DriverPageState();
+  ConsumerState<DriverPage> createState() => _DriverPageState();
 }
 
-class _DriverPageState extends State<DriverPage> {
-  final _drivers = List<_Driver>.from(_driversData);
+class _DriverPageState extends ConsumerState<DriverPage> {
+  List<Driver> _drivers = const [];
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final drivers = await ref.read(dispatchRepositoryProvider).drivers();
+      if (mounted)
+        setState(() {
+          _drivers = drivers;
+          _error = null;
+        });
+    } catch (error) {
+      if (mounted) setState(() => _error = '$error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     body: SafeArea(
@@ -192,25 +316,29 @@ class _DriverPageState extends State<DriverPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            if (_error != null) _InfoNotice(message: _error!),
+            Row(
               children: [
                 _StatBox(
                   label: 'DISPONIBLES',
-                  value: '03',
+                  value:
+                      '${_drivers.where((d) => d.status.toUpperCase() == 'AVAILABLE').length}',
                   color: _green,
                   soft: _greenSoft,
                 ),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 _StatBox(
                   label: 'ASIGNADOS',
-                  value: '01',
+                  value:
+                      '${_drivers.where((d) => d.status.toUpperCase() == 'ASSIGNED').length}',
                   color: _amber,
                   soft: _amberSoft,
                 ),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 _StatBox(
                   label: 'INACTIVOS',
-                  value: '01',
+                  value:
+                      '${_drivers.where((d) => d.status.toUpperCase() != 'AVAILABLE' && d.status.toUpperCase() != 'ASSIGNED').length}',
                   color: _subtle,
                   soft: _panel,
                 ),
@@ -223,7 +351,7 @@ class _DriverPageState extends State<DriverPage> {
                 child: _DriverCard(
                   driver: driver,
                   onEdit: () =>
-                      context.push('/dispatches/drivers/new?edit=true'),
+                      context.push('/dispatches/drivers/new', extra: driver),
                   onDelete: () => _delete(driver),
                 ),
               ),
@@ -236,21 +364,10 @@ class _DriverPageState extends State<DriverPage> {
 
   Future<void> _add() async {
     final changed = await context.push('/dispatches/drivers/new');
-    if (changed == true && mounted)
-      setState(
-        () => _drivers.add(
-          const _Driver(
-            'AN',
-            'Ana Navarro',
-            '60-123-456',
-            'A-2 · 2028',
-            'DISPONIBLE',
-          ),
-        ),
-      );
+    if (changed == true && mounted) await _load();
   }
 
-  Future<void> _delete(_Driver driver) async {
+  Future<void> _delete(Driver driver) async {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
@@ -269,9 +386,11 @@ class _DriverPageState extends State<DriverPage> {
         ],
       ),
     );
-    if (ok == true && mounted) setState(() => _drivers.remove(driver));
+    if (ok == true && mounted) {
+      await ref.read(dispatchRepositoryProvider).deleteDriver(driver.id);
+      await _load();
+    }
   }
 }
 
 enum DriverFormState { normal, duplicate }
-

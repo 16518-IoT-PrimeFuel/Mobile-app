@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/fulltank_theme.dart';
 import '../../auth/application/auth_providers.dart';
+import '../../orders/application/orders_controller.dart';
+import '../../orders/domain/order.dart';
 part 'home_page_part_01.dart';
 part 'home_page_part_02.dart';
 part 'home_page_part_03.dart';
@@ -13,9 +15,6 @@ part 'home_page_part_06.dart';
 part 'home_page_part_07.dart';
 part 'home_page_part_08.dart';
 part 'home_page_part_09.dart';
-
-
-
 
 enum HomeRole { requester, provider }
 

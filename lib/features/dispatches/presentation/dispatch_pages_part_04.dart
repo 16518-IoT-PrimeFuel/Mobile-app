@@ -6,14 +6,35 @@ class _DispatchFilters {
   final bool availableOnly;
 }
 
-class FleetPage extends StatefulWidget {
+class FleetPage extends ConsumerStatefulWidget {
   const FleetPage({super.key});
   @override
-  State<FleetPage> createState() => _FleetPageState();
+  ConsumerState<FleetPage> createState() => _FleetPageState();
 }
 
-class _FleetPageState extends State<FleetPage> {
-  final _items = List<_Vehicle>.from(_vehicles);
+class _FleetPageState extends ConsumerState<FleetPage> {
+  List<_Vehicle> _items = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final vehicles = await ref.read(dispatchRepositoryProvider).vehicles();
+      if (!mounted) return;
+      setState(() => _items = vehicles.map(_fleetItem).toList());
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No se pudo cargar la flota: $error')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     body: SafeArea(
@@ -33,25 +54,28 @@ class _FleetPageState extends State<FleetPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
                 _StatBox(
                   label: 'DISPONIBLES',
-                  value: '03',
+                  value:
+                      '${_items.where((item) => item.status == 'DISPONIBLE').length}',
                   color: _green,
                   soft: _greenSoft,
                 ),
                 SizedBox(width: 5),
                 _StatBox(
                   label: 'OCUPADOS',
-                  value: '01',
+                  value:
+                      '${_items.where((item) => item.status == 'IN_USE' || item.status == 'EN DESPACHO').length}',
                   color: _amber,
                   soft: _amberSoft,
                 ),
                 SizedBox(width: 5),
                 _StatBox(
                   label: 'FUERA',
-                  value: '02',
+                  value:
+                      '${_items.where((item) => item.status != 'DISPONIBLE' && item.status != 'IN_USE' && item.status != 'EN DESPACHO').length}',
                   color: _red,
                   soft: _redSoft,
                 ),
@@ -76,26 +100,14 @@ class _FleetPageState extends State<FleetPage> {
 
   Future<void> _add() async {
     final changed = await context.push('/dispatches/fleet/new');
-    if (changed == true && mounted)
-      setState(
-        () => _items.add(
-          const _Vehicle(
-            'TK-9908',
-            'Freightliner M2 106',
-            'Cisterna 20k',
-            '20.000',
-            'Sin agenda',
-            'DISPONIBLE',
-          ),
-        ),
-      );
+    if (changed == true && mounted) await _load();
   }
 
   Future<void> _edit(_Vehicle vehicle) async {
     final changed = await context.push(
       '/dispatches/fleet/new?edit=${vehicle.plate}',
     );
-    if (changed == true && mounted) setState(() {});
+    if (changed == true && mounted) await _load();
   }
 
   Future<void> _delete(_Vehicle vehicle) async {
@@ -103,9 +115,22 @@ class _FleetPageState extends State<FleetPage> {
       context: context,
       builder: (_) => _DeleteDialog(vehicle: vehicle),
     );
-    if (ok == true && mounted) setState(() => _items.remove(vehicle));
+    if (ok == true && mounted) {
+      await ref.read(dispatchRepositoryProvider).deleteVehicle(vehicle.id);
+      if (mounted) setState(() => _items.remove(vehicle));
+    }
   }
 }
+
+_Vehicle _fleetItem(Vehicle vehicle) => _Vehicle(
+  vehicle.plate,
+  '${vehicle.brand} ${vehicle.model}'.trim(),
+  vehicle.model,
+  vehicle.capacity.toStringAsFixed(0),
+  '—',
+  vehicle.status == 'AVAILABLE' ? 'DISPONIBLE' : vehicle.status,
+  id: vehicle.id,
+);
 
 class _StatBox extends StatelessWidget {
   const _StatBox({
@@ -261,4 +286,3 @@ class _FleetCard extends StatelessWidget {
 }
 
 enum VehicleFormState { normal, duplicate }
-

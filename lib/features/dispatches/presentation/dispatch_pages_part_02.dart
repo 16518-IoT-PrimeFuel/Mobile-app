@@ -20,51 +20,13 @@ class _AvailabilityConflict extends StatelessWidget {
       ),
       const SizedBox(height: 5),
       const Text(
-        'TK-4421 acaba de ser asignada a otro pedido. Actualiza para ver recursos en tiempo real.',
+        'No se pudo cargar la disponibilidad de la flota. Revisa la conexión e inténtalo de nuevo.',
         textAlign: TextAlign.center,
         style: TextStyle(color: _muted, fontSize: 9, height: 1.4),
       ),
       const SizedBox(height: 18),
       _OrangeButton(label: 'Actualizar disponibilidad', onPressed: onRefresh),
     ],
-  );
-}
-
-class _LiveConflictBanner extends StatelessWidget {
-  const _LiveConflictBanner({required this.onRefresh});
-  final VoidCallback onRefresh;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(9),
-    decoration: BoxDecoration(
-      color: _amberSoft,
-      border: Border.all(color: const Color(0xFFFDE4A7)),
-    ),
-    child: Row(
-      children: [
-        const Icon(Icons.warning_amber_rounded, color: _amber, size: 20),
-        const SizedBox(width: 7),
-        const Expanded(
-          child: Text(
-            'TK-3812 acaba de ser asignada a otro pedido. Actualiza disponibilidad.',
-            style: TextStyle(
-              color: _ink,
-              fontSize: 8,
-              height: 1.25,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        TextButton(
-          onPressed: onRefresh,
-          child: const Text(
-            'Actualizar',
-            style: TextStyle(fontSize: 8, fontWeight: FontWeight.w800),
-          ),
-        ),
-      ],
-    ),
   );
 }
 
@@ -191,4 +153,3 @@ class _FilterChip extends StatelessWidget {
     ),
   );
 }
-

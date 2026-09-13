@@ -24,23 +24,24 @@ class _NewOrderAction extends StatelessWidget {
   }
 }
 
-class SalesReportPage extends StatefulWidget {
+class SalesReportPage extends ConsumerStatefulWidget {
   const SalesReportPage({
     this.initialState = SalesReportState.dashboard,
     super.key,
   });
   final SalesReportState initialState;
   @override
-  State<SalesReportPage> createState() => _SalesReportPageState();
+  ConsumerState<SalesReportPage> createState() => _SalesReportPageState();
 }
 
-class _SalesReportPageState extends State<SalesReportPage> {
+class _SalesReportPageState extends ConsumerState<SalesReportPage> {
   late SalesReportState _state = widget.initialState;
   @override
   Widget build(BuildContext context) {
     final dashboard = _state == SalesReportState.dashboard;
     final generating = _state == SalesReportState.generating;
     final ready = _state == SalesReportState.ready;
+    final report = ref.watch(reportsControllerProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -81,11 +82,21 @@ class _SalesReportPageState extends State<SalesReportPage> {
                 ),
               const SizedBox(height: 12),
               if (dashboard)
-                const _SalesDashboard()
+                report.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, _) =>
+                      Text('No se pudo cargar el reporte: $error'),
+                  data: (summary) => _SalesDashboard(summary: summary),
+                )
               else if (generating)
                 const _SalesGenerating()
               else if (ready)
-                const _SalesReady()
+                report.when(
+                  loading: () => const CircularProgressIndicator(),
+                  error: (error, _) => Text('No se pudo cargar: $error'),
+                  data: (summary) => _SalesReady(summary: summary),
+                )
               else
                 const _SalesEmpty(),
             ],
@@ -100,17 +111,45 @@ class _SalesReportPageState extends State<SalesReportPage> {
             state: _state,
             onGenerate: _generate,
             onReset: () => setState(() => _state = SalesReportState.dashboard),
+            onExport: _export,
           ),
         ),
       ),
     );
   }
 
-  void _generate() {
+  Future<void> _generate() async {
     setState(() => _state = SalesReportState.generating);
-    Future<void>.delayed(const Duration(milliseconds: 700), () {
+    try {
+      await ref.read(reportsControllerProvider.future);
       if (mounted) setState(() => _state = SalesReportState.ready);
-    });
+    } catch (error) {
+      if (mounted) {
+        setState(() => _state = SalesReportState.dashboard);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No se pudo generar el reporte: $error')),
+        );
+      }
+    }
+  }
+
+  void _export() {
+    final summary = ref.read(reportsControllerProvider).valueOrNull;
+    if (summary == null) return;
+    final rows = [
+      'metric,value',
+      'revenue,${summary.revenue}',
+      'liters,${summary.liters}',
+      'orders,${summary.orders}',
+      'confirmed_orders,${summary.confirmedOrders}',
+      ...summary.monthly.map((item) => '${item.month},${item.amount}'),
+    ];
+    Clipboard.setData(ClipboardData(text: rows.join('\n')));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('CSV copiado al portapapeles')),
+      );
+    }
   }
 }
 
@@ -207,4 +246,3 @@ class _HeaderIcon extends StatelessWidget {
     ),
   );
 }
-

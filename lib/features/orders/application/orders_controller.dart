@@ -21,13 +21,58 @@ class OrdersController extends StateNotifier<AsyncValue<List<Order>>> {
     state = await AsyncValue.guard(() => _repository.list(history: history));
   }
 
-  Future<void> create({required String fuel, required double quantity}) async {
+  Future<Order?> create({
+    required int fuelProductId,
+    required int equipmentId,
+    required int providerId,
+    required String fuel,
+    required double quantity,
+    required String unit,
+    required String deliveryAddress,
+    required DateTime deliveryDate,
+  }) async {
     final result = await AsyncValue.guard(
-      () => _repository.create(fuel: fuel, quantity: quantity),
+      () => _repository.create(
+        fuelProductId: fuelProductId,
+        equipmentId: equipmentId,
+        providerId: providerId,
+        fuel: fuel,
+        quantity: quantity,
+        unit: unit,
+        deliveryAddress: deliveryAddress,
+        deliveryDate: deliveryDate,
+      ),
     );
     result.whenData(
       (order) => state = AsyncData([order, ...state.value ?? []]),
     );
     if (result.hasError) state = AsyncError(result.error!, result.stackTrace!);
+    return result.valueOrNull;
+  }
+
+  Future<void> accept(int requestId) async {
+    try {
+      final accepted = await _repository.accept(requestId);
+      final current = state.valueOrNull ?? const <Order>[];
+      state = AsyncData([
+        accepted,
+        ...current.where((o) => o.id != '$requestId'),
+      ]);
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+    }
+  }
+
+  Future<void> reject(int requestId, String reason) async {
+    try {
+      final rejected = await _repository.reject(requestId, reason);
+      final current = state.valueOrNull ?? const <Order>[];
+      state = AsyncData([
+        rejected,
+        ...current.where((o) => o.id != '$requestId'),
+      ]);
+    } catch (error, stackTrace) {
+      state = AsyncError(error, stackTrace);
+    }
   }
 }

@@ -1,4 +1,11 @@
-enum OrderStatus { pending, approved, inTransit, delivered, rejected }
+enum OrderStatus {
+  pending,
+  approved,
+  inTransit,
+  delivered,
+  rejected,
+  cancelled,
+}
 
 class Order {
   const Order({
@@ -7,6 +14,9 @@ class Order {
     required this.quantity,
     required this.total,
     required this.status,
+    this.requestId,
+    this.request = false,
+    this.deliveryAddress = '',
   });
 
   final String id;
@@ -14,4 +24,7 @@ class Order {
   final double quantity;
   final double total;
   final OrderStatus status;
+  final int? requestId;
+  final bool request;
+  final String deliveryAddress;
 }

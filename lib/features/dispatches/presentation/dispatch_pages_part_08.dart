@@ -31,52 +31,6 @@ class _ChoiceList extends StatelessWidget {
   );
 }
 
-class _OrderChoice extends StatelessWidget {
-  const _OrderChoice({
-    required this.title,
-    required this.detail,
-    this.selected = false,
-  });
-  final String title, detail;
-  final bool selected;
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(9),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border.all(color: selected ? _blue : _line),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Row(
-      children: [
-        const Icon(Icons.inventory_2_outlined, color: _blue, size: 18),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: _ink,
-                  fontSize: 8,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                detail,
-                style: const TextStyle(color: _muted, fontSize: 7.5),
-              ),
-            ],
-          ),
-        ),
-        if (selected) const Icon(Icons.check_circle, color: _blue, size: 16),
-      ],
-    ),
-  );
-}
-
 class _SelectableChoice extends StatelessWidget {
   const _SelectableChoice({
     required this.selected,
@@ -132,8 +86,14 @@ class _SelectableChoice extends StatelessWidget {
 }
 
 class _AssignmentSummary extends StatelessWidget {
-  const _AssignmentSummary({required this.vehicle, required this.driver});
-  final int vehicle, driver;
+  const _AssignmentSummary({
+    required this.order,
+    required this.vehicle,
+    required this.driver,
+  });
+  final Order? order;
+  final Vehicle? vehicle;
+  final Driver? driver;
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -159,20 +119,23 @@ class _AssignmentSummary extends StatelessWidget {
             _DarkRow(
               icon: Icons.inventory_2_outlined,
               label: 'PEDIDO',
-              value: '#ORD-4820 · Cliente B · 8,500 L',
+              value: order == null
+                  ? '—'
+                  : '#${order!.id} · ${order!.quantity.toStringAsFixed(0)} L',
             ),
             const Divider(color: Colors.white24),
             _DarkRow(
               icon: Icons.local_shipping_outlined,
               label: 'VEHÍCULO',
-              value:
-                  '${_vehicles[vehicle].plate} · ${_vehicles[vehicle].brand} · 20k L',
+              value: vehicle == null
+                  ? '—'
+                  : '${vehicle!.plate} · ${vehicle!.brand} · ${vehicle!.capacity.toStringAsFixed(0)} L',
             ),
             const Divider(color: Colors.white24),
             _DarkRow(
               icon: Icons.person_outline,
               label: 'CONDUCTOR',
-              value: _driversData[driver].name,
+              value: driver?.name ?? '—',
             ),
             const SizedBox(height: 8),
             const Row(
@@ -183,7 +146,7 @@ class _AssignmentSummary extends StatelessWidget {
                   style: TextStyle(color: Colors.white70, fontSize: 7),
                 ),
                 Text(
-                  'Hoy · 14:15',
+                  'Se asignará al crear',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 8,
@@ -198,4 +161,3 @@ class _AssignmentSummary extends StatelessWidget {
     ],
   );
 }
-

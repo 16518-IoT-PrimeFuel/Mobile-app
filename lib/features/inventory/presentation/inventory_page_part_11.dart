@@ -34,6 +34,9 @@ class _PrimaryButton extends StatelessWidget {
 }
 
 class _TankSearchDelegate extends SearchDelegate<TankData?> {
+  _TankSearchDelegate(this.tanks);
+
+  final List<TankData> tanks;
   @override
   List<Widget>? buildActions(BuildContext context) => [
     if (query.isNotEmpty)
@@ -53,7 +56,7 @@ class _TankSearchDelegate extends SearchDelegate<TankData?> {
   Widget buildSuggestions(BuildContext context) => _buildList(context);
 
   Widget _buildList(BuildContext context) {
-    final matches = _tanks.where((tank) {
+    final matches = tanks.where((tank) {
       final value = '${tank.id} ${tank.name} ${tank.location}'.toLowerCase();
       return value.contains(query.toLowerCase());
     }).toList();

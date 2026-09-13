@@ -16,11 +16,7 @@ class _RecoverHero extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color(0x551A202C),
-                  Color(0xAA1A202C),
-                  Colors.white,
-                ],
+                colors: [Color(0x551A202C), Color(0xAA1A202C), Colors.white],
                 stops: [0, 0.7, 1],
               ),
             ),
@@ -64,7 +60,7 @@ class _RecoveryPill extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: const Text(
-        'RECUPERACIÓN SEGURA',
+        'RECUPERACIÓN POR CORREO',
         style: TextStyle(
           color: FullTankColors.blue,
           fontSize: 10.5,
@@ -104,19 +100,8 @@ class _InboxInfoCard extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    text: 'Revisa tu bandeja\n',
-                    style: TextStyle(
-                      color: FullTankColors.blue,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  TextSpan(text: 'El enlace expira en '),
-                  TextSpan(
-                    text: '15 minutos',
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  TextSpan(
-                    text: '. Si no aparece, revisa tu carpeta de spam.',
+                    text:
+                        'Recibirás instrucciones si encontramos una cuenta asociada a ese correo.',
                   ),
                 ],
               ),
@@ -186,4 +171,3 @@ class _SupportCard extends StatelessWidget {
     );
   }
 }
-

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mobile_app/domain/auth/auth_repository.dart';
 import 'package:mobile_app/domain/auth/auth_session.dart';
+import 'package:mobile_app/domain/auth/sign_up_request.dart';
 import 'package:mobile_app/features/auth/application/auth_providers.dart';
 import 'package:mobile_app/features/home/presentation/home_page.dart';
 
@@ -11,12 +12,21 @@ void main() {
   testWidgets('renders every requested Home-related screen', (tester) async {
     final screens = <({Widget screen, String title})>[
       (screen: const HomePage(role: HomeRole.requester), title: 'PetroAndes'),
-      (screen: const HomePage(role: HomeRole.provider), title: 'FuelMex Logistics'),
+      (
+        screen: const HomePage(role: HomeRole.provider),
+        title: 'FuelMex Logistics',
+      ),
       (screen: const GlobalSearchPage(), title: 'Búsqueda global'),
       (screen: const QuickActionsPage(), title: 'Acciones rápidas'),
       (screen: const ActivityCenterPage(), title: 'Actividad'),
-      (screen: const EmptyHomePage(role: HomeRole.requester), title: 'No hay pedidos activos'),
-      (screen: const EmptyHomePage(role: HomeRole.provider), title: 'No hay operaciones hoy'),
+      (
+        screen: const EmptyHomePage(role: HomeRole.requester),
+        title: 'No hay pedidos activos',
+      ),
+      (
+        screen: const EmptyHomePage(role: HomeRole.provider),
+        title: 'No hay operaciones hoy',
+      ),
     ];
 
     for (final entry in screens) {
@@ -35,6 +45,15 @@ void main() {
 }
 
 class _NoopAuthRepository implements AuthRepository {
+  @override
+  Future<void> signUp(SignUpRequest request) async {}
+
+  @override
+  Future<void> requestPasswordReset(String email) async {}
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {}
+
   @override
   Future<AuthSession> signIn(
     String username,

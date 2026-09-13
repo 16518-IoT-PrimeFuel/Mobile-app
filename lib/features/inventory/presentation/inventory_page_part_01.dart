@@ -3,25 +3,24 @@ part of 'inventory_page.dart';
 class TankData {
   const TankData({
     required this.id,
+    this.equipmentId,
     required this.name,
     required this.location,
     required this.type,
     required this.level,
     required this.capacity,
     required this.current,
-    required this.sensor,
-    required this.updated,
   });
 
   final String id;
+  final int? equipmentId;
+  String get routeId => equipmentId?.toString() ?? id;
   final String name;
   final String location;
   final String type;
   final int level;
   final int capacity;
   final int current;
-  final String sensor;
-  final String updated;
 }
 
 const _tanks = [
@@ -33,8 +32,6 @@ const _tanks = [
     level: 12,
     capacity: 12000,
     current: 1440,
-    sensor: 'SN-4492',
-    updated: '2 min ago',
   ),
   TankData(
     id: 'B-05',
@@ -44,8 +41,6 @@ const _tanks = [
     level: 84,
     capacity: 50000,
     current: 42000,
-    sensor: 'SN-2011',
-    updated: '1 min ago',
   ),
   TankData(
     id: 'C-12',
@@ -55,8 +50,6 @@ const _tanks = [
     level: 35,
     capacity: 8000,
     current: 2800,
-    sensor: 'SN-8821',
-    updated: '3 min ago',
   ),
   TankData(
     id: 'A-204',
@@ -66,8 +59,6 @@ const _tanks = [
     level: 72,
     capacity: 15000,
     current: 10800,
-    sensor: 'SN-4499',
-    updated: 'just now',
   ),
   TankData(
     id: 'G-11',
@@ -77,8 +68,6 @@ const _tanks = [
     level: 18,
     capacity: 6000,
     current: 1080,
-    sensor: 'SN-9002',
-    updated: '5 min ago',
   ),
   TankData(
     id: 'D-4',
@@ -88,14 +77,12 @@ const _tanks = [
     level: 58,
     capacity: 4000,
     current: 2320,
-    sensor: 'SN-3355',
-    updated: '4 min ago',
   ),
 ];
 
 TankData _tankForId(String id) {
   for (final tank in _tanks) {
-    if (tank.id == id) return tank;
+    if (tank.id == id || tank.routeId == id) return tank;
   }
   if (id == 'B-07') {
     return const TankData(
@@ -106,8 +93,6 @@ TankData _tankForId(String id) {
       level: 28,
       capacity: 50000,
       current: 14000,
-      sensor: 'SN-2018',
-      updated: '18 min ago',
     );
   }
   return _tanks.first;
@@ -142,19 +127,35 @@ String _liters(int value) => value.toString().replaceAllMapped(
   (match) => '${match[1]},',
 );
 
-class InventoryPage extends StatefulWidget {
+class InventoryPage extends ConsumerStatefulWidget {
   const InventoryPage({super.key});
 
   @override
-  State<InventoryPage> createState() => _InventoryPageState();
+  ConsumerState<InventoryPage> createState() => _InventoryPageState();
 }
 
-class _InventoryPageState extends State<InventoryPage> {
+class _InventoryPageState extends ConsumerState<InventoryPage> {
   String _filter = 'all';
 
   @override
   Widget build(BuildContext context) {
-    final visible = _tanks.where((tank) {
+    return ref
+        .watch(inventoryEquipmentProvider)
+        .when(
+          loading: () =>
+              const Scaffold(body: Center(child: CircularProgressIndicator())),
+          error: (error, _) => Scaffold(
+            body: Center(
+              child: Text('No se pudo cargar el inventario: $error'),
+            ),
+          ),
+          data: (equipment) =>
+              _buildForTanks(equipment.map(_tankFromEquipment).toList()),
+        );
+  }
+
+  Widget _buildForTanks(List<TankData> tanks) {
+    final visible = tanks.where((tank) {
       return switch (_filter) {
         'critical' => tank.level < 20,
         'warning' => tank.level >= 20 && tank.level < 40,
@@ -166,7 +167,7 @@ class _InventoryPageState extends State<InventoryPage> {
       context,
       _InventoryShell(
         title: 'Inventory',
-        subtitle: '${_tanks.length} tanks · live IoT',
+        subtitle: '${tanks.length} tanks',
         right: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -176,10 +177,10 @@ class _InventoryPageState extends State<InventoryPage> {
               onPressed: () async {
                 final selected = await showSearch<TankData?>(
                   context: context,
-                  delegate: _TankSearchDelegate(),
+                  delegate: _TankSearchDelegate(tanks),
                 );
                 if (context.mounted && selected != null) {
-                  context.go('/inventory/tank/${selected.id}');
+                  context.go('/inventory/tank/${selected.routeId}');
                 }
               },
             ),
@@ -197,7 +198,7 @@ class _InventoryPageState extends State<InventoryPage> {
               Expanded(
                 child: _SummaryMetric(
                   label: 'Critical',
-                  count: _tanks.where((tank) => tank.level < 20).length,
+                  count: tanks.where((tank) => tank.level < 20).length,
                   status: _TankStatus.critical,
                 ),
               ),
@@ -205,7 +206,7 @@ class _InventoryPageState extends State<InventoryPage> {
               Expanded(
                 child: _SummaryMetric(
                   label: 'Warning',
-                  count: _tanks
+                  count: tanks
                       .where((tank) => tank.level >= 20 && tank.level < 40)
                       .length,
                   status: _TankStatus.warning,
@@ -215,7 +216,7 @@ class _InventoryPageState extends State<InventoryPage> {
               Expanded(
                 child: _SummaryMetric(
                   label: 'Optimal',
-                  count: _tanks.where((tank) => tank.level >= 40).length,
+                  count: tanks.where((tank) => tank.level >= 40).length,
                   status: _TankStatus.optimal,
                 ),
               ),
@@ -228,27 +229,29 @@ class _InventoryPageState extends State<InventoryPage> {
               children: [
                 _FilterChip(
                   label: 'All',
-                  count: _tanks.length,
+                  count: tanks.length,
                   selected: _filter == 'all',
                   onPressed: () => setState(() => _filter = 'all'),
                 ),
                 _FilterChip(
                   label: 'Critical',
-                  count: 2,
+                  count: tanks.where((tank) => tank.level < 20).length,
                   status: _TankStatus.critical,
                   selected: _filter == 'critical',
                   onPressed: () => setState(() => _filter = 'critical'),
                 ),
                 _FilterChip(
                   label: 'Warning',
-                  count: 1,
+                  count: tanks
+                      .where((tank) => tank.level >= 20 && tank.level < 40)
+                      .length,
                   status: _TankStatus.warning,
                   selected: _filter == 'warning',
                   onPressed: () => setState(() => _filter = 'warning'),
                 ),
                 _FilterChip(
                   label: 'Optimal',
-                  count: 3,
+                  count: tanks.where((tank) => tank.level >= 40).length,
                   status: _TankStatus.optimal,
                   selected: _filter == 'optimal',
                   onPressed: () => setState(() => _filter = 'optimal'),
@@ -269,3 +272,17 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 }
 
+TankData _tankFromEquipment(Equipment equipment) => TankData(
+  id:
+      RegExp(r'([A-Z]-?\d+)$').firstMatch(equipment.name)?.group(1) ??
+      '${equipment.id}',
+  equipmentId: equipment.id,
+  name: equipment.name,
+  location: equipment.location,
+  type: equipment.fuelType,
+  level: equipment.capacity <= 0
+      ? 0
+      : (equipment.currentLevel / equipment.capacity * 100).round(),
+  capacity: equipment.capacity.round(),
+  current: equipment.currentLevel.round(),
+);

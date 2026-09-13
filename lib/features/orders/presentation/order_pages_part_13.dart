@@ -1,56 +1,53 @@
 part of 'order_pages.dart';
 
 class _SalesDashboard extends StatelessWidget {
-  const _SalesDashboard();
+  const _SalesDashboard({required this.summary});
+  final ReportSummary summary;
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Row(
+      Row(
         children: [
           Expanded(
             child: _MetricCard(
               label: 'VENTAS TOTALES',
-              value: 'S/ 148,320',
+              value: 'S/ ${summary.revenue.toStringAsFixed(2)}',
               accent: _blue,
-              badge: '+8.2%',
             ),
           ),
           SizedBox(width: 6),
           Expanded(
             child: _MetricCard(
               label: 'LITROS VENDIDOS',
-              value: '42.8K L',
+              value: '${summary.liters.toStringAsFixed(0)} L',
               accent: _blue,
-              badge: '+5.6%',
             ),
           ),
         ],
       ),
       const SizedBox(height: 6),
-      const Row(
+      Row(
         children: [
           Expanded(
             child: _MetricCard(
               label: 'PEDIDOS',
-              value: '24',
+              value: '${summary.orders}',
               accent: _orange,
-              badge: '+3',
             ),
           ),
           SizedBox(width: 6),
           Expanded(
             child: _MetricCard(
-              label: 'CLIENTES ATENDIDOS',
-              value: '18',
+              label: 'ÓRDENES CONFIRMADAS',
+              value: '${summary.confirmedOrders}',
               accent: _muted,
-              badge: '+2',
             ),
           ),
         ],
       ),
       const SizedBox(height: 12),
-      const _SalesBars(),
+      _SalesBars(monthly: summary.monthly),
       const SizedBox(height: 12),
       const Text(
         'Filtros del reporte',
@@ -84,69 +81,82 @@ class _SalesDashboard extends StatelessWidget {
 }
 
 class _SalesBars extends StatelessWidget {
-  const _SalesBars();
+  const _SalesBars({required this.monthly});
+  final List<MonthlyReportValue> monthly;
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.fromLTRB(10, 9, 10, 7),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(11),
-      border: Border.all(color: _line),
-    ),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'VENTAS POR SEMANA',
-              style: TextStyle(
-                color: _muted,
-                fontSize: 7,
-                fontWeight: FontWeight.w800,
+  Widget build(BuildContext context) {
+    final maxAmount = monthly.fold<double>(
+      0,
+      (max, item) => item.amount > max ? item.amount : max,
+    );
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 9, 10, 7),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(11),
+        border: Border.all(color: _line),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'VENTAS POR SEMANA',
+                style: TextStyle(
+                  color: _muted,
+                  fontSize: 7,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-              decoration: BoxDecoration(
-                color: _panel,
-                borderRadius: BorderRadius.circular(99),
-              ),
-              child: const Row(
-                children: [
-                  Text(
-                    '30d',
-                    style: TextStyle(
-                      color: _muted,
-                      fontSize: 7,
-                      fontWeight: FontWeight.w800,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+                decoration: BoxDecoration(
+                  color: _panel,
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: const Row(
+                  children: [
+                    Text(
+                      '30d',
+                      style: TextStyle(
+                        color: _muted,
+                        fontSize: 7,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                  ),
-                  Icon(Icons.keyboard_arrow_down, size: 11, color: _muted),
+                    Icon(Icons.keyboard_arrow_down, size: 11, color: _muted),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          if (monthly.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Sin datos mensuales'),
+            )
+          else
+            SizedBox(
+              height: 67,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  for (final item in monthly.take(8))
+                    _Bar(
+                      value: maxAmount == 0 ? 0 : item.amount / maxAmount,
+                      label: item.month,
+                      highlighted: item == monthly.last,
+                    ),
                 ],
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          height: 67,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              for (var i = 0; i < 8; i++)
-                _Bar(
-                  value: [0.48, .67, .72, .57, .9, .75, .82, .88][i],
-                  label: 'S${i + 1}',
-                  highlighted: i == 4,
-                ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 class _SelectField extends StatelessWidget {
@@ -183,4 +193,3 @@ class _SelectField extends StatelessWidget {
     ),
   );
 }
-

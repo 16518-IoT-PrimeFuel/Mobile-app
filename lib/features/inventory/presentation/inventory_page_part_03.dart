@@ -180,8 +180,8 @@ class _RestockPageState extends State<RestockPage> {
                 );
                 return;
               }
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Request ready to submit.')),
+              context.go(
+                '/orders/new?equipmentId=${_tank.routeId}&quantity=$_quantity',
               );
             },
           ),
@@ -206,4 +206,3 @@ class _RestockPageState extends State<RestockPage> {
     );
   }
 }
-

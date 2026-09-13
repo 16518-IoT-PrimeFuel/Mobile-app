@@ -2,7 +2,7 @@ part of 'dispatch_pages.dart';
 
 class _VehicleCard extends StatelessWidget {
   const _VehicleCard({required this.vehicle});
-  final _Vehicle vehicle;
+  final Vehicle vehicle;
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.all(9),
@@ -17,12 +17,16 @@ class _VehicleCard extends StatelessWidget {
           width: 35,
           height: 35,
           decoration: BoxDecoration(
-            color: vehicle.status == 'DISPONIBLE' ? _greenSoft : _amberSoft,
+            color: vehicle.status.toUpperCase() == 'AVAILABLE'
+                ? _greenSoft
+                : _amberSoft,
             borderRadius: BorderRadius.circular(9),
           ),
           child: Icon(
             Icons.local_shipping_outlined,
-            color: vehicle.status == 'DISPONIBLE' ? _green : _amber,
+            color: vehicle.status.toUpperCase() == 'AVAILABLE'
+                ? _green
+                : _amber,
             size: 18,
           ),
         ),
@@ -43,14 +47,18 @@ class _VehicleCard extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   _StatusTag(
-                    vehicle.status,
-                    color: vehicle.status == 'DISPONIBLE' ? _green : _amber,
+                    vehicle.status.toUpperCase() == 'AVAILABLE'
+                        ? 'DISPONIBLE'
+                        : vehicle.status,
+                    color: vehicle.status.toUpperCase() == 'AVAILABLE'
+                        ? _green
+                        : _amber,
                   ),
                 ],
               ),
               const SizedBox(height: 3),
               Text(
-                '${vehicle.brand} · ${vehicle.type}',
+                '${vehicle.brand} · ${vehicle.model}',
                 style: const TextStyle(color: _muted, fontSize: 7.5),
               ),
               const SizedBox(height: 7),
@@ -59,11 +67,14 @@ class _VehicleCard extends StatelessWidget {
                   Expanded(
                     child: _VehicleMeta(
                       label: 'CAPACIDAD',
-                      value: '${vehicle.capacity} L',
+                      value: '${vehicle.capacity.toStringAsFixed(0)} L',
                     ),
                   ),
-                  Expanded(
-                    child: _VehicleMeta(label: 'PRÓXIMO', value: vehicle.next),
+                  const Expanded(
+                    child: _VehicleMeta(
+                      label: 'ESTADO',
+                      value: 'Sin asignación actual',
+                    ),
                   ),
                 ],
               ),
@@ -189,4 +200,3 @@ class _DispatchFilterSheetState extends State<_DispatchFilterSheet> {
     ),
   );
 }
-

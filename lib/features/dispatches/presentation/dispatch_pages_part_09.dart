@@ -145,7 +145,14 @@ class _ConflictResource extends StatelessWidget {
 }
 
 class _AssignmentSuccess extends StatelessWidget {
-  const _AssignmentSuccess();
+  const _AssignmentSuccess({
+    required this.order,
+    required this.vehicle,
+    required this.driver,
+  });
+  final Order? order;
+  final Vehicle? vehicle;
+  final Driver? driver;
   @override
   Widget build(BuildContext context) => Column(
     children: [
@@ -170,10 +177,10 @@ class _AssignmentSuccess extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 5),
-      const Text(
-        '#ORD-4820 está listo para salir. Se notificó al conductor y al cliente.',
+      Text(
+        '#${order?.id ?? ''} fue asignado y marcado como despachado.',
         textAlign: TextAlign.center,
-        style: TextStyle(color: _muted, fontSize: 9, height: 1.4),
+        style: const TextStyle(color: _muted, fontSize: 9, height: 1.4),
       ),
       const SizedBox(height: 16),
       Container(
@@ -182,19 +189,19 @@ class _AssignmentSuccess extends StatelessWidget {
           color: _panel,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: const Column(
+        child: Column(
           children: [
-            _KeyValue(label: 'Pedido', value: '#ORD-4820'),
-            _KeyValue(label: 'Vehículo', value: 'TK-4421'),
-            _KeyValue(label: 'Conductor', value: 'Juan Ramírez'),
-            _KeyValue(label: 'Estado', value: 'DESPACHADO'),
+            _KeyValue(label: 'Pedido', value: '#${order?.id ?? ''}'),
+            _KeyValue(label: 'Vehículo', value: vehicle?.plate ?? '—'),
+            _KeyValue(label: 'Conductor', value: driver?.name ?? '—'),
+            const _KeyValue(label: 'Estado', value: 'DESPACHADO'),
           ],
         ),
       ),
       const SizedBox(height: 17),
       _OrangeButton(
         label: 'Ver seguimiento',
-        onPressed: () => context.go('/orders/ORD-4820'),
+        onPressed: () => context.go('/orders/${order?.id ?? ''}'),
       ),
       TextButton(
         onPressed: () => context.go('/dispatches/assign'),
@@ -210,4 +217,3 @@ class _AssignmentSuccess extends StatelessWidget {
     ],
   );
 }
-

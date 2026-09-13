@@ -1,6 +1,6 @@
 part of 'dispatch_pages.dart';
 
-class TransportAvailabilityPage extends StatefulWidget {
+class TransportAvailabilityPage extends ConsumerStatefulWidget {
   const TransportAvailabilityPage({
     this.initialState = TransportAvailabilityState.content,
     super.key,
@@ -9,14 +9,22 @@ class TransportAvailabilityPage extends StatefulWidget {
   final TransportAvailabilityState initialState;
 
   @override
-  State<TransportAvailabilityPage> createState() =>
+  ConsumerState<TransportAvailabilityPage> createState() =>
       _TransportAvailabilityPageState();
 }
 
-class _TransportAvailabilityPageState extends State<TransportAvailabilityPage> {
+class _TransportAvailabilityPageState
+    extends ConsumerState<TransportAvailabilityPage> {
   late TransportAvailabilityState _state = widget.initialState;
   var _capacity = 8000;
   var _availableOnly = false;
+  List<Vehicle> _vehicles = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _refresh();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -55,7 +63,7 @@ class _TransportAvailabilityPageState extends State<TransportAvailabilityPage> {
                 capacity: _capacity,
                 availableOnly: _availableOnly,
                 onAdjust: _openFilters,
-                onClearConflict: _refresh,
+                vehicles: _vehicles,
               ),
       ),
     ),
@@ -64,8 +72,18 @@ class _TransportAvailabilityPageState extends State<TransportAvailabilityPage> {
 
   Future<void> _refresh() async {
     setState(() => _state = TransportAvailabilityState.loading);
-    await Future<void>.delayed(const Duration(milliseconds: 550));
-    if (mounted) setState(() => _state = TransportAvailabilityState.content);
+    try {
+      final vehicles = await ref.read(dispatchRepositoryProvider).vehicles();
+      if (!mounted) return;
+      setState(() {
+        _vehicles = vehicles;
+        _state = vehicles.isEmpty
+            ? TransportAvailabilityState.empty
+            : TransportAvailabilityState.content;
+      });
+    } catch (_) {
+      if (mounted) setState(() => _state = TransportAvailabilityState.conflict);
+    }
   }
 
   Future<void> _openFilters() async {
@@ -83,8 +101,8 @@ class _TransportAvailabilityPageState extends State<TransportAvailabilityPage> {
       _availableOnly = result.availableOnly;
       final matches = _vehicles.any(
         (item) =>
-            item.capacityLiters >= result.capacity &&
-            (!result.availableOnly || item.status == 'DISPONIBLE'),
+            item.capacity >= result.capacity &&
+            (!result.availableOnly || item.status.toUpperCase() == 'AVAILABLE'),
       );
       _state = matches
           ? TransportAvailabilityState.content
@@ -98,31 +116,29 @@ class _AvailabilityContent extends StatelessWidget {
     required this.capacity,
     required this.availableOnly,
     required this.onAdjust,
-    required this.onClearConflict,
+    required this.vehicles,
   });
 
   final int capacity;
   final bool availableOnly;
   final VoidCallback onAdjust;
-  final VoidCallback onClearConflict;
+  final List<Vehicle> vehicles;
 
   @override
   Widget build(BuildContext context) {
-    final matching = _vehicles
-        .where((item) => item.capacityLiters >= capacity)
+    final matching = vehicles
+        .where((item) => item.capacity >= capacity)
         .toList();
     final available = matching
-        .where((item) => item.status == 'DISPONIBLE')
+        .where((item) => item.status.toUpperCase() == 'AVAILABLE')
         .toList();
     final inDispatch = matching
-        .where((item) => item.status == 'EN DESPACHO')
+        .where((item) => item.status.toUpperCase() == 'IN_ROUTE')
         .length;
     final visible = availableOnly ? available : matching;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _LiveConflictBanner(onRefresh: onClearConflict),
-        const SizedBox(height: 9),
         _FilterSummary(
           capacity: capacity,
           availableOnly: availableOnly,
@@ -195,4 +211,3 @@ class _AvailabilityEmpty extends StatelessWidget {
     ],
   );
 }
-
