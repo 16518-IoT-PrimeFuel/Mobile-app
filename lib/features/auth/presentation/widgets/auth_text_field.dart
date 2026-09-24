@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/fulltank_theme.dart';
+
 class AuthTextField extends StatefulWidget {
   const AuthTextField({
     required this.label,
@@ -11,7 +13,6 @@ class AuthTextField extends StatefulWidget {
     this.onToggleObscure,
     this.onChanged,
     this.errorText,
-    this.largeText = false,
     super.key,
   });
 
@@ -24,7 +25,6 @@ class AuthTextField extends StatefulWidget {
   final VoidCallback? onToggleObscure;
   final ValueChanged<String>? onChanged;
   final String? errorText;
-  final bool largeText;
 
   @override
   State<AuthTextField> createState() => _AuthTextFieldState();
@@ -54,13 +54,13 @@ class _AuthTextFieldState extends State<AuthTextField> {
     final hasError = widget.errorText != null;
     final active = _focusNode.hasFocus;
     final borderColor = hasError
-        ? Color(0xFFEF4444)
+        ? FullTankColors.danger
         : active
-        ? Color(0xFF1E40AF)
-        : Color(0xFFE2E8F0);
+            ? FullTankColors.blue
+            : FullTankColors.line;
     final iconColor = hasError || active
-        ? (hasError ? Color(0xFFEF4444) : Color(0xFF1E40AF))
-        : Color(0xFF94A3B8);
+        ? (hasError ? FullTankColors.danger : FullTankColors.blue)
+        : FullTankColors.inkSoft;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,8 +68,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
         Text(
           widget.label.toUpperCase(),
           style: TextStyle(
-            color: hasError ? Color(0xFFEF4444) : Color(0xFF4A5568),
-            fontSize: widget.largeText ? 15.95 : 11,
+            color: hasError ? FullTankColors.danger : FullTankColors.inkMid,
+            fontSize: 11,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.15,
           ),
@@ -79,9 +79,12 @@ class _AuthTextFieldState extends State<AuthTextField> {
           duration: const Duration(milliseconds: 150),
           height: 46,
           decoration: BoxDecoration(
-            color: active ? Colors.white : Color(0xFFF3F4F6),
+            color: active ? Colors.white : FullTankColors.card,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: borderColor, width: 1.5),
+            border: Border.all(
+              color: borderColor,
+              width: 1.5,
+            ),
           ),
           child: TextField(
             controller: widget.controller,
@@ -91,17 +94,17 @@ class _AuthTextFieldState extends State<AuthTextField> {
             onChanged: widget.onChanged,
             autocorrect: false,
             enableSuggestions: !widget.obscureText,
-            style: TextStyle(
-              color: Color(0xFF1A202C),
-              fontSize: widget.largeText ? 20.3 : 14,
+            style: const TextStyle(
+              color: FullTankColors.navy,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
-            cursorColor: Color(0xFF1E40AF),
+            cursorColor: FullTankColors.blue,
             decoration: InputDecoration(
               hintText: widget.hintText,
-              hintStyle: TextStyle(
-                color: Color(0xFF94A3B8),
-                fontSize: widget.largeText ? 20.3 : 14,
+              hintStyle: const TextStyle(
+                color: FullTankColors.inkSoft,
+                fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: Icon(widget.icon, size: 18, color: iconColor),
@@ -117,7 +120,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
                         size: 18,
-                        color: Color(0xFF94A3B8),
+                        color: FullTankColors.inkSoft,
                       ),
                     ),
               border: InputBorder.none,
@@ -133,15 +136,15 @@ class _AuthTextFieldState extends State<AuthTextField> {
               const Icon(
                 Icons.cancel_outlined,
                 size: 14,
-                color: Color(0xFFEF4444),
+                color: FullTankColors.danger,
               ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   widget.errorText!,
-                  style: TextStyle(
-                    color: Color(0xFFEF4444),
-                    fontSize: widget.largeText ? 15.225 : 10.5,
+                  style: const TextStyle(
+                    color: FullTankColors.danger,
+                    fontSize: 10.5,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

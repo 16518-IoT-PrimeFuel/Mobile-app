@@ -41,7 +41,10 @@ class AuthController extends StateNotifier<AuthState> {
     try {
       final session = await _repository.restoreSession();
       if (session == null) return;
-      state = AuthState(status: AuthStatus.authenticated, session: session);
+      state = AuthState(
+        status: AuthStatus.authenticated,
+        session: session,
+      );
     } catch (_) {
       await _repository.signOut();
     }
@@ -59,10 +62,16 @@ class AuthController extends StateNotifier<AuthState> {
         password,
         rememberMe: rememberMe,
       );
-      state = AuthState(status: AuthStatus.authenticated, session: session);
+      state = AuthState(
+        status: AuthStatus.authenticated,
+        session: session,
+      );
       return true;
     } on AuthFailure catch (failure) {
-      state = AuthState(status: AuthStatus.failure, failure: failure);
+      state = AuthState(
+        status: AuthStatus.failure,
+        failure: failure,
+      );
       return false;
     } catch (_) {
       state = AuthState(

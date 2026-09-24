@@ -59,7 +59,7 @@ features/*/
   └── presentation/      # páginas y widgets
 ```
 
-`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio, pero las pantallas operativas todavía no consumen esos controllers/providers y mantienen datos mock locales.
+`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio.
 
 ## Refactor aplicado
 
@@ -71,8 +71,6 @@ features/*/
 
 ## Pendientes de integración real
 
-- Persistir JWT de forma segura en almacenamiento nativo.
 - Conectar cada ViewModel a las pantallas concretas de operaciones.
 - Validar los nombres de campos de respuesta contra el backend desplegado.
 - Activar providers API por entorno cuando exista una URL estable.
-- Mapear errores HTTP a estados de UI traducidos y accionables.

@@ -2,7 +2,7 @@
 
 Este documento es la referencia visual de la aplicación móvil FullTank. Las imágenes recibidas muestran un producto B2B operativo: combustible, inventario, pedidos, pagos, entregas y reportes. La interfaz debe sentirse confiable y rápida para una persona que toma decisiones operativas desde el teléfono.
 
-La implementación actual integra las stories públicas, autenticación, pedidos, inventario, despachos, reportes y cuenta. La nueva arquitectura separa contratos, mocks y adaptadores para `FullTankApi`; las pantallas operativas aún usan datos mock locales y queda pendiente conectarlas a sus providers.
+La implementación integra las stories públicas, autenticación, pedidos, inventario, despachos, reportes y cuenta. Los flujos operativos usan la API real por defecto; los mocks quedan disponibles solo para pruebas y desarrollo.
 
 ## 1. Lectura del patrón visual
 

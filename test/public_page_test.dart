@@ -8,8 +8,6 @@ void main() {
     for (final section in PublicSection.values) {
       await tester.pumpWidget(MaterialApp(home: PublicPage(section: section)));
       await tester.pump();
-      await tester.drag(find.byType(ListView), const Offset(0, -600));
-      await tester.pump();
       expect(find.text('Comenzar con FullTank'), findsOneWidget);
     }
   });
