@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:mobile_app/features/account/presentation/account_page.dart';
-import 'package:mobile_app/features/home/presentation/home_page.dart';
+import 'package:mobile_app/shared/widgets/fulltank_bottom_navigation.dart';
 
 void main() {
   testWidgets('renders every account variant with the expected bottom bar', (

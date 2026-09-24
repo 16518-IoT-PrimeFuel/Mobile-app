@@ -11,6 +11,18 @@ import 'package:mobile_app/features/reports/data/mock_reports_repository.dart';
 import 'package:mobile_app/features/orders/presentation/order_pages.dart';
 
 void main() {
+  testWidgets('orders flows keep the shared bottom navigation', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: OrdersPage(history: false)),
+    );
+    await tester.pump();
+    expect(find.text('Pedidos'), findsOneWidget);
+
+    await tester.pumpWidget(const MaterialApp(home: SalesReportPage()));
+    await tester.pump();
+    expect(find.text('Reportes'), findsOneWidget);
+  });
+
   testWidgets('renders order list states and detail', (tester) async {
     for (final state in OrderPageState.values) {
       await tester.pumpWidget(
@@ -57,16 +69,12 @@ void main() {
     expect(find.text('Reportes de ventas'), findsOneWidget);
     expect(find.text('S/ 31200.00'), findsOneWidget);
 
-    final generate = find.textContaining('Generate Report');
+    final generate = find.textContaining('Generar reporte');
     await tester.ensureVisible(generate);
     await tester.tap(generate);
     await tester.pumpAndSettle();
     expect(find.text('Reporte listo'), findsWidgets);
-    final export = find.text('Copiar reporte CSV');
-    await tester.ensureVisible(export);
-    await tester.tap(export);
-    await tester.pumpAndSettle();
-    expect(find.text('CSV copiado al portapapeles'), findsOneWidget);
+    expect(find.textContaining('Descargar PDF'), findsOneWidget);
   });
 
   testWidgets('renders new order states and creates an order', (tester) async {
@@ -76,12 +84,14 @@ void main() {
       expect(find.byType(NewOrderPage), findsOneWidget);
     }
 
-    await tester.pumpWidget(_testApp(const NewOrderPage()));
-    await tester.pumpAndSettle();
-    expect(find.text('New Order'), findsOneWidget);
-    expect(find.text('Create Order  →'), findsOneWidget);
-    await tester.tap(find.text('Create Order  →'));
-    await tester.pumpAndSettle();
+    await tester.pumpWidget(const MaterialApp(home: NewOrderPage()));
+    await tester.pump();
+    expect(find.text('Nuevo pedido'), findsOneWidget);
+    expect(find.text('Crear pedido  →'), findsOneWidget);
+    await tester.tap(find.text('Crear pedido  →'));
+    await tester.pump();
+    expect(find.text('Creando pedido'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 800));
     expect(find.text('Pedido creado\ncorrectamente'), findsOneWidget);
     expect(find.text('#FT-MOCK-001'), findsOneWidget);
   });

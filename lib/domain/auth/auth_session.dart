@@ -1,12 +1,5 @@
 class AuthSession {
-  const AuthSession({
-    required this.username,
-    required this.token,
-    this.userId,
-    this.roles = const [],
-    this.companyId,
-    this.providerId,
-  });
+  const AuthSession({required this.username, required this.token, this.userId});
 
   final int? userId;
   final String username;

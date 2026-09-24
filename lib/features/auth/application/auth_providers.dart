@@ -17,7 +17,7 @@ final fullTankApiProvider = Provider<FullTankApi>(
   (ref) => FullTankApi(ApiClient()),
 );
 
-const _useMockAuth = bool.fromEnvironment('USE_MOCK_AUTH', defaultValue: false);
+const _useMockAuth = bool.fromEnvironment('USE_MOCK_AUTH', defaultValue: true);
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final storage = ref.watch(tokenStorageProvider);

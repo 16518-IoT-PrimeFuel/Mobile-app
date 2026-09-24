@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/fulltank_theme.dart';
 import '../domain/public_content.dart';
 
 class PublicPage extends StatelessWidget {
@@ -15,7 +14,7 @@ class PublicPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('FullTank'),
+        title: const Text('FullTank', style: TextStyle(fontSize: 31.9)),
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back),
@@ -32,7 +31,15 @@ class PublicPage extends StatelessWidget {
           const SizedBox(height: 18),
           FilledButton(
             onPressed: () => context.go('/login'),
-            child: const Text('Comenzar con FullTank'),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(52),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              shape: const StadiumBorder(),
+            ),
+            child: const Text(
+              'Comenzar con FullTank',
+              style: TextStyle(fontSize: 20.3),
+            ),
           ),
         ],
       ),
@@ -50,17 +57,17 @@ class _PublicCard extends StatelessWidget {
     margin: const EdgeInsets.only(bottom: 10),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: FullTankColors.card,
+      color: Color(0xFFF3F4F6),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: FullTankColors.line),
+      border: Border.all(color: Color(0xFFE2E8F0)),
     ),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircleAvatar(
-          backgroundColor: FullTankColors.blueSoft,
-          foregroundColor: FullTankColors.blue,
-          child: Text(item.icon),
+          backgroundColor: Color(0xFFEFF4FF),
+          foregroundColor: Color(0xFF1E40AF),
+          child: Text(item.icon, style: const TextStyle(fontSize: 23.2)),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -79,26 +86,26 @@ class _PublicCard extends StatelessWidget {
 }
 
 const _titleStyle = TextStyle(
-  color: FullTankColors.navy,
-  fontSize: 28,
+  color: Color(0xFF1A202C),
+  fontSize: 40.6,
   fontWeight: FontWeight.w800,
   height: 1.1,
 );
 
 const _subtitleStyle = TextStyle(
-  color: FullTankColors.inkMid,
-  fontSize: 15,
+  color: Color(0xFF4A5568),
+  fontSize: 21.75,
   height: 1.4,
 );
 
 const _itemTitleStyle = TextStyle(
-  color: FullTankColors.navy,
-  fontSize: 15,
+  color: Color(0xFF1A202C),
+  fontSize: 21.75,
   fontWeight: FontWeight.w800,
 );
 
 const _itemDescriptionStyle = TextStyle(
-  color: FullTankColors.inkMid,
-  fontSize: 13,
+  color: Color(0xFF4A5568),
+  fontSize: 18.85,
   height: 1.35,
 );

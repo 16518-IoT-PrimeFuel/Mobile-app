@@ -19,23 +19,39 @@ void main() {
   });
 
   testWidgets('shows the empty email validation state', (tester) async {
-    await tester.pumpWidget(_TestApp(repository: _FakeAuthRepository()));
-    await tester.tap(find.text('Enviar instrucciones'));
+    await tester.pumpWidget(const _TestApp());
+    await tester.ensureVisible(find.text('Enviar enlace de recuperación'));
+    await tester.tap(find.text('Enviar enlace de recuperación'));
     await tester.pump();
 
     expect(find.text('Ingresa tu email corporativo'), findsOneWidget);
   });
 
-  testWidgets('shows the generic successful request response', (tester) async {
-    await tester.pumpWidget(_TestApp(repository: _FakeAuthRepository()));
-    await tester.enterText(find.byType(TextField), 'operador@empresa.com');
-    await tester.tap(find.text('Enviar instrucciones'));
-    await tester.pumpAndSettle();
+  testWidgets('shows the not found state for the reference email', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const _TestApp());
+    await tester.enterText(find.byType(TextField), 'noexiste@empresa.com');
+    await tester.ensureVisible(find.text('Enviar enlace de recuperación'));
+    await tester.tap(find.text('Enviar enlace de recuperación'));
+    await tester.pump();
 
     expect(
       find.text('Si la cuenta existe, recibirás instrucciones en tu correo.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('shows the sent state for a valid email', (tester) async {
+    await tester.pumpWidget(const _TestApp());
+    await tester.enterText(find.byType(TextField), 'operador@empresa.com');
+    await tester.ensureVisible(find.text('Enviar enlace de recuperación'));
+    await tester.tap(find.text('Enviar enlace de recuperación'));
+    await tester.pump();
+
+    expect(find.text('Revisa tu bandeja'), findsOneWidget);
+    expect(find.text('Abrir mi correo'), findsOneWidget);
+    expect(find.text('ENVIADO A'), findsOneWidget);
   });
 }
 

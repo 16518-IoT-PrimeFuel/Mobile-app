@@ -13,6 +13,7 @@ import '../features/orders/presentation/order_pages.dart';
 import '../features/dispatches/presentation/dispatch_pages.dart';
 import '../features/dispatches/domain/driver.dart';
 import '../features/reports/presentation/reports_page.dart';
+import '../features/gaps/presentation/missing_pages.dart';
 import '../features/public/domain/public_content.dart';
 import '../features/public/presentation/public_pages.dart';
 
@@ -27,20 +28,26 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isAuthRoute =
           location == '/login' ||
           location == '/recover' ||
-          location == '/signup';
+          location.startsWith('/signup') ||
+          location == '/splash';
       if (!authenticated &&
           (location.startsWith('/home') ||
               location.startsWith('/reports') ||
               location.startsWith('/account') ||
               location.startsWith('/inventory') ||
               location.startsWith('/orders') ||
-              location.startsWith('/dispatches')))
+              location.startsWith('/dispatches') ||
+              location.startsWith('/provider') ||
+              location.startsWith('/support') ||
+              location.startsWith('/notifications') ||
+              location.startsWith('/customers')))
         return '/login';
       if (authenticated && isAuthRoute) return '/home';
       return null;
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+      GoRoute(path: '/splash', builder: (context, state) => const SplashPage()),
       GoRoute(
         path: '/about',
         builder: (context, state) =>
@@ -136,10 +143,47 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
+        path: '/orders/search',
+        builder: (context, state) => const SearchOrdersPage(),
+      ),
+      GoRoute(
+        path: '/orders/filter',
+        builder: (context, state) => const SearchOrdersPage(),
+      ),
+      GoRoute(
+        path: '/orders/:orderId/payment',
+        builder: (context, state) => PaymentPage(
+          orderId: state.pathParameters['orderId'] ?? 'FT-88421',
+          initialState: switch (state.uri.queryParameters['state']) {
+            'processing' => PaymentState.processing,
+            'success' => PaymentState.success,
+            'error' => PaymentState.error,
+            _ => PaymentState.checkout,
+          },
+        ),
+      ),
+      GoRoute(
         path: '/orders/:orderId',
         builder: (context, state) => OrderDetailPage(
           history: false,
           orderId: state.pathParameters['orderId'] ?? 'FT-88421',
+        ),
+      ),
+      GoRoute(
+        path: '/provider/orders',
+        builder: (context, state) => const ProviderOrdersPage(),
+      ),
+      GoRoute(
+        path: '/provider/orders/:orderId',
+        builder: (context, state) => ProviderOrderDetailPage(
+          orderId: state.pathParameters['orderId'] ?? 'FT-2098',
+        ),
+      ),
+      GoRoute(
+        path: '/provider/orders/:orderId/:action',
+        builder: (context, state) => ProviderOrderActionPage(
+          orderId: state.pathParameters['orderId'] ?? 'FT-2098',
+          action: state.pathParameters['action'] ?? 'dispatch',
         ),
       ),
       GoRoute(
@@ -210,6 +254,55 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             const AccountPage(variant: AccountVariant.help),
       ),
       GoRoute(
+        path: '/support/help',
+        builder: (context, state) => const SupportHelpPage(),
+      ),
+      GoRoute(
+        path: '/support/contact',
+        builder: (context, state) => const ContactSupportPage(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsCenterPage(),
+      ),
+      GoRoute(
+        path: '/customers',
+        builder: (context, state) => const CustomersPage(),
+      ),
+      GoRoute(
+        path: '/customers/new',
+        builder: (context, state) => const CustomerFormPage(),
+      ),
+      GoRoute(
+        path: '/customers/:customerId/edit',
+        builder: (context, state) =>
+            CustomerFormPage(customerId: state.pathParameters['customerId']),
+      ),
+      GoRoute(
+        path: '/customers/:customerId',
+        builder: (context, state) => CustomerDetailPage(
+          customerId: state.pathParameters['customerId'] ?? 'agronorte',
+        ),
+      ),
+      GoRoute(
+        path: '/inventory/products',
+        builder: (context, state) => const ProductsPage(),
+      ),
+      GoRoute(
+        path: '/inventory/products/new',
+        builder: (context, state) => const ProductFormPage(),
+      ),
+      GoRoute(
+        path: '/inventory/products/:productId/edit',
+        builder: (context, state) =>
+            ProductFormPage(productId: state.pathParameters['productId']),
+      ),
+      GoRoute(
+        path: '/inventory/products/:productId',
+        builder: (context, state) =>
+            ProductFormPage(productId: state.pathParameters['productId']),
+      ),
+      GoRoute(
         path: '/home/search',
         builder: (context, state) => const GlobalSearchPage(),
       ),
@@ -262,9 +355,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RecoverPage(),
       ),
       GoRoute(
-        path: '/reset-password',
+        path: '/signup/requester',
         builder: (context, state) =>
-            ResetPasswordPage(token: state.uri.queryParameters['token'] ?? ''),
+            const SignupPage(role: SignupRole.requester),
+      ),
+      GoRoute(
+        path: '/signup/provider',
+        builder: (context, state) =>
+            const SignupPage(role: SignupRole.provider),
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => SignupPage(
+          role: state.uri.queryParameters['role'] == 'provider'
+              ? SignupRole.provider
+              : SignupRole.requester,
+        ),
       ),
       GoRoute(path: '/signup', builder: (context, state) => const SignUpPage()),
     ],
