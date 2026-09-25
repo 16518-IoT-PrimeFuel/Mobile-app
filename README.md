@@ -2,7 +2,7 @@
 
 Este documento es la referencia visual de la aplicación móvil FullTank. Las imágenes recibidas muestran un producto B2B operativo: combustible, inventario, pedidos, pagos, entregas y reportes. La interfaz debe sentirse confiable y rápida para una persona que toma decisiones operativas desde el teléfono.
 
-La implementación integra las stories públicas, autenticación, pedidos, inventario, despachos, reportes y cuenta. Los flujos operativos usan la API real por defecto; los mocks quedan disponibles solo para pruebas y desarrollo.
+La implementación actual integra las stories públicas, autenticación, pedidos, inventario, despachos, reportes y cuenta. La nueva arquitectura separa contratos, mocks y adaptadores para `FullTankApi`; las pantallas operativas aún usan datos mock locales y queda pendiente conectarlas a sus providers.
 
 ## 1. Lectura del patrón visual
 
@@ -193,9 +193,9 @@ View → ViewModel/Provider → Repository contract → Mock repository
 - Las Views renderizan estado y emiten acciones.
 - Los ViewModels controlan loading, success, empty y error.
 - Los repositories exponen interfaces simples.
-- Los repositorios API usan `/api/v1` y el JWT de la sesión.
-- Los mocks son opt-in mediante `USE_MOCK_AUTH`, `USE_MOCK_ORDERS`, `USE_MOCK_INVENTORY`, `USE_MOCK_DISPATCH` y `USE_MOCK_REPORTS`; por defecto se conecta al backend.
-- Para el emulador Android: `flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080/api/v1`. Para dispositivo físico o producción, define la URL HTTPS alcanzable del backend.
+- El mock repository es la implementación inicial.
+- La futura integración usará `/api/v1` y JWT sin rediseñar pantallas.
+- El modo API se activa por variables `USE_MOCK_*`; por defecto permanece en mock.
 
 ## 7. Qué evitar
 

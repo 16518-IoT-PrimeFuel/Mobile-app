@@ -7,26 +7,10 @@ import '../domain/inventory_repository.dart';
 
 const _useMockInventory = bool.fromEnvironment(
   'USE_MOCK_INVENTORY',
-  defaultValue: false,
+  defaultValue: true,
 );
 
 final inventoryRepositoryProvider = Provider<InventoryRepository>((ref) {
   if (_useMockInventory) return MockInventoryRepository();
-  return ApiInventoryRepository(
-    ref.watch(fullTankApiProvider),
-    companyId: ref.watch(authControllerProvider).session?.companyId,
-    providerId:
-        ref
-                .watch(authControllerProvider)
-                .session
-                ?.roles
-                .contains('ROLE_PROVIDER') ==
-            true
-        ? ref.watch(authControllerProvider).session?.providerId
-        : null,
-  );
-});
-
-final inventoryEquipmentProvider = FutureProvider.autoDispose((ref) {
-  return ref.watch(inventoryRepositoryProvider).equipment();
+  return ApiInventoryRepository(ref.watch(fullTankApiProvider));
 });

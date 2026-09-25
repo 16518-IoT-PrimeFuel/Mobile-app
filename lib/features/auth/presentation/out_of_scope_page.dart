@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/theme/fulltank_theme.dart';
-
 class OutOfScopePage extends StatelessWidget {
   const OutOfScopePage({required this.title, required this.message, super.key});
 
@@ -17,7 +15,7 @@ class OutOfScopePage extends StatelessWidget {
           onPressed: () => context.pop(),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: Text(title),
+        title: Text(title, style: const TextStyle(fontSize: 31.9)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
@@ -26,8 +24,8 @@ class OutOfScopePage extends StatelessWidget {
             message,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              color: FullTankColors.inkMid,
-              fontSize: 15,
+              color: Color(0xFF4A5568),
+              fontSize: 21.75,
               height: 1.5,
             ),
           ),

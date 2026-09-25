@@ -1,0 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../shared/widgets/fulltank_bottom_navigation.dart';
+part 'missing_pages_shared.dart';
+part 'missing_pages_auth_payment.dart';
+part 'missing_pages_payment.dart';
+part 'missing_pages_provider_orders.dart';
+part 'missing_pages_support.dart';
+part 'missing_pages_search_notifications.dart';
+part 'missing_pages_customers.dart';
+part 'missing_pages_products.dart';

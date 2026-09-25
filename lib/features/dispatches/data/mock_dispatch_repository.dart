@@ -1,27 +1,11 @@
 import '../domain/dispatch_repository.dart';
-import '../domain/vehicle.dart';
 import '../domain/driver.dart';
+import '../domain/vehicle.dart';
 
 class MockDispatchRepository implements DispatchRepository {
   static const _vehicles = [
-    Vehicle(
-      id: 1,
-      plate: 'ABC-921',
-      type: 'Cisterna',
-      brand: 'Freightliner',
-      model: 'M2 106',
-      capacity: 12000,
-      status: 'AVAILABLE',
-    ),
-    Vehicle(
-      id: 2,
-      plate: 'MNO-442',
-      type: 'Cisterna',
-      brand: 'International',
-      model: 'DuraStar',
-      capacity: 8000,
-      status: 'IN_USE',
-    ),
+    Vehicle(id: 1, plate: 'ABC-921', type: 'Cisterna 12.000 L'),
+    Vehicle(id: 2, plate: 'MNO-442', type: 'Cisterna 8.000 L'),
   ];
 
   @override
@@ -62,15 +46,7 @@ class MockDispatchRepository implements DispatchRepository {
   Future<void> deleteVehicle(int id) async {}
 
   @override
-  Future<List<Driver>> drivers() async => const [
-    Driver(id: 1, firstName: 'Ana', lastName: 'Navarro', licenseNumber: 'A-2'),
-    Driver(
-      id: 2,
-      firstName: 'Carlos',
-      lastName: 'Mendoza',
-      licenseNumber: 'A-3',
-    ),
-  ];
+  Future<List<Driver>> drivers() async => const [];
 
   @override
   Future<Driver> createDriver(Driver driver) async => driver;

@@ -1,11 +1,10 @@
 import '../../../data/fulltank_api.dart';
 import '../domain/dispatch_repository.dart';
-import '../domain/vehicle.dart';
 import '../domain/driver.dart';
+import '../domain/vehicle.dart';
 
 class ApiDispatchRepository implements DispatchRepository {
-  const ApiDispatchRepository(this.api, {required this.providerId});
-
+  const ApiDispatchRepository(this.api, {this.providerId = 1});
   final FullTankApi api;
   final int? providerId;
 
@@ -14,8 +13,7 @@ class ApiDispatchRepository implements DispatchRepository {
     final id = providerId;
     if (id == null) return const [];
     final raw = await api.vehicles(providerId: id);
-    if (raw is! List) return const [];
-    return raw.whereType<Map>().map(_map).toList();
+    return raw is List ? raw.whereType<Map>().map(_map).toList() : const [];
   }
 
   @override
@@ -72,8 +70,9 @@ class ApiDispatchRepository implements DispatchRepository {
     final id = providerId;
     if (id == null) return const [];
     final raw = await api.drivers(providerId: id);
-    if (raw is! List) return const [];
-    return raw.whereType<Map>().map(_mapDriver).toList();
+    return raw is List
+        ? raw.whereType<Map>().map(_mapDriver).toList()
+        : const [];
   }
 
   @override
@@ -87,12 +86,9 @@ class ApiDispatchRepository implements DispatchRepository {
 
   @override
   Future<Driver> updateDriver(Driver driver) async {
-    if (providerId == null)
-      throw StateError('Authenticated provider is required');
-    final raw = await api.updateDriver(
-      driver.id,
-      _driverBody(driver, providerId!),
-    );
+    final id = providerId;
+    if (id == null) throw StateError('Authenticated provider is required');
+    final raw = await api.updateDriver(driver.id, _driverBody(driver, id));
     if (raw is! Map) throw const FormatException('Invalid driver response');
     return _mapDriver(raw);
   }
@@ -119,8 +115,8 @@ class ApiDispatchRepository implements DispatchRepository {
     });
   }
 
-  Map<String, dynamic> _driverBody(Driver driver, int providerId) => {
-    'providerId': providerId,
+  Map<String, dynamic> _driverBody(Driver driver, int id) => {
+    'providerId': id,
     'firstName': driver.firstName,
     'lastName': driver.lastName,
     'licenseNumber': driver.licenseNumber,
@@ -128,7 +124,6 @@ class ApiDispatchRepository implements DispatchRepository {
     'email': driver.email,
     'status': driver.status,
   };
-
   Driver _mapDriver(Map raw) => Driver(
     id: raw['id'] is num ? (raw['id'] as num).toInt() : 0,
     firstName: '${raw['firstName'] ?? ''}',
@@ -138,7 +133,6 @@ class ApiDispatchRepository implements DispatchRepository {
     email: '${raw['email'] ?? ''}',
     status: '${raw['status'] ?? 'AVAILABLE'}',
   );
-
   Vehicle _map(Map raw) => Vehicle(
     id: raw['id'] is num ? (raw['id'] as num).toInt() : 0,
     plate: '${raw['licensePlate'] ?? raw['plate'] ?? ''}',

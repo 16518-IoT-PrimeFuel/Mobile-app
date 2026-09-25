@@ -68,11 +68,6 @@ class AuthApiRepository implements AuthRepository {
         userId: _intValue(data['id']),
         username: data['username'] as String? ?? username,
         token: token,
-        roles: data['roles'] is List
-            ? (data['roles'] as List).whereType<String>().toList()
-            : const [],
-        companyId: _intValue(data['companyId']),
-        providerId: _intValue(data['providerId']),
       );
       api.client.token = session.token;
       if (rememberMe) {
@@ -80,9 +75,6 @@ class AuthApiRepository implements AuthRepository {
           token: session.token,
           username: session.username,
           userId: session.userId,
-          roles: session.roles,
-          companyId: session.companyId,
-          providerId: session.providerId,
         );
       } else {
         await storage.clear();
@@ -112,9 +104,6 @@ class AuthApiRepository implements AuthRepository {
       userId: saved.userId,
       username: saved.username,
       token: saved.token,
-      roles: saved.roles,
-      companyId: saved.companyId,
-      providerId: saved.providerId,
     );
   }
 

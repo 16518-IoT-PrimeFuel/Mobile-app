@@ -68,15 +68,6 @@ class _FakeAuthRepository implements AuthRepository {
   final bool fails;
 
   @override
-  Future<void> signUp(SignUpRequest request) async {}
-
-  @override
-  Future<void> requestPasswordReset(String email) async {}
-
-  @override
-  Future<void> resetPassword(String token, String newPassword) async {}
-
-  @override
   Future<AuthSession> signIn(
     String username,
     String password, {
@@ -92,6 +83,15 @@ class _FakeAuthRepository implements AuthRepository {
 
   @override
   Future<AuthSession?> restoreSession() async => null;
+
+  @override
+  Future<void> signUp(SignUpRequest request) async {}
+
+  @override
+  Future<void> requestPasswordReset(String email) async {}
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {}
 
   @override
   Future<void> signOut() async {}

@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mobile_app/features/dispatches/application/dispatch_providers.dart';
-import 'package:mobile_app/features/dispatches/data/mock_dispatch_repository.dart';
-import 'package:mobile_app/features/orders/application/orders_providers.dart';
-import 'package:mobile_app/features/orders/data/mock_orders_repository.dart';
 
 import 'package:mobile_app/features/dispatches/presentation/dispatch_pages.dart';
 
@@ -14,49 +9,28 @@ void main() {
     (tester) async {
       for (final state in TransportAvailabilityState.values) {
         await tester.pumpWidget(
-          ProviderScope(
-            overrides: [
-              dispatchRepositoryProvider.overrideWithValue(
-                MockDispatchRepository(),
-              ),
-            ],
-            child: MaterialApp(
-              home: TransportAvailabilityPage(initialState: state),
-            ),
-          ),
+          MaterialApp(home: TransportAvailabilityPage(initialState: state)),
         );
         await tester.pump();
         expect(find.text('Transporte disponible'), findsOneWidget);
       }
 
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            dispatchRepositoryProvider.overrideWithValue(
-              MockDispatchRepository(),
-            ),
-          ],
-          child: const MaterialApp(home: TransportAvailabilityPage()),
-        ),
+        const MaterialApp(home: TransportAvailabilityPage()),
       );
-      await tester.pumpAndSettle();
-      await tester.tap(find.byTooltip('Actualizar disponibilidad'));
-      await tester.pumpAndSettle();
-      expect(find.text('ABC-921'), findsOneWidget);
+      await tester.pump();
+      await tester.tap(find.text('Actualizar').first);
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(find.text('Cargando...'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(find.text('TK-4421'), findsOneWidget);
     },
   );
 
   testWidgets('fleet and driver forms block duplicate records', (tester) async {
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          dispatchRepositoryProvider.overrideWithValue(
-            MockDispatchRepository(),
-          ),
-        ],
-        child: const MaterialApp(
-          home: FleetFormPage(initialState: VehicleFormState.duplicate),
-        ),
+      const MaterialApp(
+        home: FleetFormPage(initialState: VehicleFormState.duplicate),
       ),
     );
     await tester.pump();
@@ -66,54 +40,43 @@ void main() {
     );
     expect(find.text('Guardar vehículo'), findsOneWidget);
     await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          dispatchRepositoryProvider.overrideWithValue(
-            MockDispatchRepository(),
-          ),
-        ],
-        child: const MaterialApp(
-          home: DriverFormPage(initialState: DriverFormState.duplicate),
-        ),
+      const MaterialApp(
+        home: DriverFormPage(initialState: DriverFormState.duplicate),
       ),
     );
     await tester.pump();
-    expect(find.text('DNI duplicado'), findsOneWidget);
+    expect(find.text('Este DNI ya está registrado'), findsOneWidget);
     expect(find.text('Guardar conductor'), findsOneWidget);
   });
 
   testWidgets(
-    'assignment flow creates a delivery with selected backend resources',
+    'assignment flow reaches conflict and can recover with a new vehicle',
     (tester) async {
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            dispatchRepositoryProvider.overrideWithValue(
-              MockDispatchRepository(),
-            ),
-            ordersRepositoryProvider.overrideWithValue(MockOrdersRepository()),
-          ],
-          child: const MaterialApp(home: DispatchAssignmentPage()),
-        ),
+        const MaterialApp(home: DispatchAssignmentPage()),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
       for (var i = 0; i < 3; i++) {
-        if (i == 1) {
-          expect(find.text('ABC-921'), findsOneWidget);
-          await tester.tap(find.text('ABC-921'));
-          await tester.pump();
-        }
-        if (i == 2) {
-          expect(find.text('Ana Navarro'), findsOneWidget);
-          await tester.tap(find.text('Ana Navarro'));
-          await tester.pump();
-        }
         await tester.tap(find.text('Continuar  →'));
-        await tester.pumpAndSettle();
+        await tester.pump();
       }
       await tester.tap(find.text('Asignar recursos'));
-      await tester.pumpAndSettle();
-      expect(find.text('Despacho asignado'), findsWidgets);
+      await tester.pump();
+      expect(
+        find.textContaining('Conflicto de recursos detectado'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Volver a seleccionar'));
+      await tester.pump();
+      await tester.tap(find.text('TK-2214'));
+      await tester.tap(find.text('Continuar  →'));
+      await tester.pump();
+      await tester.tap(find.text('Carlos Mendoza'));
+      await tester.tap(find.text('Continuar  →'));
+      await tester.pump();
+      await tester.tap(find.text('Asignar recursos'));
+      await tester.pump();
+      expect(find.text('Despacho asignado'), findsNWidgets(2));
     },
   );
 }

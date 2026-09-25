@@ -3,8 +3,8 @@ enum OrderStatus {
   approved,
   inTransit,
   delivered,
-  rejected,
   cancelled,
+  rejected,
 }
 
 class Order {

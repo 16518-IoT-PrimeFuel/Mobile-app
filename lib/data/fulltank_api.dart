@@ -50,7 +50,7 @@ class FullTankApi {
     };
     final suffix = query.isEmpty
         ? ''
-        : '?${query.entries.map((e) => '${e.key}=${e.value}').join('&')}';
+        : '?${query.entries.map((entry) => '${entry.key}=${entry.value}').join('&')}';
     return client.get('/fuel-requests$suffix');
   }
 
@@ -126,17 +126,8 @@ class FullTankApi {
   Future<dynamic> updateDriver(int id, Map<String, dynamic> body) =>
       client.put('/drivers/$id', body);
   Future<void> deleteDriver(int id) => client.delete('/drivers/$id');
-  Future<dynamic> providerRatings({int? companyId, int? providerId}) {
-    final query = <String, String>{
-      if (companyId != null) 'companyId': '$companyId',
-      if (providerId != null) 'providerId': '$providerId',
-    };
-    final suffix = query.isEmpty
-        ? ''
-        : '?${query.entries.map((entry) => '${entry.key}=${entry.value}').join('&')}';
-    return client.get('/provider-ratings$suffix');
-  }
-
+  Future<dynamic> providerRatings({int? companyId, int? providerId}) => client
+      .get('/provider-ratings?companyId=$companyId&providerId=$providerId');
   Future<dynamic> createProviderRating(Map<String, dynamic> body) =>
       client.post('/provider-ratings', body);
   Future<dynamic> updateProviderRating(int id, Map<String, dynamic> body) =>

@@ -5,9 +5,9 @@ import '../domain/reports_repository.dart';
 class ApiReportsRepository implements ReportsRepository {
   const ApiReportsRepository(
     this.api, {
-    required this.providerId,
-    required this.companyId,
-    required this.providerMode,
+    this.providerId,
+    this.companyId = 1,
+    this.providerMode = false,
   });
 
   final FullTankApi api;
@@ -27,8 +27,6 @@ class ApiReportsRepository implements ReportsRepository {
     final orderResponse = providerMode
         ? await api.providerOrders(id)
         : await api.orders(companyId: id);
-    final monthlyResponse =
-        raw[providerMode ? 'monthlyRevenue' : 'monthlySpending'];
     return ReportSummary(
       revenue: _number(
         raw['totalRevenue'] ?? raw['totalSpent'] ?? raw['revenue'],
@@ -36,15 +34,18 @@ class ApiReportsRepository implements ReportsRepository {
       liters: orderResponse is List
           ? orderResponse.whereType<Map>().fold<double>(
               0,
-              (sum, order) => sum + _number(order['requestedQuantity']),
+              (sum, order) =>
+                  sum +
+                  _number(order['requestedQuantity'] ?? order['quantity']),
             )
-          : 0,
+          : _number(raw['liters'] ?? raw['volume']),
       orders: _number(raw['totalOrders'] ?? raw['orders']).toInt(),
       confirmedOrders: _number(
         raw['confirmedOrders'] ?? raw['completedPayments'],
       ).toInt(),
-      monthly: monthlyResponse is List
-          ? monthlyResponse
+      monthly:
+          (raw[providerMode ? 'monthlyRevenue' : 'monthlySpending'] is List)
+          ? (raw[providerMode ? 'monthlyRevenue' : 'monthlySpending'] as List)
                 .whereType<Map>()
                 .map(
                   (item) => MonthlyReportValue(

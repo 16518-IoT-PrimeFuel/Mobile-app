@@ -35,17 +35,12 @@ class MockAuthRepository implements AuthRepository {
       userId: 1,
       username: demoUsername,
       token: 'mock-fulltank-jwt',
-      roles: ['ROLE_PROVIDER'],
-      providerId: 1,
     );
     if (rememberMe) {
       await storage.save(
         token: session.token,
         username: session.username,
         userId: session.userId,
-        roles: session.roles,
-        companyId: session.companyId,
-        providerId: session.providerId,
       );
     } else {
       await storage.clear();
@@ -61,9 +56,6 @@ class MockAuthRepository implements AuthRepository {
       userId: saved.userId,
       username: saved.username,
       token: saved.token,
-      roles: saved.roles,
-      companyId: saved.companyId,
-      providerId: saved.providerId,
     );
   }
 

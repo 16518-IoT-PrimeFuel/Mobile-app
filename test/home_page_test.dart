@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:mobile_app/domain/auth/auth_repository.dart';
 import 'package:mobile_app/domain/auth/auth_session.dart';
@@ -42,18 +43,36 @@ void main() {
       expect(find.text(entry.title), findsOneWidget);
     }
   });
+
+  testWidgets('tank summary opens inventory', (tester) async {
+    final router = GoRouter(
+      initialLocation: '/home',
+      routes: [
+        GoRoute(
+          path: '/home',
+          builder: (_, __) => const HomePage(role: HomeRole.requester),
+        ),
+        GoRoute(
+          path: '/inventory',
+          builder: (_, __) => const Text('Inventario abierto'),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(child: MaterialApp.router(routerConfig: router)),
+    );
+    await tester.pump();
+    final tank = find.text('TANQUE PRINCIPAL · A-102 DIÉSEL');
+    await tester.ensureVisible(tank);
+    await tester.tap(tank);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Inventario abierto'), findsOneWidget);
+  });
 }
 
 class _NoopAuthRepository implements AuthRepository {
-  @override
-  Future<void> signUp(SignUpRequest request) async {}
-
-  @override
-  Future<void> requestPasswordReset(String email) async {}
-
-  @override
-  Future<void> resetPassword(String token, String newPassword) async {}
-
   @override
   Future<AuthSession> signIn(
     String username,
@@ -65,6 +84,15 @@ class _NoopAuthRepository implements AuthRepository {
 
   @override
   Future<AuthSession?> restoreSession() async => null;
+
+  @override
+  Future<void> signUp(SignUpRequest request) async {}
+
+  @override
+  Future<void> requestPasswordReset(String email) async {}
+
+  @override
+  Future<void> resetPassword(String token, String newPassword) async {}
 
   @override
   Future<void> signOut() async {}

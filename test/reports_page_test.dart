@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mobile_app/features/reports/application/reports_providers.dart';
-import 'package:mobile_app/features/reports/data/mock_reports_repository.dart';
 import 'package:mobile_app/features/reports/presentation/reports_page.dart';
 
 void main() {
@@ -11,16 +8,7 @@ void main() {
     tester,
   ) async {
     for (final variant in ReportVariant.values) {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            reportsRepositoryProvider.overrideWithValue(
-              MockReportsRepository(),
-            ),
-          ],
-          child: MaterialApp(home: ReportsPage(variant: variant)),
-        ),
-      );
+      await tester.pumpWidget(MaterialApp(home: ReportsPage(variant: variant)));
       await tester.pump();
       expect(find.text('Inicio'), findsOneWidget);
       expect(find.text('Pedidos'), findsWidgets);

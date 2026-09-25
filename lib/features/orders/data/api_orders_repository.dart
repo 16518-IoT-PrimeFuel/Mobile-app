@@ -1,16 +1,15 @@
-import '../../../data/fulltank_api.dart';
 import '../../../data/api_client.dart';
+import '../../../data/fulltank_api.dart';
 import '../domain/order.dart';
 import '../domain/orders_repository.dart';
 
 class ApiOrdersRepository implements OrdersRepository {
   const ApiOrdersRepository(
     this.api, {
-    required this.companyId,
-    required this.providerId,
-    required this.providerMode,
+    this.companyId = 1,
+    this.providerId,
+    this.providerMode = false,
   });
-
   final FullTankApi api;
   final int? companyId;
   final int? providerId;
@@ -28,34 +27,30 @@ class ApiOrdersRepository implements OrdersRepository {
       providerId: providerMode ? id : null,
     );
     final rawProducts = await api.fuelProducts(
-      providerId: providerMode ? providerId : null,
+      providerId: providerMode ? id : null,
     );
-    final productNames = rawProducts is List
+    final names = rawProducts is List
         ? {
-            for (final product in rawProducts.whereType<Map>())
-              _int(product['id']):
-                  '${product['name'] ?? product['fuelType'] ?? ''}',
+            for (final item in rawProducts.whereType<Map>())
+              _int(item['id']): '${item['name'] ?? item['fuelType'] ?? ''}',
           }
         : const <int?, String>{};
     final orders = rawOrders is List
         ? rawOrders
               .whereType<Map>()
-              .map((raw) => _mapOrder(raw, productNames))
+              .map((raw) => _mapOrder(raw, names))
               .toList()
         : <Order>[];
-    final acceptedRequestIds = orders
-        .map((order) => order.requestId)
-        .whereType<int>()
-        .toSet();
+    final ids = orders.map((order) => order.requestId).whereType<int>().toSet();
     final requests = rawRequests is List
         ? rawRequests
               .whereType<Map>()
-              .where((raw) => !acceptedRequestIds.contains(_int(raw['id'])))
+              .where((raw) => !ids.contains(_int(raw['id'])))
               .map(_mapRequest)
               .toList()
         : <Order>[];
-    final results = [...orders, ...requests];
-    return results
+    final result = [...orders, ...requests];
+    return result
         .where(
           (order) =>
               history ? _isHistory(order.status) : !_isHistory(order.status),
@@ -123,20 +118,16 @@ class ApiOrdersRepository implements OrdersRepository {
     return _mapRequest(raw);
   }
 
-  Order _mapOrder(
-    Map raw, [
-    Map<int?, String> productNames = const {},
-  ]) => Order(
+  Order _mapOrder(Map raw, [Map<int?, String> names = const {}]) => Order(
     id: '${raw['id'] ?? 'UNKNOWN'}',
     fuel:
-        '${raw['fuel'] ?? raw['fuelType'] ?? productNames[_int(raw['fuelProductId'])] ?? 'Producto #${raw['fuelProductId'] ?? ''}'}',
+        '${raw['fuel'] ?? raw['fuelType'] ?? names[_int(raw['fuelProductId'])] ?? 'Producto #${raw['fuelProductId'] ?? ''}'}',
     quantity: _number(raw['requestedQuantity'] ?? raw['quantity']),
     total: _number(raw['totalPrice'] ?? raw['total'] ?? raw['amount']),
     status: _status('${raw['status'] ?? 'PENDING'}'),
     requestId: _int(raw['requestId']),
     deliveryAddress: '${raw['deliveryAddress'] ?? ''}',
   );
-
   Order _mapRequest(Map raw) => Order(
     id: '${raw['id'] ?? 'UNKNOWN'}',
     fuel:
@@ -147,18 +138,14 @@ class ApiOrdersRepository implements OrdersRepository {
     request: true,
     deliveryAddress: '${raw['deliveryAddress'] ?? ''}',
   );
-
   int? _int(Object? value) =>
       value is num ? value.toInt() : int.tryParse('$value');
-
+  double _number(Object? value) =>
+      value is num ? value.toDouble() : double.tryParse('$value') ?? 0;
   bool _isHistory(OrderStatus status) =>
       status == OrderStatus.delivered ||
       status == OrderStatus.cancelled ||
       status == OrderStatus.rejected;
-
-  double _number(Object? value) =>
-      value is num ? value.toDouble() : double.tryParse('$value') ?? 0;
-
   OrderStatus _status(String value) => switch (value.toLowerCase()) {
     'approved' ||
     'confirmed' ||

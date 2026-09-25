@@ -7,10 +7,6 @@ class FuelProduct {
     required this.type,
     required this.price,
     required this.availability,
-    this.unit = 'LITERS',
-    this.availableStock,
-    this.capacity,
-    this.providerId,
   });
 
   final int id;
@@ -18,8 +14,4 @@ class FuelProduct {
   final String type;
   final double price;
   final ProductAvailability availability;
-  final String unit;
-  final double? availableStock;
-  final double? capacity;
-  final int? providerId;
 }

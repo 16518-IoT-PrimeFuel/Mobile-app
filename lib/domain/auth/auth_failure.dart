@@ -7,19 +7,19 @@ class AuthFailure implements Exception {
   final String message;
 
   factory AuthFailure.invalidCredentials() => const AuthFailure(
-        AuthFailureType.invalidCredentials,
-        'Email o contraseña incorrectos. Verifica tus credenciales o recupera tu acceso.',
-      );
+    AuthFailureType.invalidCredentials,
+    'Email o contraseña incorrectos. Verifica tus credenciales o recupera tu acceso.',
+  );
 
   factory AuthFailure.network() => const AuthFailure(
-        AuthFailureType.network,
-        'No pudimos conectar con FullTank. Revisa tu conexión e inténtalo de nuevo.',
-      );
+    AuthFailureType.network,
+    'No pudimos conectar con FullTank. Revisa tu conexión e inténtalo de nuevo.',
+  );
 
   factory AuthFailure.unknown() => const AuthFailure(
-        AuthFailureType.unknown,
-        'No pudimos iniciar sesión. Inténtalo de nuevo.',
-      );
+    AuthFailureType.unknown,
+    'No pudimos iniciar sesión. Inténtalo de nuevo.',
+  );
 
   @override
   String toString() => message;
