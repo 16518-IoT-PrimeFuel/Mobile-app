@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../application/reports_controller.dart';
+import '../application/reports_providers.dart';
 import '../domain/report.dart';
 import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 part 'reports_page_content.dart';

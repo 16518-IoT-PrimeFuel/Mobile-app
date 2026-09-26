@@ -10,6 +10,7 @@ import 'package:mobile_app/features/orders/domain/order.dart';
 import 'package:mobile_app/features/dispatches/data/api_dispatch_repository.dart';
 import 'package:mobile_app/features/dispatches/domain/driver.dart';
 import 'package:mobile_app/features/reports/data/api_reports_repository.dart';
+import 'package:mobile_app/features/inventory/data/api_inventory_repository.dart';
 
 void main() {
   test('order adapter maps backend response names and statuses', () async {
@@ -106,6 +107,17 @@ void main() {
       expect(summary.monthly.single.amount, 1800.0);
     },
   );
+
+  test('tank adapter maps v2 telemetry fields', () async {
+    final repository = ApiInventoryRepository(_TankBackendApi());
+    final tanks = await repository.listTanks(companyId: 17, siteId: 4);
+
+    expect(tanks.single.id, 'tank-1');
+    expect(tanks.single.siteId, 4);
+    expect(tanks.single.currentLevel, 250.0);
+    expect(tanks.single.level, 25);
+    expect(tanks.single.lastReadingAt, DateTime.parse('2026-09-26T12:00:00Z'));
+  });
 
   test('signup creates the business and account in one request', () async {
     final api = _SignupBackendApi();
@@ -236,6 +248,25 @@ class _AnalyticsBackendApi extends FullTankApi {
   Future<dynamic> orders({required int companyId}) async => [
     {'requestedQuantity': 100},
     {'requestedQuantity': 160},
+  ];
+}
+
+class _TankBackendApi extends FullTankApi {
+  _TankBackendApi() : super(ApiClient());
+
+  @override
+  Future<dynamic> tanks(int companyId, int siteId) async => [
+    {
+      'id': 'tank-1',
+      'siteId': siteId,
+      'name': 'Diesel tank',
+      'fuelType': 'DIESEL',
+      'capacity': 1000,
+      'unit': 'L',
+      'currentLevel': 250,
+      'status': 'WARNING',
+      'lastReadingAt': '2026-09-26T12:00:00Z',
+    },
   ];
 }
 

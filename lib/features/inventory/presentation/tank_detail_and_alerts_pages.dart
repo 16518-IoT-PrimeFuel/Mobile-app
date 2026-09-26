@@ -1,13 +1,16 @@
 part of 'inventory_page.dart';
 
-class TankDetailPage extends StatelessWidget {
+class TankDetailPage extends ConsumerWidget {
   const TankDetailPage({required this.tankId, super.key});
 
   final String tankId;
 
   @override
-  Widget build(BuildContext context) {
-    final tank = _tankForId(tankId);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final apiTank = ref.watch(inventoryTankProvider(tankId)).valueOrNull;
+    final tank = apiTank == null
+        ? _tankForId(tankId)
+        : TankData.fromTank(apiTank);
     final status = _statusFor(tank.level);
     return _InventoryShell(
       title: tank.id,

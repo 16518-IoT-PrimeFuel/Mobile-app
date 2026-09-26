@@ -22,7 +22,34 @@ class ReportsPage extends ConsumerWidget {
             data: (data) =>
                 data.revenue == 0 && data.liters == 0 && data.orders == 0
                 ? _ReportState(variant: variant, state: _ReportStateType.empty)
-                : _ReportContent(variant: variant, summary: data),
+                : _ReportContent(
+                    variant: variant,
+                    summary: data,
+                    onExport: () async {
+                      try {
+                        final csv = await ref
+                            .read(reportsRepositoryProvider)
+                            .exportCsv();
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('CSV listo (${csv.length} bytes)'),
+                            ),
+                          );
+                        }
+                      } catch (error) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'No se pudo descargar el CSV: $error',
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
           ),
         ),
       ),
@@ -34,16 +61,21 @@ class ReportsPage extends ConsumerWidget {
 enum _ReportStateType { loading, empty, error }
 
 class _ReportContent extends StatelessWidget {
-  const _ReportContent({required this.variant, required this.summary});
+  const _ReportContent({
+    required this.variant,
+    required this.summary,
+    required this.onExport,
+  });
 
   final ReportVariant variant;
   final ReportSummary summary;
+  final Future<void> Function() onExport;
 
   @override
   Widget build(BuildContext context) => switch (variant) {
     ReportVariant.consumption => _ConsumptionReport(summary: summary),
     ReportVariant.sales => _SalesReport(summary: summary),
-    ReportVariant.export => _ExportReport(summary: summary),
+    ReportVariant.export => _ExportReport(summary: summary, onExport: onExport),
     ReportVariant.industry => _IndustryReport(summary: summary),
   };
 }
@@ -166,14 +198,15 @@ class _SalesReport extends StatelessWidget {
 }
 
 class _ExportReport extends StatelessWidget {
-  const _ExportReport({required this.summary});
+  const _ExportReport({required this.summary, required this.onExport});
 
   final ReportSummary summary;
+  final Future<void> Function() onExport;
 
   @override
   Widget build(BuildContext context) => _ReportFrame(
     title: 'Exportar reporte',
-    subtitle: 'Resumen operacional como PDF',
+    subtitle: 'Resumen operacional como CSV',
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -186,7 +219,7 @@ class _ExportReport extends StatelessWidget {
         _FieldLabel('RESUMEN GENERADO'),
         _SummaryCard(summary: summary),
         SizedBox(height: 12),
-        _DownloadButton(),
+        _DownloadButton(onPressed: onExport),
       ],
     ),
   );

@@ -16,12 +16,12 @@
 | US-09 | Historial | API provider, UI integrada |
 | US-10 | Pedidos pendientes | API provider, provider workflow pending |
 | US-43 | Detalle de pedido | API-backed order detail |
-| US-46 | Inventario y editar producto | API provider, product UI integrated; tanks/IoT mock |
+| US-46 | Inventario y editar producto | API provider, product UI integrated; tanks use v2 list/detail with mock fallback |
 | US-08 | Registrar pago | API create/complete integrated |
 | US-11 | Aprobar pedido | API accept integrated |
 | US-12 | Marcar como despachado | API dispatch integrated |
 | US-13 | Cerrar pedido | Mock |
-| US-14 | Reportes de ventas | API provider, UI integrada |
+| US-14 | Reportes de ventas | API provider, UI integrada; CSV export wired to v2 attachment route |
 | US-42 | Rechazar pedido | API reject integrated |
 | EP09 | Perfil de usuario | Mock |
 | EP10 | Soporte y contacto | Estático/mock |
@@ -42,6 +42,7 @@
 - calificaciones;
 - notificaciones;
 - analítica de comprador y proveedor.
+- tanques v2 por site y exportación CSV de reportes.
 
 Los providers de autenticación, pedidos, inventario, despachos y reportes usan
 `FullTankApi` por defecto. Los mocks siguen disponibles por feature mediante
@@ -61,7 +62,7 @@ features/*/
   └── presentation/      # páginas y widgets
 ```
 
-`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio. Pedidos, productos, reportes, pagos, flota y notificaciones ya consumen adapters/controllers; el timeline v2 conserva fallback visual cuando no existe delivery.
+`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio. Pedidos, productos, tanques, reportes, pagos, flota y notificaciones ya consumen adapters/controllers; el timeline v2 conserva fallback visual cuando no existe delivery.
 
 ## Refactor aplicado
 
@@ -75,7 +76,7 @@ features/*/
 ## Pendientes de integración real
 
 - Persistir JWT de forma segura en almacenamiento nativo.
-- Conectar los ViewModels restantes a IoT y exportación PDF.
+- Persistir archivos CSV en una ubicación nativa si la aplicación requiere descarga fuera de la sesión actual.
 - Validar los nombres de campos de respuesta contra el backend desplegado.
 - Configurar `API_BASE_URL` por entorno (`http://10.0.2.2:8080/api/v1` es el
   valor por defecto para el emulador Android).

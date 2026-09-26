@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:mobile_app/features/reports/application/reports_controller.dart';
+import 'package:mobile_app/features/reports/application/reports_providers.dart';
+import 'package:mobile_app/features/reports/data/mock_reports_repository.dart';
 import 'package:mobile_app/features/reports/domain/report.dart';
 import 'package:mobile_app/features/reports/presentation/reports_page.dart';
 
@@ -72,5 +74,30 @@ void main() {
 
     expect(find.text('No pudimos cargar este reporte'), findsOneWidget);
     expect(find.text('Intenta nuevamente más tarde.'), findsOneWidget);
+  });
+
+  testWidgets('export action requests CSV and shows the result', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          reportsRepositoryProvider.overrideWithValue(MockReportsRepository()),
+          reportsControllerProvider.overrideWith(
+            (ref) async =>
+                const ReportSummary(revenue: 1, liters: 1, orders: 1),
+          ),
+        ],
+        child: const MaterialApp(
+          home: ReportsPage(variant: ReportVariant.export),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Generar y descargar CSV'));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('CSV listo'), findsOneWidget);
   });
 }

@@ -58,6 +58,11 @@ class ApiReportsRepository implements ReportsRepository {
     );
   }
 
+  @override
+  Future<String> exportCsv() => providerMode
+      ? api.exportReport(providerId: providerId)
+      : api.exportReport(companyId: companyId);
+
   double _number(Object? value) =>
       value is num ? value.toDouble() : double.tryParse('$value') ?? 0;
 }

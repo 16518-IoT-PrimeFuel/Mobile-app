@@ -1,6 +1,7 @@
 import '../../../data/fulltank_api.dart';
 import '../domain/fuel_product.dart';
 import '../domain/inventory_repository.dart';
+import '../domain/tank.dart';
 
 class ApiInventoryRepository implements InventoryRepository {
   const ApiInventoryRepository(this.api);
@@ -32,6 +33,25 @@ class ApiInventoryRepository implements InventoryRepository {
 
   @override
   Future<void> delete(int id) => api.deleteFuelProduct(id);
+
+  @override
+  Future<List<Tank>> listTanks({
+    required int companyId,
+    required int siteId,
+  }) async {
+    final raw = await api.tanks(companyId, siteId);
+    return raw is List ? raw.whereType<Map>().map(_tank).toList() : const [];
+  }
+
+  @override
+  Future<Tank?> tank({
+    required int companyId,
+    required int siteId,
+    required String id,
+  }) async {
+    final raw = await api.tank(companyId, siteId, id);
+    return raw is Map ? _tank(raw) : null;
+  }
 
   FuelProduct _map(Map raw) => FuelProduct(
     id: raw['id'] is num ? (raw['id'] as num).toInt() : 0,
@@ -70,4 +90,19 @@ class ApiInventoryRepository implements InventoryRepository {
       _ => ProductAvailability.available,
     };
   }
+
+  Tank _tank(Map raw) => Tank(
+    id: '${raw['id'] ?? ''}',
+    siteId: raw['siteId'] is num ? (raw['siteId'] as num).toInt() : 0,
+    name: '${raw['name'] ?? ''}',
+    fuelType: '${raw['fuelType'] ?? ''}',
+    capacity: _double(raw['capacity']),
+    unit: '${raw['unit'] ?? ''}',
+    currentLevel: _double(raw['currentLevel']),
+    status: '${raw['status'] ?? ''}',
+    lastReadingAt: DateTime.tryParse('${raw['lastReadingAt'] ?? ''}'),
+  );
+
+  double _double(Object? value) =>
+      value is num ? value.toDouble() : double.tryParse('$value') ?? 0;
 }

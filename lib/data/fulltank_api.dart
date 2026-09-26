@@ -169,4 +169,19 @@ class FullTankApi {
     final suffix = providerId == null ? '' : '?providerId=$providerId';
     return client.getV2('/api/v2/fleet/eligible$suffix');
   }
+
+  Future<dynamic> tanks(int companyId, int siteId) =>
+      client.getV2('/api/v2/buyer-companies/$companyId/sites/$siteId/tanks');
+
+  Future<dynamic> tank(int companyId, int siteId, String tankId) => client
+      .getV2('/api/v2/buyer-companies/$companyId/sites/$siteId/tanks/$tankId');
+
+  Future<String> exportReport({int? companyId, int? providerId}) {
+    final path = providerId != null
+        ? '/api/v2/reports/providers/$providerId/export'
+        : companyId != null
+        ? '/api/v2/reports/buyers/$companyId/export'
+        : '/api/v2/reports/platform/export';
+    return client.getV2Text(path);
+  }
 }

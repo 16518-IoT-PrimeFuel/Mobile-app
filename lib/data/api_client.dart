@@ -16,6 +16,8 @@ class ApiClient {
   Future<dynamic> get(String path) => _request('GET', path, null);
   Future<dynamic> getV2(String path) =>
       _request('GET', path, null, baseUrlOverride: _apiRoot);
+  Future<String> getV2Text(String path) =>
+      _requestText('GET', path, baseUrlOverride: _apiRoot);
   Future<dynamic> post(String path, [Map<String, dynamic>? body]) =>
       _request('POST', path, body);
   Future<dynamic> postV2(String path, [Map<String, dynamic>? body]) =>
@@ -45,6 +47,29 @@ class ApiClient {
       if (response.statusCode < 200 || response.statusCode >= 300)
         throw ApiException(response.statusCode, text);
       return text.isEmpty ? null : jsonDecode(text);
+    } finally {
+      client.close(force: true);
+    }
+  }
+
+  Future<String> _requestText(
+    String method,
+    String path, {
+    String? baseUrlOverride,
+  }) async {
+    final client = HttpClient();
+    try {
+      final request = await client.openUrl(
+        method,
+        Uri.parse('${baseUrlOverride ?? baseUrl}$path'),
+      );
+      if (token != null)
+        request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
+      final response = await request.close();
+      final text = await response.transform(utf8.decoder).join();
+      if (response.statusCode < 200 || response.statusCode >= 300)
+        throw ApiException(response.statusCode, text);
+      return text;
     } finally {
       client.close(force: true);
     }

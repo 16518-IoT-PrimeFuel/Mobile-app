@@ -29,38 +29,43 @@ class _SummaryMetric extends StatelessWidget {
 }
 
 class _DownloadButton extends StatelessWidget {
-  const _DownloadButton();
+  const _DownloadButton({required this.onPressed});
+  final Future<void> Function() onPressed;
   @override
-  Widget build(BuildContext context) => Container(
-    height: 46,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      gradient: const LinearGradient(
-        colors: [Color(0xFFFFB300), Color(0xFFFFA500)],
-      ),
-      borderRadius: BorderRadius.circular(99),
-      boxShadow: const [
-        BoxShadow(
-          color: Color(0x44FFA500),
-          blurRadius: 14,
-          offset: Offset(0, 7),
+  Widget build(BuildContext context) => InkWell(
+    onTap: onPressed,
+    borderRadius: BorderRadius.circular(99),
+    child: Container(
+      height: 46,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFFFB300), Color(0xFFFFA500)],
         ),
-      ],
-    ),
-    child: const Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(Icons.download_outlined, size: 14, color: Colors.white),
-        SizedBox(width: 6),
-        Text(
-          'Generar y descargar PDF',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 13.05,
-            fontWeight: FontWeight.w800,
+        borderRadius: BorderRadius.circular(99),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x44FFA500),
+            blurRadius: 14,
+            offset: Offset(0, 7),
           ),
-        ),
-      ],
+        ],
+      ),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.download_outlined, size: 14, color: Colors.white),
+          SizedBox(width: 6),
+          Text(
+            'Generar y descargar CSV',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13.05,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
     ),
   );
 }

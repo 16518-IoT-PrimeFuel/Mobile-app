@@ -65,4 +65,26 @@ void main() {
       }
     },
   );
+
+  test('v2 export requests the CSV attachment route', () async {
+    final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    final requestSeen = Completer<String>();
+    server.listen((request) async {
+      requestSeen.complete(request.uri.path);
+      request.response
+        ..headers.contentType = ContentType('text', 'csv', charset: 'utf-8')
+        ..write('id,name\n1,Tank\n')
+        ..close();
+    });
+
+    try {
+      final api = FullTankApi(
+        ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api/v1'),
+      );
+      expect(await api.exportReport(companyId: 17), 'id,name\n1,Tank\n');
+      expect(await requestSeen.future, '/api/v2/reports/buyers/17/export');
+    } finally {
+      await server.close(force: true);
+    }
+  });
 }

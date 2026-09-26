@@ -22,6 +22,20 @@ class TankData {
   final int current;
   final String sensor;
   final String updated;
+
+  factory TankData.fromTank(Tank tank) => TankData(
+    id: tank.id,
+    name: tank.name,
+    location: 'Site ${tank.siteId}',
+    type: tank.fuelType,
+    level: tank.level,
+    capacity: tank.capacity.round(),
+    current: tank.currentLevel.round(),
+    sensor: 'API',
+    updated: tank.lastReadingAt == null
+        ? 'sin lectura'
+        : '${tank.lastReadingAt}',
+  );
 }
 
 const _tanks = [
@@ -154,7 +168,11 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final visible = _tanks.where((tank) {
+    final remoteTanks = ref.watch(inventoryTanksProvider).valueOrNull;
+    final tanks = remoteTanks == null
+        ? _tanks
+        : remoteTanks.map(TankData.fromTank).toList();
+    final visible = tanks.where((tank) {
       return switch (_filter) {
         'critical' => tank.level < 20,
         'warning' => tank.level >= 20 && tank.level < 40,
@@ -164,7 +182,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
     }).toList();
     return _InventoryShell(
       title: 'Inventario',
-      subtitle: '${_tanks.length} tanques · IoT en vivo',
+      subtitle: '${tanks.length} tanques · IoT en vivo',
       right: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -195,7 +213,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
             Expanded(
               child: _SummaryMetric(
                 label: 'Crítico',
-                count: _tanks.where((tank) => tank.level < 20).length,
+                count: tanks.where((tank) => tank.level < 20).length,
                 status: _TankStatus.critical,
               ),
             ),
@@ -213,7 +231,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
             Expanded(
               child: _SummaryMetric(
                 label: 'Óptimo',
-                count: _tanks.where((tank) => tank.level >= 40).length,
+                count: tanks.where((tank) => tank.level >= 40).length,
                 status: _TankStatus.optimal,
               ),
             ),
@@ -226,27 +244,29 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
             children: [
               _FilterChip(
                 label: 'Todos',
-                count: _tanks.length,
+                count: tanks.length,
                 selected: _filter == 'all',
                 onPressed: () => setState(() => _filter = 'all'),
               ),
               _FilterChip(
                 label: 'Crítico',
-                count: 2,
+                count: tanks.where((tank) => tank.level < 20).length,
                 status: _TankStatus.critical,
                 selected: _filter == 'critical',
                 onPressed: () => setState(() => _filter = 'critical'),
               ),
               _FilterChip(
                 label: 'Advertencia',
-                count: 1,
+                count: tanks
+                    .where((tank) => tank.level >= 20 && tank.level < 40)
+                    .length,
                 status: _TankStatus.warning,
                 selected: _filter == 'warning',
                 onPressed: () => setState(() => _filter = 'warning'),
               ),
               _FilterChip(
                 label: 'Óptimo',
-                count: 3,
+                count: tanks.where((tank) => tank.level >= 40).length,
                 status: _TankStatus.optimal,
                 selected: _filter == 'optimal',
                 onPressed: () => setState(() => _filter = 'optimal'),
