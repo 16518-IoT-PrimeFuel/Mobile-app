@@ -12,7 +12,7 @@
 | US-38 | Planes y precios | Estático |
 | US-39 | Cambio de idioma | Estado local ES/EN |
 | US-05 | Registrar nuevo pedido | API provider, UI integrada |
-| US-06 | Estado y tracking | API-backed order list/detail; tracking v2 pending UI |
+| US-06 | Estado y tracking | API-backed order list/detail and timeline v2 fallback |
 | US-09 | Historial | API provider, UI integrada |
 | US-10 | Pedidos pendientes | API provider, provider workflow pending |
 | US-43 | Detalle de pedido | API-backed order detail |
@@ -26,7 +26,7 @@
 | EP09 | Perfil de usuario | Mock |
 | EP10 | Soporte y contacto | Estático/mock |
 | EP11 | Búsqueda y filtros | Mock |
-| EP12 | Notificaciones | Mock |
+| EP12 | Notificaciones | API v2 with mock fallback |
 
 ## Módulo de integración
 
@@ -61,7 +61,7 @@ features/*/
   └── presentation/      # páginas y widgets
 ```
 
-`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio. Pedidos, productos y reportes ya consumen sus controllers; flota se está conectando y pagos, aprobación, cierre, notificaciones e IoT requieren adapters/controllers específicos.
+`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio. Pedidos, productos, reportes, pagos, flota y notificaciones ya consumen adapters/controllers; el timeline v2 conserva fallback visual cuando no existe delivery.
 
 ## Refactor aplicado
 
@@ -75,7 +75,7 @@ features/*/
 ## Pendientes de integración real
 
 - Persistir JWT de forma segura en almacenamiento nativo.
-- Conectar los ViewModels restantes a pagos, aprobación, cierre, notificaciones e IoT.
+- Conectar los ViewModels restantes a IoT y exportación PDF.
 - Validar los nombres de campos de respuesta contra el backend desplegado.
 - Configurar `API_BASE_URL` por entorno (`http://10.0.2.2:8080/api/v1` es el
   valor por defecto para el emulador Android).
