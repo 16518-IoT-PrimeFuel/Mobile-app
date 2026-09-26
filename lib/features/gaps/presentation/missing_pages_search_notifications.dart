@@ -97,14 +97,15 @@ class _SearchOrdersPageState extends State<SearchOrdersPage> {
   }
 }
 
-class NotificationsCenterPage extends StatefulWidget {
+class NotificationsCenterPage extends ConsumerStatefulWidget {
   const NotificationsCenterPage({super.key});
   @override
-  State<NotificationsCenterPage> createState() =>
+  ConsumerState<NotificationsCenterPage> createState() =>
       _NotificationsCenterPageState();
 }
 
-class _NotificationsCenterPageState extends State<NotificationsCenterPage> {
+class _NotificationsCenterPageState
+    extends ConsumerState<NotificationsCenterPage> {
   final _items = <({String title, String detail, IconData icon, bool read})>[
     (
       title: 'Pedido en tránsito',
@@ -125,6 +126,84 @@ class _NotificationsCenterPageState extends State<NotificationsCenterPage> {
       read: true,
     ),
   ];
+  final _ids = <int>[];
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(_load);
+  }
+
+  Future<void> _load() async {
+    int? userId;
+    try {
+      userId = ref.read(authControllerProvider).session?.userId;
+    } catch (_) {
+      return;
+    }
+    if (userId == null) return;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      final items = await NotificationRepository(
+        api: ref.read(fullTankApiProvider),
+      ).list(userId);
+      if (!mounted) return;
+      setState(() {
+        _ids
+          ..clear()
+          ..addAll(items.map((item) => item.id));
+        _items
+          ..clear()
+          ..addAll(
+            items.map(
+              (item) => (
+                title: item.title,
+                detail: item.detail,
+                icon: Icons.notifications_none,
+                read: item.read,
+              ),
+            ),
+          );
+      });
+    } catch (_) {
+      if (mounted)
+        setState(() => _error = 'No se pudieron cargar las notificaciones.');
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _markRead(int index) async {
+    final item = _items[index];
+    if (item.read) return;
+    int? userId;
+    try {
+      userId = ref.read(authControllerProvider).session?.userId;
+    } catch (_) {
+      userId = null;
+    }
+    setState(
+      () => _items[index] = (
+        title: item.title,
+        detail: item.detail,
+        icon: item.icon,
+        read: true,
+      ),
+    );
+    if (userId == null) return;
+    try {
+      if (index < _ids.length) {
+        await NotificationRepository(
+          api: ref.read(fullTankApiProvider),
+        ).markRead(_ids[index]);
+      }
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) => MissingPageShell(
@@ -147,19 +226,13 @@ class _NotificationsCenterPageState extends State<NotificationsCenterPage> {
     ],
     child: Column(
       children: [
+        if (_loading) const LinearProgressIndicator(),
+        if (_error != null) ...[
+          Text(_error!, style: const TextStyle(color: _red)),
+          TextButton(onPressed: _load, child: const Text('Reintentar')),
+        ],
         for (var i = 0; i < _items.length; i++)
-          _NotificationTile(
-            item: _items[i],
-            onTap: () => setState(() {
-              final item = _items[i];
-              _items[i] = (
-                title: item.title,
-                detail: item.detail,
-                icon: item.icon,
-                read: true,
-              );
-            }),
-          ),
+          _NotificationTile(item: _items[i], onTap: () => _markRead(i)),
       ],
     ),
   );
