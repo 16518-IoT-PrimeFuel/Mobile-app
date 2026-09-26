@@ -7,7 +7,7 @@ import '../domain/inventory_repository.dart';
 
 const _useMockInventory = bool.fromEnvironment(
   'USE_MOCK_INVENTORY',
-  defaultValue: true,
+  defaultValue: false,
 );
 
 final inventoryRepositoryProvider = Provider<InventoryRepository>((ref) {

@@ -7,7 +7,7 @@ import '../domain/reports_repository.dart';
 
 const _useMockReports = bool.fromEnvironment(
   'USE_MOCK_REPORTS',
-  defaultValue: true,
+  defaultValue: false,
 );
 
 final reportsRepositoryProvider = Provider<ReportsRepository>((ref) {

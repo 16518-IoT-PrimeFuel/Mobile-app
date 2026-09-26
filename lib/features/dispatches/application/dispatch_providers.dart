@@ -7,7 +7,7 @@ import '../domain/dispatch_repository.dart';
 
 const _useMockDispatch = bool.fromEnvironment(
   'USE_MOCK_DISPATCH',
-  defaultValue: true,
+  defaultValue: false,
 );
 
 final dispatchRepositoryProvider = Provider<DispatchRepository>((ref) {

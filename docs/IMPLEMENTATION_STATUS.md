@@ -43,7 +43,9 @@
 - notificaciones;
 - analítica de comprador y proveedor.
 
-Las pantallas siguen usando mock data en esta entrega. El siguiente paso de integración sustituye el repository/mock provider por `FullTankApi`; no requiere cambiar la estructura visual.
+Los providers de autenticación, pedidos, inventario, despachos y reportes usan
+`FullTankApi` por defecto. Los mocks siguen disponibles por feature mediante
+`--dart-define=USE_MOCK_<FEATURE>=true` para demos y pruebas visuales.
 
 ## Arquitectura actual
 
@@ -67,12 +69,14 @@ features/*/
 - Las pantallas grandes se dividieron en módulos de presentación pequeños.
 - Se añadieron contratos, entidades, mocks, adaptadores API y providers para pedidos, inventario, despachos y reportes.
 - Las stories públicas faltantes tienen contenido aislado y rutas `/about`, `/how-it-works`, `/benefits`, `/testimonials` y `/plans`.
-- El modo mock sigue siendo el predeterminado durante el desarrollo visual.
+- El modo API es predeterminado; las pantallas que todavía tienen datos locales
+  deben migrarse progresivamente a sus controllers/providers.
 
 ## Pendientes de integración real
 
 - Persistir JWT de forma segura en almacenamiento nativo.
 - Conectar cada ViewModel a las pantallas concretas de operaciones.
 - Validar los nombres de campos de respuesta contra el backend desplegado.
-- Activar providers API por entorno cuando exista una URL estable.
+- Configurar `API_BASE_URL` por entorno (`http://10.0.2.2:8080/api/v1` es el
+  valor por defecto para el emulador Android).
 - Mapear errores HTTP a estados de UI traducidos y accionables.

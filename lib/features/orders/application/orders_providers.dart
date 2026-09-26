@@ -7,7 +7,7 @@ import '../domain/orders_repository.dart';
 
 const _useMockOrders = bool.fromEnvironment(
   'USE_MOCK_ORDERS',
-  defaultValue: true,
+  defaultValue: false,
 );
 
 final ordersRepositoryProvider = Provider<OrdersRepository>((ref) {
