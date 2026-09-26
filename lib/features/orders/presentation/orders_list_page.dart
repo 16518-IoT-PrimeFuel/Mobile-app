@@ -1,6 +1,6 @@
 part of 'order_pages.dart';
 
-class OrdersPage extends StatefulWidget {
+class OrdersPage extends ConsumerStatefulWidget {
   const OrdersPage({
     required this.history,
     this.state = OrderPageState.content,
@@ -9,16 +9,29 @@ class OrdersPage extends StatefulWidget {
   final bool history;
   final OrderPageState state;
   @override
-  State<OrdersPage> createState() => _OrdersPageState();
+  ConsumerState<OrdersPage> createState() => _OrdersPageState();
 }
 
-class _OrdersPageState extends State<OrdersPage> {
+class _OrdersPageState extends ConsumerState<OrdersPage> {
   late OrderPageState _state = widget.state;
   String _filter = 'Todos';
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.history) {
+      Future.microtask(
+        () => ref.read(ordersControllerProvider.notifier).load(history: true),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final body = widget.history ? _historyBody(context) : _activeBody(context);
+    final orders = ref.watch(ordersControllerProvider);
+    final body = widget.history
+        ? _historyBody(context, orders)
+        : _activeBody(context, orders);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -44,11 +57,14 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 
-  Widget _historyBody(BuildContext context) {
-    if (_state == OrderPageState.loading)
+  Widget _historyBody(BuildContext context, AsyncValue<List<Order>> orders) {
+    if (_state == OrderPageState.loading || orders.isLoading)
       return _loadingBody(title: 'Historial', subtitle: 'Cargando pedidos...');
-    if (_state == OrderPageState.empty) return _emptyBody(history: true);
-    if (_state == OrderPageState.error) return _errorBody(history: true);
+    if (_state == OrderPageState.empty ||
+        (orders.hasValue && orders.value!.isEmpty))
+      return _emptyBody(history: true);
+    if (_state == OrderPageState.error || orders.hasError)
+      return _errorBody(history: true);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -69,7 +85,7 @@ class _OrdersPageState extends State<OrdersPage> {
           ],
         ),
         const SizedBox(height: 12),
-        const _HistoryMetrics(),
+        _HistoryMetrics(orders: orders.value ?? const []),
         const SizedBox(height: 12),
         const _WeeklyBars(label: 'CONSUMO SEMANAL (L)', action: 'Ver detalle'),
         const SizedBox(height: 11),
@@ -80,19 +96,22 @@ class _OrdersPageState extends State<OrdersPage> {
           leading: 'Filtros 3',
         ),
         const SizedBox(height: 10),
-        _HistoryOrders(filter: _filter),
+        _HistoryOrders(orders: orders.value ?? const [], filter: _filter),
       ],
     );
   }
 
-  Widget _activeBody(BuildContext context) {
-    if (_state == OrderPageState.loading)
+  Widget _activeBody(BuildContext context, AsyncValue<List<Order>> orders) {
+    if (_state == OrderPageState.loading || orders.isLoading)
       return _loadingBody(
         title: 'Mis pedidos',
         subtitle: 'Cargando pedidos...',
       );
-    if (_state == OrderPageState.empty) return _emptyBody(history: false);
-    if (_state == OrderPageState.error) return _errorBody(history: false);
+    if (_state == OrderPageState.empty ||
+        (orders.hasValue && orders.value!.isEmpty))
+      return _emptyBody(history: false);
+    if (_state == OrderPageState.error || orders.hasError)
+      return _errorBody(history: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -113,21 +132,15 @@ class _OrdersPageState extends State<OrdersPage> {
           ],
         ),
         const SizedBox(height: 12),
-        const _ActiveMetrics(),
+        _ActiveMetrics(orders: orders.value ?? const []),
         const SizedBox(height: 12),
         _Filters(
-          selected: _filter == 'Todos' ? 'Todos 5' : _filter,
-          labels: const [
-            'Todos 5',
-            'Pendiente 1',
-            'Aprobado 1',
-            'En tránsito 1',
-          ],
-          onSelected: (value) =>
-              setState(() => _filter = value == 'Todos 5' ? 'Todos' : value),
+          selected: _filter,
+          labels: const ['Todos', 'Pendiente', 'Aprobado', 'En tránsito'],
+          onSelected: (value) => setState(() => _filter = value),
         ),
         const SizedBox(height: 10),
-        _ActiveOrders(filter: _filter),
+        _ActiveOrders(orders: orders.value ?? const [], filter: _filter),
       ],
     );
   }
@@ -215,7 +228,9 @@ class _OrdersPageState extends State<OrdersPage> {
           _HeaderIcon(
             icon: Icons.refresh,
             label: 'Actualizar',
-            onTap: () => setState(() => _state = OrderPageState.content),
+            onTap: () => ref
+                .read(ordersControllerProvider.notifier)
+                .load(history: history),
           ),
         ],
       ),
@@ -256,7 +271,9 @@ class _OrdersPageState extends State<OrdersPage> {
         width: double.infinity,
         child: _OrangeButton(
           label: 'Reintentar  ↻',
-          onPressed: () => setState(() => _state = OrderPageState.content),
+          onPressed: () => ref
+              .read(ordersControllerProvider.notifier)
+              .load(history: history),
         ),
       ),
       const SizedBox(height: 12),

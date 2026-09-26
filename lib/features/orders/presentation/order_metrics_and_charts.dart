@@ -1,14 +1,16 @@
 part of 'order_pages.dart';
 
 class _HistoryMetrics extends StatelessWidget {
-  const _HistoryMetrics();
+  const _HistoryMetrics({required this.orders});
+  final List<Order> orders;
   @override
-  Widget build(BuildContext context) => const Row(
+  Widget build(BuildContext context) => Row(
     children: [
       Expanded(
         child: _MetricCard(
           label: 'CONSUMO',
-          value: '42.8k\nL',
+          value:
+              '${(orders.fold<double>(0, (sum, order) => sum + order.quantity) / 1000).toStringAsFixed(1)}k\nL',
           accent: _blue,
           badge: '+8%',
         ),
@@ -17,7 +19,7 @@ class _HistoryMetrics extends StatelessWidget {
       Expanded(
         child: _MetricCard(
           label: 'PEDIDOS',
-          value: '24',
+          value: '${orders.length}',
           accent: _orange,
           badge: '+3',
         ),
@@ -26,7 +28,8 @@ class _HistoryMetrics extends StatelessWidget {
       Expanded(
         child: _MetricCard(
           label: 'TOTAL',
-          value: 'S/\n63k',
+          value:
+              'S/\n${(orders.fold<double>(0, (sum, order) => sum + order.total) / 1000).toStringAsFixed(0)}k',
           accent: _muted,
           badge: 'mes',
         ),
@@ -36,20 +39,39 @@ class _HistoryMetrics extends StatelessWidget {
 }
 
 class _ActiveMetrics extends StatelessWidget {
-  const _ActiveMetrics();
+  const _ActiveMetrics({required this.orders});
+  final List<Order> orders;
   @override
-  Widget build(BuildContext context) => const Row(
+  Widget build(BuildContext context) => Row(
     children: [
       Expanded(
-        child: _MetricCard(label: 'PENDIENTES', value: '01', accent: _orange),
+        child: _MetricCard(
+          label: 'PENDIENTES',
+          value:
+              '${orders.where((order) => order.status == OrderStatus.pending).length}'
+                  .padLeft(2, '0'),
+          accent: _orange,
+        ),
       ),
       SizedBox(width: 6),
       Expanded(
-        child: _MetricCard(label: 'APROBADOS', value: '01', accent: _blue),
+        child: _MetricCard(
+          label: 'APROBADOS',
+          value:
+              '${orders.where((order) => order.status == OrderStatus.approved).length}'
+                  .padLeft(2, '0'),
+          accent: _blue,
+        ),
       ),
       SizedBox(width: 6),
       Expanded(
-        child: _MetricCard(label: 'EN TRÁNSITO', value: '01', accent: _orange),
+        child: _MetricCard(
+          label: 'EN TRÁNSITO',
+          value:
+              '${orders.where((order) => order.status == OrderStatus.inTransit).length}'
+                  .padLeft(2, '0'),
+          accent: _orange,
+        ),
       ),
     ],
   );

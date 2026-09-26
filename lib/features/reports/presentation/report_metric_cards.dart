@@ -122,7 +122,9 @@ class _MetricCard extends StatelessWidget {
 }
 
 class _CurrentPeriodCard extends StatelessWidget {
-  const _CurrentPeriodCard();
+  const _CurrentPeriodCard({required this.revenue});
+
+  final double revenue;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -139,7 +141,7 @@ class _CurrentPeriodCard extends StatelessWidget {
         ),
       ],
     ),
-    child: const Column(
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -154,7 +156,7 @@ class _CurrentPeriodCard extends StatelessWidget {
         Row(
           children: [
             Text(
-              '\$31.200',
+              _currency(revenue),
               style: TextStyle(
                 color: Color(0xFF1A202C),
                 fontSize: 23.2,
@@ -162,28 +164,18 @@ class _CurrentPeriodCard extends StatelessWidget {
               ),
             ),
             Text(
-              ' K',
+              ' MXN',
               style: TextStyle(color: Color(0xFF4A5568), fontSize: 11.6),
             ),
-            SizedBox(width: 10),
-            _DeltaBadge('+16%'),
           ],
         ),
         SizedBox(height: 6),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'vs. anterior',
+              'Período seleccionado',
               style: TextStyle(color: Color(0xFF4A5568), fontSize: 10.875),
-            ),
-            Text(
-              '\$27.000K',
-              style: TextStyle(
-                color: Color(0xFF2D3748),
-                fontSize: 10.875,
-                fontWeight: FontWeight.w700,
-              ),
             ),
           ],
         ),

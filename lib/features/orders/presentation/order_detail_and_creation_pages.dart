@@ -1,6 +1,6 @@
 part of 'order_pages.dart';
 
-class OrderDetailPage extends StatelessWidget {
+class OrderDetailPage extends ConsumerWidget {
   const OrderDetailPage({
     required this.history,
     required this.orderId,
@@ -9,18 +9,25 @@ class OrderDetailPage extends StatelessWidget {
   final bool history;
   final String orderId;
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Colors.white,
-    body: SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.fromLTRB(29.0, 20.3, 29.0, 40.6),
-        child: history ? _historyDetail(context) : _activeDetail(context),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final order =
+        ref.watch(orderProvider(orderId)).valueOrNull ??
+        fallbackOrder(orderId, history: history);
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(29.0, 20.3, 29.0, 40.6),
+          child: history
+              ? _historyDetail(context, order)
+              : _activeDetail(context, order),
+        ),
       ),
-    ),
-    bottomNavigationBar: const FullTankBottomNav(active: 1),
-  );
+      bottomNavigationBar: const FullTankBottomNav(active: 1),
+    );
+  }
 
-  Widget _historyDetail(BuildContext context) => Column(
+  Widget _historyDetail(BuildContext context, Order order) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       _Header(
@@ -56,13 +63,13 @@ class OrderDetailPage extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 12),
-      const Row(
+      Row(
         children: [
           Expanded(
             child: _FuelMetric(
               label: 'COMBUSTIBLE',
-              value: 'Diésel',
-              detail: 'ULSD B5',
+              value: order.fuel,
+              detail: '',
               icon: Icons.opacity_outlined,
               color: _blue,
             ),
@@ -71,7 +78,7 @@ class OrderDetailPage extends StatelessWidget {
           Expanded(
             child: _FuelMetric(
               label: 'CANTIDAD',
-              value: '10,500',
+              value: order.quantity.toStringAsFixed(0),
               detail: 'L',
               icon: Icons.local_gas_station_outlined,
               color: _orange,
@@ -80,26 +87,31 @@ class OrderDetailPage extends StatelessWidget {
         ],
       ),
       const SizedBox(height: 12),
-      const _DetailTable(
+      _DetailTable(
         title: 'DETALLES DEL PEDIDO',
         rows: [
-          ('Número', '#FT-88402'),
+          ('Número', '#${order.id}'),
           ('Fecha de creación', 'Ayer, 09:30'),
           ('Fecha de entrega', 'Ayer, 17:45'),
-          ('Proveedor', 'Global Fuel Corp'),
+          (
+            'Proveedor',
+            order.deliveryAddress.isEmpty
+                ? 'Proveedor asignado'
+                : order.deliveryAddress,
+          ),
           ('Tanque destino', 'A-102 · Sector 4'),
           ('Vehículo', 'ABC-921 · M. Ríos'),
         ],
       ),
       const SizedBox(height: 12),
-      const _DetailTable(
+      _DetailTable(
         title: 'PAGO',
         rows: [('Estado', 'Aprobado'), ('Payment ID', 'PAY-88402-A')],
       ),
     ],
   );
 
-  Widget _activeDetail(BuildContext context) => Column(
+  Widget _activeDetail(BuildContext context, Order order) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       _Header(
@@ -138,12 +150,17 @@ class OrderDetailPage extends StatelessWidget {
       const SizedBox(height: 8),
       const _DeliveryTimeline(),
       const SizedBox(height: 12),
-      const _DetailTable(
+      _DetailTable(
         title: 'DETALLES DEL PEDIDO',
         rows: [
-          ('Combustible', 'Diésel · ULSD B5'),
-          ('Cantidad', '6,000 L'),
-          ('Proveedor', 'Global Fuel Corp'),
+          ('Combustible', order.fuel),
+          ('Cantidad', orderQuantityLabel(order.quantity)),
+          (
+            'Proveedor',
+            order.deliveryAddress.isEmpty
+                ? 'Proveedor asignado'
+                : order.deliveryAddress,
+          ),
         ],
       ),
       const SizedBox(height: 14),
@@ -168,7 +185,7 @@ class OrderDetailPage extends StatelessWidget {
   );
 }
 
-class NewOrderPage extends StatefulWidget {
+class NewOrderPage extends ConsumerStatefulWidget {
   const NewOrderPage({
     this.initialState = NewOrderState.defaultState,
     super.key,
@@ -177,10 +194,10 @@ class NewOrderPage extends StatefulWidget {
   final NewOrderState initialState;
 
   @override
-  State<NewOrderPage> createState() => _NewOrderPageState();
+  ConsumerState<NewOrderPage> createState() => _NewOrderPageState();
 }
 
-class _NewOrderPageState extends State<NewOrderPage> {
+class _NewOrderPageState extends ConsumerState<NewOrderPage> {
   late NewOrderState _state = widget.initialState;
   String _fuel = 'Diésel';
 
@@ -344,10 +361,16 @@ class _NewOrderPageState extends State<NewOrderPage> {
     ],
   );
 
-  void _create() {
+  Future<void> _create() async {
     setState(() => _state = NewOrderState.loading);
-    Future<void>.delayed(const Duration(milliseconds: 700), () {
-      if (mounted) setState(() => _state = NewOrderState.success);
-    });
+    await ref
+        .read(ordersControllerProvider.notifier)
+        .create(fuel: _fuel, quantity: 0);
+    if (!mounted) return;
+    setState(
+      () => _state = ref.read(ordersControllerProvider).hasError
+          ? NewOrderState.error
+          : NewOrderState.success,
+    );
   }
 }

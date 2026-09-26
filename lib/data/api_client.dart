@@ -13,21 +13,29 @@ class ApiClient {
   final String baseUrl;
   String? token;
 
-  Future<dynamic> get(String path) => _request('GET', path);
+  Future<dynamic> get(String path) => _request('GET', path, null);
+  Future<dynamic> getV2(String path) =>
+      _request('GET', path, null, baseUrlOverride: _apiRoot);
   Future<dynamic> post(String path, [Map<String, dynamic>? body]) =>
       _request('POST', path, body);
+  Future<dynamic> postV2(String path, [Map<String, dynamic>? body]) =>
+      _request('POST', path, body, baseUrlOverride: _apiRoot);
   Future<dynamic> put(String path, Map<String, dynamic> body) =>
       _request('PUT', path, body);
-  Future<void> delete(String path) async => _request('DELETE', path);
+  Future<void> delete(String path) async => _request('DELETE', path, null);
 
   Future<dynamic> _request(
     String method,
-    String path, [
-    Map<String, dynamic>? body,
-  ]) async {
+    String path,
+    Map<String, dynamic>? body, {
+    String? baseUrlOverride,
+  }) async {
     final client = HttpClient();
     try {
-      final request = await client.openUrl(method, Uri.parse('$baseUrl$path'));
+      final request = await client.openUrl(
+        method,
+        Uri.parse('${baseUrlOverride ?? baseUrl}$path'),
+      );
       request.headers.contentType = ContentType.json;
       if (token != null)
         request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $token');
@@ -41,6 +49,8 @@ class ApiClient {
       client.close(force: true);
     }
   }
+
+  String get _apiRoot => baseUrl.replaceFirst(RegExp(r'/api/v1/?$'), '');
 }
 
 class ApiException implements Exception {

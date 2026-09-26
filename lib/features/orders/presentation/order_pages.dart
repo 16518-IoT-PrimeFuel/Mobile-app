@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/fulltank_bottom_navigation.dart';
+import '../application/orders_controller.dart';
+import '../application/orders_providers.dart';
+import '../domain/order.dart';
 part 'orders_list_page.dart';
 part 'order_detail_and_creation_pages.dart';
 part 'new_order_fuel_fields.dart';
@@ -49,3 +53,32 @@ NewOrderState newOrderStateFromQuery(String? value) => switch (value) {
   'error' => NewOrderState.error,
   _ => NewOrderState.defaultState,
 };
+
+String orderStatusLabel(OrderStatus status) => switch (status) {
+  OrderStatus.pending => 'Pendiente',
+  OrderStatus.approved => 'Aprobado',
+  OrderStatus.inTransit => 'En tránsito',
+  OrderStatus.delivered => 'Entregado',
+  OrderStatus.cancelled => 'Cancelado',
+  OrderStatus.rejected => 'Rechazado',
+};
+
+Color orderStatusColor(OrderStatus status) => switch (status) {
+  OrderStatus.approved || OrderStatus.delivered => _blue,
+  OrderStatus.pending || OrderStatus.inTransit => _orange,
+  OrderStatus.cancelled || OrderStatus.rejected => _red,
+};
+
+String orderQuantityLabel(double quantity) =>
+    '${quantity.toStringAsFixed(quantity == quantity.roundToDouble() ? 0 : 1)} L';
+
+String orderTotalLabel(double total) => 'S/ ${total.toStringAsFixed(2)}';
+
+Order fallbackOrder(String id, {bool history = false}) => Order(
+  id: id,
+  fuel: 'Diésel · ULSD B5',
+  quantity: history ? 10500 : 6000,
+  total: history ? 16170 : 9274.80,
+  status: history ? OrderStatus.delivered : OrderStatus.inTransit,
+  deliveryAddress: 'Global Fuel Corp',
+);

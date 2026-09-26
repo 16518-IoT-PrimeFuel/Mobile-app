@@ -145,4 +145,26 @@ class FullTankApi {
       client.get('/analytics/buyers/$companyId');
   Future<dynamic> analyticsForProvider(int providerId) =>
       client.get('/analytics/providers/$providerId');
+
+  Future<dynamic> replenishmentRequests(int companyId) =>
+      client.getV2('/api/v2/buyer-companies/$companyId/replenishment-requests');
+  Future<dynamic> createReplenishmentRequest(
+    int companyId,
+    Map<String, dynamic> body,
+  ) => client.postV2(
+    '/api/v2/buyer-companies/$companyId/replenishment-requests',
+    body,
+  );
+  Future<dynamic> tracking(int deliveryId) =>
+      client.getV2('/api/v2/deliveries/$deliveryId/tracking');
+  Future<dynamic> latestTracking(int deliveryId) =>
+      client.getV2('/api/v2/deliveries/$deliveryId/tracking/latest');
+  Future<dynamic> deliveryTimeline(int deliveryId) =>
+      client.getV2('/api/v2/deliveries/$deliveryId/timeline');
+  Future<dynamic> notificationsV2(int userId) =>
+      client.getV2('/api/v2/users/$userId/notifications');
+  Future<dynamic> eligibleFleet({int? providerId}) {
+    final suffix = providerId == null ? '' : '?providerId=$providerId';
+    return client.getV2('/api/v2/fleet/eligible$suffix');
+  }
 }

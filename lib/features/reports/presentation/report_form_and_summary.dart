@@ -148,7 +148,9 @@ class _SelectField extends StatelessWidget {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard();
+  const _SummaryCard({required this.summary});
+
+  final ReportSummary summary;
   @override
   Widget build(BuildContext context) => Container(
     margin: const EdgeInsets.only(top: 6),
@@ -157,7 +159,7 @@ class _SummaryCard extends StatelessWidget {
       color: Color(0xFFEFF4FF),
       borderRadius: BorderRadius.circular(10),
     ),
-    child: const Column(
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -186,9 +188,13 @@ class _SummaryCard extends StatelessWidget {
         SizedBox(height: 10),
         Row(
           children: [
-            Expanded(child: _SummaryMetric('INGRESOS', '\$31.200K')),
-            Expanded(child: _SummaryMetric('LITROS VENDIDOS', '1.240.000')),
-            Expanded(child: _SummaryMetric('TICKET PROM.', '\$98.1K')),
+            Expanded(
+              child: _SummaryMetric('INGRESOS', _currency(summary.revenue)),
+            ),
+            Expanded(
+              child: _SummaryMetric('LITROS VENDIDOS', _liters(summary.liters)),
+            ),
+            Expanded(child: _SummaryMetric('PEDIDOS', '${summary.orders}')),
           ],
         ),
       ],

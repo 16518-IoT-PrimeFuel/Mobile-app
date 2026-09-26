@@ -1,43 +1,33 @@
 part of 'order_pages.dart';
 
 class _ActiveOrders extends StatelessWidget {
-  const _ActiveOrders({required this.filter});
+  const _ActiveOrders({required this.orders, required this.filter});
+  final List<Order> orders;
   final String filter;
   @override
   Widget build(BuildContext context) {
-    const items = [
-      _ActiveOrderData(
-        id: '#FT-88421',
-        status: 'En tránsito',
-        fuel: 'Diésel · ULSD B5',
-        quantity: '6,000 L',
-        supplier: 'Global Fuel Corp',
-        eta: '~1h 20m',
-        color: _orange,
-      ),
-      _ActiveOrderData(
-        id: '#FT-88418',
-        status: 'Aprobado',
-        fuel: 'Gasolina · 95',
-        quantity: '3,200 L',
-        supplier: 'Midwest PetroLink',
-        eta: 'Despacho 14:00',
-        color: _blue,
-      ),
-      _ActiveOrderData(
-        id: '#FT-88415',
-        status: 'Pendiente',
-        fuel: 'Diésel · ULSD B5',
-        quantity: '4,000 L',
-        supplier: 'Global Fuel Corp',
-        eta: 'Pendiente de aprobación',
-        color: _orange,
-      ),
-    ];
+    final items = orders
+        .map(
+          (order) => _ActiveOrderData(
+            order: order,
+            id: '#${order.id}',
+            status: orderStatusLabel(order.status),
+            fuel: order.fuel,
+            quantity: orderQuantityLabel(order.quantity),
+            supplier: order.deliveryAddress.isEmpty
+                ? 'Proveedor asignado'
+                : order.deliveryAddress,
+            eta: order.status == OrderStatus.pending
+                ? 'Pendiente de aprobación'
+                : 'Seguimiento disponible',
+            color: orderStatusColor(order.status),
+          ),
+        )
+        .toList();
     final shown = switch (filter) {
-      'Pendiente 1' => items.where((item) => item.status == 'Pendiente'),
-      'Aprobado 1' => items.where((item) => item.status == 'Aprobado'),
-      'En tránsito 1' => items.where((item) => item.status == 'En tránsito'),
+      'Pendiente' => items.where((item) => item.status == 'Pendiente'),
+      'Aprobado' => items.where((item) => item.status == 'Aprobado'),
+      'En tránsito' => items.where((item) => item.status == 'En tránsito'),
       _ => items,
     };
     return Column(
@@ -45,7 +35,7 @@ class _ActiveOrders extends StatelessWidget {
         for (final item in shown) ...[
           _ActiveOrderCard(
             data: item,
-            onTap: () => context.push('/orders/${item.id.substring(1)}'),
+            onTap: () => context.push('/orders/${item.order.id}'),
           ),
           if (item != shown.last) const SizedBox(height: 8),
         ],
@@ -56,6 +46,7 @@ class _ActiveOrders extends StatelessWidget {
 
 class _ActiveOrderData {
   const _ActiveOrderData({
+    required this.order,
     required this.id,
     required this.status,
     required this.fuel,
@@ -64,6 +55,7 @@ class _ActiveOrderData {
     required this.eta,
     required this.color,
   });
+  final Order order;
   final String id, status, fuel, quantity, supplier, eta;
   final Color color;
 }

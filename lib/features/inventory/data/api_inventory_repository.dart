@@ -23,7 +23,9 @@ class ApiInventoryRepository implements InventoryRepository {
       'unit': product.unit,
       'availableStock': product.availableStock,
       'capacity': product.capacity,
-      'active': product.active && product.availability != ProductAvailability.inactive,
+      'active':
+          product.active &&
+          product.availability != ProductAvailability.inactive,
     });
     return raw is Map ? _map(raw) : product;
   }
@@ -46,7 +48,9 @@ class ApiInventoryRepository implements InventoryRepository {
         ? (raw['availableStock'] as num).toDouble()
         : 0,
     capacity: raw['capacity'] is num ? (raw['capacity'] as num).toDouble() : 0,
-    providerId: raw['providerId'] is num ? (raw['providerId'] as num).toInt() : null,
+    providerId: raw['providerId'] is num
+        ? (raw['providerId'] as num).toInt()
+        : null,
     active: raw['active'] != false,
   );
 
@@ -54,7 +58,10 @@ class ApiInventoryRepository implements InventoryRepository {
     if (raw['active'] == false) return ProductAvailability.inactive;
     final stock = raw['availableStock'];
     final capacity = raw['capacity'];
-    if (stock is num && capacity is num && capacity > 0 && stock / capacity <= .2) {
+    if (stock is num &&
+        capacity is num &&
+        capacity > 0 &&
+        stock / capacity <= .2) {
       return ProductAvailability.lowStock;
     }
     return switch ('${raw['availability'] ?? 'available'}'.toLowerCase()) {

@@ -65,27 +65,6 @@ class _DownloadButton extends StatelessWidget {
   );
 }
 
-class _DeltaBadge extends StatelessWidget {
-  const _DeltaBadge(this.text);
-  final String text;
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-    decoration: BoxDecoration(
-      color: const Color(0xFFE9FFF4),
-      borderRadius: BorderRadius.circular(99),
-    ),
-    child: Text(
-      '↑ $text',
-      style: const TextStyle(
-        color: Color(0xFF059669),
-        fontSize: 9.425,
-        fontWeight: FontWeight.w800,
-      ),
-    ),
-  );
-}
-
 class _IndustryRows extends StatelessWidget {
   const _IndustryRows();
   @override

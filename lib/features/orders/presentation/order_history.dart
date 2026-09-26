@@ -86,31 +86,30 @@ class _Chip extends StatelessWidget {
 }
 
 class _HistoryOrders extends StatelessWidget {
-  const _HistoryOrders({required this.filter});
+  const _HistoryOrders({required this.orders, required this.filter});
+  final List<Order> orders;
   final String filter;
   @override
   Widget build(BuildContext context) {
-    final items = [
-      const _OrderData(
-        id: '#FT-88421',
-        status: 'En tránsito',
-        fuel: 'Diésel · ULSD B5',
-        amount: '6,000 L',
-        supplier: 'Global Fuel Corp',
-        total: 'S/ 9,274.80',
-        color: _orange,
-      ),
-      const _OrderData(
-        id: '#FT-88418',
-        status: 'Aprobado',
-        fuel: 'Gasolina · 95',
-        amount: '3,200 L',
-        supplier: 'Midwest PetroLink',
-        total: 'S/ 5,120.00',
-        color: _blue,
-      ),
-    ];
-    final shown = filter == 'Entregado' ? const <_OrderData>[] : items;
+    final items = orders
+        .map(
+          (order) => _OrderData(
+            order: order,
+            id: '#${order.id}',
+            status: orderStatusLabel(order.status),
+            fuel: order.fuel,
+            amount: orderQuantityLabel(order.quantity),
+            supplier: order.deliveryAddress.isEmpty
+                ? 'Proveedor asignado'
+                : order.deliveryAddress,
+            total: orderTotalLabel(order.total),
+            color: orderStatusColor(order.status),
+          ),
+        )
+        .toList();
+    final shown = filter == 'Todos'
+        ? items
+        : items.where((item) => item.status == filter).toList();
     return Column(
       children: [
         for (final item in shown)
@@ -125,6 +124,7 @@ class _HistoryOrders extends StatelessWidget {
 
 class _OrderData {
   const _OrderData({
+    required this.order,
     required this.id,
     required this.status,
     required this.fuel,
@@ -133,6 +133,7 @@ class _OrderData {
     required this.total,
     required this.color,
   });
+  final Order order;
   final String id, status, fuel, amount, supplier, total;
   final Color color;
 }
