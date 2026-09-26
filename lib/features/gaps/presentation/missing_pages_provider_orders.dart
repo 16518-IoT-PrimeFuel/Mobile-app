@@ -4,35 +4,56 @@ class ProviderOrdersPage extends StatelessWidget {
   const ProviderOrdersPage({super.key});
 
   @override
-  Widget build(BuildContext context) => MissingPageShell(
-    title: 'Pedidos por atender',
-    subtitle: '2 solicitudes requieren una decisión',
-    bottomNav: 1,
-    child: Column(
-      children: [
-        _ProviderOrderCard(
-          id: 'FT-2098',
-          customer: 'AgroNorte',
-          detail: '12,000 L · Diésel B5 · entrega hoy',
-          status: 'Pendiente',
-          color: _orange,
-          onTap: () => context.push('/provider/orders/FT-2098'),
-        ),
-        const SizedBox(height: 10),
-        _ProviderOrderCard(
-          id: 'FT-2091',
-          customer: 'Transportes Delta',
-          detail: '8,000 L · Gasolina regular · 3:00 PM',
-          status: 'Aprobado',
-          color: _green,
-          onTap: () => context.push('/provider/orders/FT-2091/dispatch'),
-        ),
-        const SizedBox(height: 16),
-        _PrimaryButton(
-          label: 'Ver historial de ventas',
-          onPressed: () => context.push('/reports/sales'),
-        ),
-      ],
+  Widget build(BuildContext context) => FutureBuilder<List<ProviderOrder>>(
+    future: providerOrderRepository().list(),
+    builder: (context, snapshot) => MissingPageShell(
+      title: 'Pedidos por atender',
+      subtitle: snapshot.hasData
+          ? '${snapshot.data!.length} solicitudes requieren una decisión'
+          : '2 solicitudes requieren una decisión',
+      bottomNav: 1,
+      child: Column(
+        children: [
+          if (snapshot.hasData && snapshot.data!.isNotEmpty)
+            ...snapshot.data!.map(
+              (order) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: _ProviderOrderCard(
+                  id: order.id,
+                  customer: order.customer,
+                  detail: order.detail,
+                  status: order.status,
+                  color: order.status == 'Aprobado' ? _green : _orange,
+                  onTap: () => context.push('/provider/orders/${order.id}'),
+                ),
+              ),
+            )
+          else ...[
+            _ProviderOrderCard(
+              id: 'FT-2098',
+              customer: 'AgroNorte',
+              detail: '12,000 L · Diésel B5 · entrega hoy',
+              status: 'Pendiente',
+              color: _orange,
+              onTap: () => context.push('/provider/orders/FT-2098'),
+            ),
+            const SizedBox(height: 10),
+            _ProviderOrderCard(
+              id: 'FT-2091',
+              customer: 'Transportes Delta',
+              detail: '8,000 L · Gasolina regular · 3:00 PM',
+              status: 'Aprobado',
+              color: _green,
+              onTap: () => context.push('/provider/orders/FT-2091/dispatch'),
+            ),
+          ],
+          const SizedBox(height: 6),
+          _PrimaryButton(
+            label: 'Ver historial de ventas',
+            onPressed: () => context.push('/reports/sales'),
+          ),
+        ],
+      ),
     ),
   );
 }
@@ -101,13 +122,21 @@ class _ProviderOrderCard extends StatelessWidget {
   );
 }
 
-class ProviderOrderDetailPage extends StatelessWidget {
+class ProviderOrderDetailPage extends StatefulWidget {
   const ProviderOrderDetailPage({required this.orderId, super.key});
   final String orderId;
 
   @override
+  State<ProviderOrderDetailPage> createState() =>
+      _ProviderOrderDetailPageState();
+}
+
+class _ProviderOrderDetailPageState extends State<ProviderOrderDetailPage> {
+  bool _busy = false;
+
+  @override
   Widget build(BuildContext context) => MissingPageShell(
-    title: 'Pedido #$orderId',
+    title: 'Pedido #${widget.orderId}',
     subtitle: 'Revisión de solicitud',
     child: Column(
       children: [
@@ -146,12 +175,12 @@ class ProviderOrderDetailPage extends StatelessWidget {
         const SizedBox(height: 14),
         _PrimaryButton(
           label: 'Aprobar pedido',
-          onPressed: () =>
-              _message(context, 'Pedido aprobado. Ahora asigna el despacho.'),
+          onPressed: _busy ? null : () => _accept(context),
         ),
         const SizedBox(height: 8),
         OutlinedButton(
-          onPressed: () => context.push('/provider/orders/$orderId/reject'),
+          onPressed: () =>
+              context.push('/provider/orders/${widget.orderId}/reject'),
           style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(48),
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -163,6 +192,24 @@ class ProviderOrderDetailPage extends StatelessWidget {
       ],
     ),
   );
+
+  Future<void> _accept(BuildContext context) async {
+    final id = int.tryParse(widget.orderId);
+    if (id == null) {
+      _message(context, 'Pedido aprobado. Ahora asigna el despacho.');
+      return;
+    }
+    setState(() => _busy = true);
+    try {
+      await providerOrderRepository().accept(id);
+      if (mounted)
+        _message(context, 'Pedido aprobado. Ahora asigna el despacho.');
+    } catch (error) {
+      if (mounted) _message(context, 'No se pudo aprobar el pedido: $error');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 }
 
 class ProviderOrderActionPage extends StatefulWidget {
@@ -182,6 +229,7 @@ class ProviderOrderActionPage extends StatefulWidget {
 class _ProviderOrderActionPageState extends State<ProviderOrderActionPage> {
   final _note = TextEditingController();
   bool _done = false;
+  bool _busy = false;
 
   @override
   void dispose() {
@@ -270,10 +318,38 @@ class _ProviderOrderActionPageState extends State<ProviderOrderActionPage> {
                 : isClose
                 ? 'Cerrar pedido'
                 : 'Asignar y notificar',
-            onPressed: () => setState(() => _done = true),
+            onPressed: _busy ? null : () => _submit(context, isReject, isClose),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _submit(
+    BuildContext context,
+    bool isReject,
+    bool isClose,
+  ) async {
+    final id = int.tryParse(widget.orderId);
+    if (id == null) {
+      setState(() => _done = true);
+      return;
+    }
+    setState(() => _busy = true);
+    try {
+      final repository = providerOrderRepository();
+      if (isReject) {
+        await repository.reject(id, _note.text.trim());
+      } else if (isClose) {
+        await repository.complete(id);
+      } else {
+        await repository.dispatch(id);
+      }
+      if (mounted) setState(() => _done = true);
+    } catch (error) {
+      if (mounted) _message(context, 'No se pudo actualizar el pedido: $error');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
 }
