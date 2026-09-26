@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../auth/application/auth_providers.dart';
 import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 import '../application/orders_controller.dart';
 import '../application/orders_providers.dart';

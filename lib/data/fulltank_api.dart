@@ -107,6 +107,8 @@ class FullTankApi {
       client.post('/deliveries/$id/dispatch');
   Future<dynamic> completeDelivery(int id) =>
       client.post('/deliveries/$id/complete');
+  Future<dynamic> deliveryForOrder(int orderId) =>
+      client.get('/deliveries/order/$orderId');
   Future<dynamic> failDelivery(int id, String reason) =>
       client.post('/deliveries/$id/fail', {'reason': reason});
   Future<dynamic> vehicles({required int providerId}) =>

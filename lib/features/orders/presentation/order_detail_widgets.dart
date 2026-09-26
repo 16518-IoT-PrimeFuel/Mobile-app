@@ -143,6 +143,41 @@ class _DeliveryTimeline extends StatelessWidget {
   );
 }
 
+class _ApiDeliveryTimeline extends ConsumerWidget {
+  const _ApiDeliveryTimeline({required this.orderId});
+  final String orderId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final numericId = int.tryParse(orderId.replaceAll(RegExp(r'\D'), ''));
+    if (numericId == null) return const _DeliveryTimeline();
+    final api = ref.read(fullTankApiProvider);
+    return FutureBuilder<dynamic>(
+      future: api.deliveryForOrder(numericId).then((delivery) {
+        if (delivery is! Map || delivery['id'] is! num) return null;
+        return api.deliveryTimeline((delivery['id'] as num).toInt());
+      }),
+      builder: (context, snapshot) {
+        final raw = snapshot.data;
+        if (raw is! List || raw.isEmpty) return const _DeliveryTimeline();
+        final entries = raw.whereType<Map>().toList();
+        if (entries.isEmpty) return const _DeliveryTimeline();
+        return Column(
+          children: [
+            for (final entry in entries)
+              _TimelineStep(
+                label: '${entry['eventType'] ?? 'Actualización'}',
+                detail: '${entry['occurredAt'] ?? ''}',
+                color: _blue,
+                icon: Icons.check,
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
 class _TimelineStep extends StatelessWidget {
   const _TimelineStep({
     required this.label,

@@ -148,7 +148,7 @@ class OrderDetailPage extends ConsumerWidget {
         ),
       ),
       const SizedBox(height: 8),
-      const _DeliveryTimeline(),
+      _ApiDeliveryTimeline(orderId: orderId),
       const SizedBox(height: 12),
       _DetailTable(
         title: 'DETALLES DEL PEDIDO',
