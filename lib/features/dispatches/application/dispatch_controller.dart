@@ -35,4 +35,44 @@ class DispatchController extends StateNotifier<AsyncValue<List<Vehicle>>> {
     );
     if (result.hasError) state = AsyncError(result.error!, result.stackTrace!);
   }
+
+  Future<bool> updateVehicle(
+    int id, {
+    required String plate,
+    required String brand,
+    required String model,
+    required double capacity,
+  }) async {
+    final result = await AsyncValue.guard(
+      () => _repository.updateVehicle(
+        id,
+        plate: plate,
+        brand: brand,
+        model: model,
+        capacity: capacity,
+      ),
+    );
+    if (result.hasError) {
+      state = AsyncError(result.error!, result.stackTrace!);
+      return false;
+    }
+    state = AsyncData(
+      (state.value ?? [])
+          .map((vehicle) => vehicle.id == id ? result.value! : vehicle)
+          .toList(),
+    );
+    return true;
+  }
+
+  Future<bool> deleteVehicle(int id) async {
+    final result = await AsyncValue.guard(() => _repository.deleteVehicle(id));
+    if (result.hasError) {
+      state = AsyncError(result.error!, result.stackTrace!);
+      return false;
+    }
+    state = AsyncData(
+      (state.value ?? []).where((vehicle) => vehicle.id != id).toList(),
+    );
+    return true;
+  }
 }

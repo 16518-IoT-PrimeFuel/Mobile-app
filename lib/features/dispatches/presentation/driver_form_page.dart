@@ -104,7 +104,27 @@ class _DriverFormPageState extends State<DriverFormPage> {
                   label: widget.editing
                       ? 'Guardar cambios'
                       : 'Guardar conductor',
-                  onPressed: duplicate ? null : () => context.pop(true),
+                  onPressed: duplicate
+                      ? null
+                      : () => context.pop(
+                          _DriverFormResult(
+                            firstName: widget.editing ? 'Miguel' : 'Juan',
+                            lastName: widget.editing
+                                ? 'Ortega Ruiz'
+                                : 'Ramírez López',
+                            licenseNumber: widget.editing
+                                ? 'A-2 · 2027'
+                                : 'A-2 · Vigencia',
+                            initials: widget.editing ? 'MO' : 'JR',
+                            name: widget.editing
+                                ? 'Miguel Ortega Ruiz'
+                                : 'Juan Ramírez López',
+                            dni: _dni.text.trim(),
+                            license: widget.editing
+                                ? 'A-2 · 2027'
+                                : 'A-2 · Vigencia',
+                          ),
+                        ),
                 ),
               ],
             ),

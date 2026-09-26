@@ -35,9 +35,11 @@ class _Vehicle {
     this.type,
     this.capacity,
     this.next,
-    this.status,
-  );
+    this.status, [
+    this.id = 0,
+  ]);
   final String plate, brand, type, capacity, next, status;
+  final int id;
   int get capacityLiters =>
       int.parse(capacity.replaceAll('.', '').replaceAll(',', ''));
 }
@@ -101,9 +103,15 @@ class _Driver {
     this.license,
     this.status, [
     this.assignment,
+    this.id = 0,
+    this.firstName = '',
+    this.lastName = '',
+    this.licenseNumber = '',
   ]);
   final String initials, name, dni, license, status;
   final String? assignment;
+  final int id;
+  final String firstName, lastName, licenseNumber;
 }
 
 const _driversData = [

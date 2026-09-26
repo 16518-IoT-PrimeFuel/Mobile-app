@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/fulltank_bottom_navigation.dart';
+import '../application/dispatch_controller.dart';
+import '../application/dispatch_providers.dart';
+import '../domain/driver.dart';
+import '../domain/vehicle.dart';
 part 'transport_availability_page.dart';
 part 'availability_conflict_widgets.dart';
 part 'vehicle_and_filter_widgets.dart';

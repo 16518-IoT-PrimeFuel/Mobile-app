@@ -11,17 +11,17 @@
 | US-37 | Testimonios | Mock |
 | US-38 | Planes y precios | Estático |
 | US-39 | Cambio de idioma | Estado local ES/EN |
-| US-05 | Registrar nuevo pedido | Mock |
-| US-06 | Estado y tracking | Mock |
-| US-09 | Historial | Mock |
-| US-10 | Pedidos pendientes | Mock |
-| US-43 | Detalle de pedido | Mock |
-| US-46 | Inventario y editar producto | Mock |
+| US-05 | Registrar nuevo pedido | API provider, UI integrada |
+| US-06 | Estado y tracking | API-backed order list/detail; tracking v2 pending UI |
+| US-09 | Historial | API provider, UI integrada |
+| US-10 | Pedidos pendientes | API provider, provider workflow pending |
+| US-43 | Detalle de pedido | API-backed order detail |
+| US-46 | Inventario y editar producto | API provider, product UI integrated; tanks/IoT mock |
 | US-08 | Registrar pago | Mock |
 | US-11 | Aprobar pedido | Mock |
 | US-12 | Marcar como despachado | Mock |
 | US-13 | Cerrar pedido | Mock |
-| US-14 | Reportes de ventas | Mock |
+| US-14 | Reportes de ventas | API provider, UI integrada |
 | US-42 | Rechazar pedido | Mock |
 | EP09 | Perfil de usuario | Mock |
 | EP10 | Soporte y contacto | Estático/mock |
@@ -61,7 +61,7 @@ features/*/
   └── presentation/      # páginas y widgets
 ```
 
-`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio, pero las pantallas operativas todavía no consumen esos controllers/providers y mantienen datos mock locales.
+`main.dart` solo arranca la aplicación. Las pantallas no importan el cliente HTTP directamente. Los repositorios seleccionan mock o API mediante providers y exponen contratos de dominio. Pedidos, productos y reportes ya consumen sus controllers; flota se está conectando y pagos, aprobación, cierre, notificaciones e IoT requieren adapters/controllers específicos.
 
 ## Refactor aplicado
 
@@ -75,7 +75,7 @@ features/*/
 ## Pendientes de integración real
 
 - Persistir JWT de forma segura en almacenamiento nativo.
-- Conectar cada ViewModel a las pantallas concretas de operaciones.
+- Conectar los ViewModels restantes a pagos, aprobación, cierre, notificaciones e IoT.
 - Validar los nombres de campos de respuesta contra el backend desplegado.
 - Configurar `API_BASE_URL` por entorno (`http://10.0.2.2:8080/api/v1` es el
   valor por defecto para el emulador Android).

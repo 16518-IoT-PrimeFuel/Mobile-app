@@ -6,96 +6,130 @@ class _DispatchFilters {
   final bool availableOnly;
 }
 
-class FleetPage extends StatefulWidget {
+class FleetPage extends ConsumerStatefulWidget {
   const FleetPage({super.key});
   @override
-  State<FleetPage> createState() => _FleetPageState();
+  ConsumerState<FleetPage> createState() => _FleetPageState();
 }
 
-class _FleetPageState extends State<FleetPage> {
-  final _items = List<_Vehicle>.from(_vehicles);
+class _FleetPageState extends ConsumerState<FleetPage> {
+  final _fallbackItems = List<_Vehicle>.from(_vehicles);
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: SafeArea(
-      child: _DispatchShell(
-        title: 'Gestión de flota',
-        subtitle: '${_items.length} vehículos registrados',
-        onBack: () => context.go('/dispatches'),
-        action: IconButton(
-          tooltip: 'Añadir vehículo',
-          onPressed: _add,
-          icon: const Icon(Icons.add, color: Colors.white, size: 21),
-          style: IconButton.styleFrom(
-            backgroundColor: _orange,
-            fixedSize: const Size(44, 44),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Row(
-              children: [
-                _StatBox(
-                  label: 'DISPONIBLES',
-                  value: '03',
-                  color: _green,
-                  soft: _greenSoft,
-                ),
-                SizedBox(width: 5),
-                _StatBox(
-                  label: 'OCUPADOS',
-                  value: '01',
-                  color: _amber,
-                  soft: _amberSoft,
-                ),
-                SizedBox(width: 5),
-                _StatBox(
-                  label: 'FUERA',
-                  value: '02',
-                  color: _red,
-                  soft: _redSoft,
-                ),
-              ],
+  Widget build(BuildContext context) {
+    final state = ref.watch(dispatchControllerProvider);
+    final items = state.value?.isNotEmpty == true
+        ? state.value!.map(_toViewVehicle).toList()
+        : _fallbackItems;
+    return Scaffold(
+      body: SafeArea(
+        child: _DispatchShell(
+          title: 'Gestión de flota',
+          subtitle: '${items.length} vehículos registrados',
+          onBack: () => context.go('/dispatches'),
+          action: IconButton(
+            tooltip: 'Añadir vehículo',
+            onPressed: _add,
+            icon: const Icon(Icons.add, color: Colors.white, size: 21),
+            style: IconButton.styleFrom(
+              backgroundColor: _orange,
+              fixedSize: const Size(44, 44),
             ),
-            const SizedBox(height: 10),
-            for (final item in _items)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 7),
-                child: _FleetCard(
-                  vehicle: item,
-                  onEdit: () => _edit(item),
-                  onDelete: () => _delete(item),
-                ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                children: [
+                  _StatBox(
+                    label: 'DISPONIBLES',
+                    value: '03',
+                    color: _green,
+                    soft: _greenSoft,
+                  ),
+                  SizedBox(width: 5),
+                  _StatBox(
+                    label: 'OCUPADOS',
+                    value: '01',
+                    color: _amber,
+                    soft: _amberSoft,
+                  ),
+                  SizedBox(width: 5),
+                  _StatBox(
+                    label: 'FUERA',
+                    value: '02',
+                    color: _red,
+                    soft: _redSoft,
+                  ),
+                ],
               ),
-          ],
+              const SizedBox(height: 10),
+              for (final item in items)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 7),
+                  child: _FleetCard(
+                    vehicle: item,
+                    onEdit: () => _edit(item),
+                    onDelete: () => _delete(item),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
-    ),
-    bottomNavigationBar: const FullTankBottomNav(active: 2),
-  );
+      bottomNavigationBar: const FullTankBottomNav(active: 2),
+    );
+  }
 
   Future<void> _add() async {
-    final changed = await context.push('/dispatches/fleet/new');
-    if (changed == true && mounted)
-      setState(
-        () => _items.add(
-          const _Vehicle(
-            'TK-9908',
-            'Freightliner M2 106',
-            'Cisterna 20k',
-            '20.000',
-            'Sin agenda',
-            'DISPONIBLE',
-          ),
+    final result = await context.push<_VehicleFormResult>(
+      '/dispatches/fleet/new',
+    );
+    if (result == null || !mounted) return;
+    await ref
+        .read(dispatchControllerProvider.notifier)
+        .createVehicle(result.plate, result.brand);
+    setState(
+      () => _fallbackItems.add(
+        _Vehicle(
+          result.plate,
+          result.brand,
+          result.type,
+          _formatCapacity(result.capacity),
+          'Sin agenda',
+          'DISPONIBLE',
         ),
-      );
+      ),
+    );
   }
 
   Future<void> _edit(_Vehicle vehicle) async {
-    final changed = await context.push(
+    final result = await context.push<_VehicleFormResult>(
       '/dispatches/fleet/new?edit=${vehicle.plate}',
     );
-    if (changed == true && mounted) setState(() {});
+    if (result == null || !mounted) return;
+    await ref
+        .read(dispatchControllerProvider.notifier)
+        .updateVehicle(
+          vehicle.id,
+          plate: result.plate,
+          brand: result.brand,
+          model: result.model,
+          capacity: result.capacity,
+        );
+    setState(() {
+      final index = _fallbackItems.indexOf(vehicle);
+      if (index >= 0) {
+        _fallbackItems[index] = _Vehicle(
+          result.plate,
+          result.brand,
+          result.type,
+          _formatCapacity(result.capacity),
+          vehicle.next,
+          vehicle.status,
+          vehicle.id,
+        );
+      }
+    });
   }
 
   Future<void> _delete(_Vehicle vehicle) async {
@@ -103,8 +137,36 @@ class _FleetPageState extends State<FleetPage> {
       context: context,
       builder: (_) => _DeleteDialog(vehicle: vehicle),
     );
-    if (ok == true && mounted) setState(() => _items.remove(vehicle));
+    if (ok != true || !mounted) return;
+    if (vehicle.id > 0) {
+      await ref
+          .read(dispatchControllerProvider.notifier)
+          .deleteVehicle(vehicle.id);
+    }
+    setState(() => _fallbackItems.remove(vehicle));
   }
+
+  _Vehicle _toViewVehicle(Vehicle vehicle) => _Vehicle(
+    vehicle.plate,
+    vehicle.brand,
+    vehicle.model.isEmpty ? vehicle.type : vehicle.model,
+    _formatCapacity(vehicle.capacity),
+    'Sin agenda',
+    _vehicleStatus(vehicle.status),
+    vehicle.id,
+  );
+
+  String _formatCapacity(double value) => value == value.roundToDouble()
+      ? value.toInt().toString()
+      : value.toString();
+
+  String _vehicleStatus(String value) => switch (value.toUpperCase()) {
+    'AVAILABLE' => 'DISPONIBLE',
+    'IN_DELIVERY' || 'IN_DISPATCH' => 'EN DESPACHO',
+    'MAINTENANCE' => 'MANTENIMIENTO',
+    'OUT_OF_SERVICE' => 'FUERA',
+    _ => value,
+  };
 }
 
 class _StatBox extends StatelessWidget {
