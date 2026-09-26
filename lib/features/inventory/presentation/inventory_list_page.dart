@@ -142,14 +142,14 @@ String _liters(int value) => value.toString().replaceAllMapped(
   (match) => '${match[1]},',
 );
 
-class InventoryPage extends StatefulWidget {
+class InventoryPage extends ConsumerStatefulWidget {
   const InventoryPage({super.key});
 
   @override
-  State<InventoryPage> createState() => _InventoryPageState();
+  ConsumerState<InventoryPage> createState() => _InventoryPageState();
 }
 
-class _InventoryPageState extends State<InventoryPage> {
+class _InventoryPageState extends ConsumerState<InventoryPage> {
   String _filter = 'all';
 
   @override
@@ -261,7 +261,223 @@ class _InventoryPageState extends State<InventoryPage> {
             child: _TankRow(tank: tank),
           ),
         ),
+        const SizedBox(height: 18),
+        _ProductSection(
+          state: ref.watch(inventoryControllerProvider),
+          onRetry: () => ref.read(inventoryControllerProvider.notifier).load(),
+          onEdit: _editProduct,
+        ),
       ],
     );
   }
+
+  Future<void> _editProduct(FuelProduct product) async {
+    final name = TextEditingController(text: product.name);
+    final price = TextEditingController(text: product.price.toString());
+    final stock = TextEditingController(
+      text: product.availableStock.toString(),
+    );
+    final formKey = GlobalKey<FormState>();
+    final edited = await showDialog<FuelProduct>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Editar producto'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: name,
+                decoration: const InputDecoration(labelText: 'Nombre'),
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? 'Este campo es obligatorio'
+                    : null,
+              ),
+              TextFormField(
+                controller: price,
+                decoration: const InputDecoration(
+                  labelText: 'Precio por unidad',
+                ),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                validator: (value) => double.tryParse(value ?? '') == null
+                    ? 'Ingresa un número válido'
+                    : null,
+              ),
+              TextFormField(
+                controller: stock,
+                decoration: const InputDecoration(
+                  labelText: 'Stock disponible',
+                ),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                validator: (value) => double.tryParse(value ?? '') == null
+                    ? 'Ingresa un número válido'
+                    : null,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (!(formKey.currentState?.validate() ?? false)) return;
+              Navigator.pop(
+                context,
+                FuelProduct(
+                  id: product.id,
+                  name: name.text.trim(),
+                  type: product.type,
+                  price: double.parse(price.text),
+                  availability: product.availability,
+                  unit: product.unit,
+                  availableStock: double.parse(stock.text),
+                  capacity: product.capacity,
+                  providerId: product.providerId,
+                  active: product.active,
+                ),
+              );
+            },
+            child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
+    name.dispose();
+    price.dispose();
+    stock.dispose();
+    if (edited != null && mounted) {
+      await ref.read(inventoryControllerProvider.notifier).save(edited);
+    }
+  }
+}
+
+class _ProductSection extends StatelessWidget {
+  const _ProductSection({
+    required this.state,
+    required this.onRetry,
+    required this.onEdit,
+  });
+
+  final AsyncValue<List<FuelProduct>> state;
+  final VoidCallback onRetry;
+  final ValueChanged<FuelProduct> onEdit;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Productos',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w800,
+          color: Color(0xFF1A202C),
+        ),
+      ),
+      const SizedBox(height: 8),
+      state.when(
+        loading: () => const _ProductState(
+          message: 'Cargando productos…',
+          icon: Icons.hourglass_empty,
+        ),
+        error: (error, _) => _ProductState(
+          message: 'No se pudieron cargar los productos',
+          icon: Icons.error_outline,
+          action: TextButton(
+            onPressed: onRetry,
+            child: const Text('Reintentar'),
+          ),
+        ),
+        data: (products) => products.isEmpty
+            ? const _ProductState(
+                message: 'No hay productos registrados',
+                icon: Icons.inventory_2_outlined,
+              )
+            : Column(
+                children: products
+                    .map(
+                      (product) =>
+                          _ProductTile(product: product, onEdit: onEdit),
+                    )
+                    .toList(),
+              ),
+      ),
+    ],
+  );
+}
+
+class _ProductState extends StatelessWidget {
+  const _ProductState({required this.message, required this.icon, this.action});
+
+  final String message;
+  final IconData icon;
+  final Widget? action;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: const Color(0xFFF8FAFC),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: const Color(0xFFE2E8F0)),
+    ),
+    child: Row(
+      children: [
+        Icon(icon, color: const Color(0xFF64748B)),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            message,
+            style: const TextStyle(color: Color(0xFF475569)),
+          ),
+        ),
+        if (action != null) action!,
+      ],
+    ),
+  );
+}
+
+class _ProductTile extends StatelessWidget {
+  const _ProductTile({required this.product, required this.onEdit});
+
+  final FuelProduct product;
+  final ValueChanged<FuelProduct> onEdit;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: 8),
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      side: const BorderSide(color: Color(0xFFE2E8F0)),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: ListTile(
+      leading: const CircleAvatar(
+        backgroundColor: _amberSoft,
+        child: Icon(Icons.water_drop_outlined, color: _amber),
+      ),
+      title: Text(
+        product.name,
+        style: const TextStyle(fontWeight: FontWeight.w700),
+      ),
+      subtitle: Text(
+        '${product.availableStock.toStringAsFixed(0)} ${product.unit} · '
+        '${product.price.toStringAsFixed(2)} / ${product.unit}',
+      ),
+      trailing: IconButton(
+        tooltip: 'Editar ${product.name}',
+        onPressed: () => onEdit(product),
+        icon: const Icon(Icons.edit_outlined),
+      ),
+    ),
+  );
 }

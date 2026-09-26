@@ -25,4 +25,9 @@ class InventoryController extends StateNotifier<AsyncValue<List<FuelProduct>>> {
     await _repository.delete(id);
     await load();
   }
+
+  Future<void> save(FuelProduct product) async {
+    await _repository.save(product);
+    await load();
+  }
 }

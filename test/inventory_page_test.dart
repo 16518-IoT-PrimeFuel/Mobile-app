@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:mobile_app/features/inventory/application/inventory_providers.dart';
+import 'package:mobile_app/features/inventory/data/mock_inventory_repository.dart';
 import 'package:mobile_app/features/inventory/presentation/inventory_page.dart';
 
 void main() {
   testWidgets('renders inventory data and filters by status', (tester) async {
-    await tester.pumpWidget(const MaterialApp(home: InventoryPage()));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          inventoryRepositoryProvider.overrideWithValue(
+            MockInventoryRepository(),
+          ),
+        ],
+        child: const MaterialApp(home: InventoryPage()),
+      ),
+    );
     await tester.pump();
 
     expect(find.text('Inventario'), findsOneWidget);
@@ -33,7 +45,16 @@ void main() {
       ],
     );
 
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          inventoryRepositoryProvider.overrideWithValue(
+            MockInventoryRepository(),
+          ),
+        ],
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     await tester.pumpAndSettle();
     final tankRow = find.byKey(const ValueKey('tank-A-102'));
     await tester.ensureVisible(tankRow);
@@ -46,6 +67,29 @@ void main() {
     );
     expect(find.text('A-102'), findsOneWidget);
     expect(find.text('TELEMETRÍA EN TIEMPO REAL'), findsOneWidget);
+  });
+
+  testWidgets('renders repository products and opens the edit form', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          inventoryRepositoryProvider.overrideWithValue(
+            MockInventoryRepository(),
+          ),
+        ],
+        child: const MaterialApp(home: InventoryPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.byTooltip('Editar Diesel B5'));
+    await tester.tap(find.byTooltip('Editar Diesel B5'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Editar producto'), findsOneWidget);
+    expect(find.text('Guardar'), findsOneWidget);
   });
 
   testWidgets('alerts expose restock navigation', (tester) async {

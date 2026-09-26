@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../application/inventory_controller.dart';
+import '../domain/fuel_product.dart';
 import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 part 'inventory_list_page.dart';
 part 'tank_detail_and_alerts_pages.dart';
