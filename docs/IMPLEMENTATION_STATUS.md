@@ -17,12 +17,12 @@
 | US-10 | Pedidos pendientes | API provider, provider workflow pending |
 | US-43 | Detalle de pedido | API-backed order detail |
 | US-46 | Inventario y editar producto | API provider, product UI integrated; tanks/IoT mock |
-| US-08 | Registrar pago | Mock |
-| US-11 | Aprobar pedido | Mock |
-| US-12 | Marcar como despachado | Mock |
+| US-08 | Registrar pago | API create/complete integrated |
+| US-11 | Aprobar pedido | API accept integrated |
+| US-12 | Marcar como despachado | API dispatch integrated |
 | US-13 | Cerrar pedido | Mock |
 | US-14 | Reportes de ventas | API provider, UI integrada |
-| US-42 | Rechazar pedido | Mock |
+| US-42 | Rechazar pedido | API reject integrated |
 | EP09 | Perfil de usuario | Mock |
 | EP10 | Soporte y contacto | Estático/mock |
 | EP11 | Búsqueda y filtros | Mock |
