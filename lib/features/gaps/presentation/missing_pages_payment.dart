@@ -6,10 +6,12 @@ class PaymentPage extends StatefulWidget {
   const PaymentPage({
     this.orderId = 'FT-88421',
     this.initialState = PaymentState.checkout,
+    this.api,
     super.key,
   });
   final String orderId;
   final PaymentState initialState;
+  final FullTankApi? api;
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -18,6 +20,44 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   late PaymentState _state = widget.initialState;
   String _method = 'Tarjeta corporativa';
+
+  Future<void> _submitPayment() async {
+    setState(() => _state = PaymentState.processing);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _processPayment();
+    });
+  }
+
+  Future<void> _processPayment() async {
+    try {
+      final orderId = int.tryParse(widget.orderId);
+      if (orderId == null) throw const FormatException('Invalid order id');
+      final api = widget.api ?? FullTankApi(ApiClient());
+      final created = await api.createPayment({
+        'orderId': orderId,
+        'companyId': 1,
+        'amount': 42600,
+        'paymentMethod': switch (_method) {
+          'Transferencia bancaria' => 'BANK_TRANSFER',
+          _ => 'CREDIT_CARD',
+        },
+      });
+      if (created is! Map)
+        throw const FormatException('Invalid payment response');
+      final paymentId = _intValue(created['id'] ?? created['paymentId']);
+      if (paymentId == null) throw const FormatException('Missing payment id');
+      await api.completePayment(
+        paymentId,
+        'MOBILE-${DateTime.now().millisecondsSinceEpoch}',
+      );
+      if (mounted) setState(() => _state = PaymentState.success);
+    } catch (_) {
+      if (mounted) setState(() => _state = PaymentState.error);
+    }
+  }
+
+  int? _intValue(Object? value) =>
+      value is num ? value.toInt() : int.tryParse('$value');
 
   @override
   Widget build(BuildContext context) => MissingPageShell(
@@ -72,10 +112,7 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
       ),
       const SizedBox(height: 14),
-      _PrimaryButton(
-        label: 'Pagar S/ 42,600',
-        onPressed: () => setState(() => _state = PaymentState.processing),
-      ),
+      _PrimaryButton(label: 'Pagar S/ 42,600', onPressed: _submitPayment),
       TextButton(
         onPressed: () => context.push('/orders/FT-88421'),
         child: const Text('Revisar pedido'),
@@ -166,11 +203,6 @@ class _PaymentProgress extends StatelessWidget {
         const Text(
           'No cierres esta pantalla.',
           style: TextStyle(color: _muted),
-        ),
-        const SizedBox(height: 18),
-        _PrimaryButton(
-          label: 'Simular resultado exitoso',
-          onPressed: () => context.go('/orders/FT-88421/payment?state=success'),
         ),
       ],
     ),
