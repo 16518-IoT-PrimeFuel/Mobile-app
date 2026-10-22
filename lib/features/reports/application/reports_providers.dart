@@ -12,5 +12,12 @@ const _useMockReports = bool.fromEnvironment(
 
 final reportsRepositoryProvider = Provider<ReportsRepository>((ref) {
   if (_useMockReports) return MockReportsRepository();
-  return ApiReportsRepository(ref.watch(fullTankApiProvider));
+  final session = ref.watch(authControllerProvider).session;
+  final isProvider = session?.roles.contains('ROLE_PROVIDER') ?? false;
+  return ApiReportsRepository(
+    ref.watch(fullTankApiProvider),
+    companyId: session?.companyId,
+    providerId: session?.providerId,
+    providerMode: isProvider,
+  );
 });

@@ -7,7 +7,7 @@ class ApiClient {
           baseUrl ??
           const String.fromEnvironment(
             'API_BASE_URL',
-            defaultValue: 'http://10.0.2.2:8080/api/v1',
+            defaultValue: 'http://10.0.2.2:8080/api',
           );
 
   final String baseUrl;
@@ -75,7 +75,7 @@ class ApiClient {
     }
   }
 
-  String get _apiRoot => baseUrl.replaceFirst(RegExp(r'/api/v1/?$'), '');
+  String get _apiRoot => baseUrl.replaceFirst(RegExp(r'/api(?:/v1)?/?$'), '');
 }
 
 class ApiException implements Exception {

@@ -13,7 +13,11 @@ const _useMockDispatch = bool.fromEnvironment(
 
 final dispatchRepositoryProvider = Provider<DispatchRepository>((ref) {
   if (_useMockDispatch) return MockDispatchRepository();
-  return ApiDispatchRepository(ref.watch(fullTankApiProvider));
+  final session = ref.watch(authControllerProvider).session;
+  return ApiDispatchRepository(
+    ref.watch(fullTankApiProvider),
+    providerId: session?.providerId,
+  );
 });
 
 final dispatchDriversProvider = FutureProvider<List<Driver>>(

@@ -6,7 +6,7 @@ class ApiReportsRepository implements ReportsRepository {
   const ApiReportsRepository(
     this.api, {
     this.providerId,
-    this.companyId = 1,
+    this.companyId,
     this.providerMode = false,
   });
 
@@ -59,9 +59,14 @@ class ApiReportsRepository implements ReportsRepository {
   }
 
   @override
-  Future<String> exportCsv() => providerMode
-      ? api.exportReport(providerId: providerId)
-      : api.exportReport(companyId: companyId);
+  Future<String> exportCsv() {
+    final id = providerMode ? providerId : companyId;
+    if (id == null)
+      throw StateError('Authenticated business account is required');
+    return providerMode
+        ? api.exportReport(providerId: id)
+        : api.exportReport(companyId: id);
+  }
 
   double _number(Object? value) =>
       value is num ? value.toDouble() : double.tryParse('$value') ?? 0;

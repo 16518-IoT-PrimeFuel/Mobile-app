@@ -43,24 +43,22 @@ class FullTankApi {
   Future<dynamic> confirmOrder(int id) =>
       client.post('/fuel-orders/$id/confirm');
   Future<dynamic> cancelOrder(int id) => client.post('/fuel-orders/$id/cancel');
-  Future<dynamic> fuelRequests({int? buyerCompanyId, int? providerId}) {
-    final query = <String, String>{
-      if (buyerCompanyId != null) 'buyerCompanyId': '$buyerCompanyId',
-      if (providerId != null) 'providerId': '$providerId',
-    };
-    final suffix = query.isEmpty
-        ? ''
-        : '?${query.entries.map((entry) => '${entry.key}=${entry.value}').join('&')}';
-    return client.get('/fuel-requests$suffix');
-  }
+  Future<dynamic> fuelRequests({int? buyerCompanyId, int? providerId}) =>
+      client.get(
+        providerId == null
+            ? '/replenishment-requests'
+            : '/replenishment-requests/inbox',
+      );
 
   Future<dynamic> createFuelRequest(Map<String, dynamic> body) =>
-      client.post('/fuel-requests', body);
-  Future<dynamic> fuelRequest(int id) => client.get('/fuel-requests/$id');
+      client.post('/replenishment-requests', body);
+  Future<dynamic> fuelRequest(int id) => Future.error(
+    UnsupportedError('Replenishment request detail is not available'),
+  );
   Future<dynamic> acceptFuelRequest(int id) =>
-      client.post('/fuel-requests/$id/accept');
+      client.post('/replenishment-requests/$id/accept');
   Future<dynamic> rejectFuelRequest(int id, String reason) =>
-      client.post('/fuel-requests/$id/reject', {'reason': reason});
+      client.post('/replenishment-requests/$id/reject', {'reason': reason});
 
   Future<dynamic> fuelProducts({int? providerId}) => client.get(
     providerId == null
@@ -83,9 +81,9 @@ class FullTankApi {
   Future<dynamic> updateEquipment(int id, Map<String, dynamic> body) =>
       client.post('/equipment/$id/update', body);
   Future<dynamic> favoriteProvider(int equipmentId, int providerId) =>
-      client.post('/equipment/$equipmentId/favorite-provider', {
-        'providerId': providerId,
-      });
+      Future.error(
+        UnsupportedError('Equipment favorite-provider is not supported'),
+      );
 
   Future<dynamic> payments({required int companyId}) =>
       client.get('/payments/company/$companyId');
@@ -100,74 +98,86 @@ class FullTankApi {
   Future<dynamic> refundPayment(int id) => client.post('/payments/$id/refund');
 
   Future<dynamic> deliveries({required int providerId}) =>
-      client.get('/deliveries/provider/$providerId');
+      client.get('/deliveries');
   Future<dynamic> createDelivery(Map<String, dynamic> body) =>
       client.post('/deliveries', body);
   Future<dynamic> dispatchDelivery(int id) =>
-      client.post('/deliveries/$id/dispatch');
-  Future<dynamic> completeDelivery(int id) =>
-      client.post('/deliveries/$id/complete');
-  Future<dynamic> deliveryForOrder(int orderId) =>
-      client.get('/deliveries/order/$orderId');
+      client.post('/deliveries/$id/start');
+  Future<dynamic> startDelivery(int id) => client.post('/deliveries/$id/start');
+  Future<dynamic> completeDelivery(int id, {double? deliveredVolume}) =>
+      deliveredVolume == null
+      ? Future.error(ArgumentError('deliveredVolume is required'))
+      : client.post('/deliveries/$id/complete', {
+          'deliveredVolume': deliveredVolume,
+        });
+  Future<dynamic> deliveryForOrder(int orderId) => Future.error(
+    UnsupportedError('Delivery lookup by order is not supported'),
+  );
   Future<dynamic> failDelivery(int id, String reason) =>
       client.post('/deliveries/$id/fail', {'reason': reason});
-  Future<dynamic> vehicles({required int providerId}) =>
-      client.get('/vehicles?providerId=$providerId');
-  Future<dynamic> vehicle(int id) => client.get('/vehicles/$id');
+  Future<dynamic> vehicles() => client.get('/tankers');
+  Future<dynamic> vehicle(int id) => client.get('/tankers/$id');
   Future<dynamic> createVehicle(Map<String, dynamic> body) =>
-      client.post('/vehicles', body);
+      client.post('/tankers', body);
   Future<dynamic> updateVehicle(int id, Map<String, dynamic> body) =>
-      client.put('/vehicles/$id', body);
-  Future<void> deleteVehicle(int id) => client.delete('/vehicles/$id');
-  Future<dynamic> drivers({int? providerId}) => client.get(
-    providerId == null ? '/drivers' : '/drivers?providerId=$providerId',
-  );
+      client.put('/tankers/$id', body);
+  Future<dynamic> deactivateVehicle(int id) =>
+      client.post('/tankers/$id/deactivate');
+  Future<void> deleteVehicle(int id) async {
+    await deactivateVehicle(id);
+  }
+
+  Future<dynamic> drivers() => client.get('/drivers');
   Future<dynamic> driver(int id) => client.get('/drivers/$id');
   Future<dynamic> createDriver(Map<String, dynamic> body) =>
       client.post('/drivers', body);
   Future<dynamic> updateDriver(int id, Map<String, dynamic> body) =>
       client.put('/drivers/$id', body);
-  Future<void> deleteDriver(int id) => client.delete('/drivers/$id');
-  Future<dynamic> providerRatings({int? companyId, int? providerId}) => client
-      .get('/provider-ratings?companyId=$companyId&providerId=$providerId');
-  Future<dynamic> createProviderRating(Map<String, dynamic> body) =>
-      client.post('/provider-ratings', body);
-  Future<dynamic> updateProviderRating(int id, Map<String, dynamic> body) =>
-      client.put('/provider-ratings/$id', body);
+  Future<dynamic> deactivateDriver(int id) =>
+      client.post('/drivers/$id/deactivate');
+  Future<void> deleteDriver(int id) async {
+    await deactivateDriver(id);
+  }
 
-  Future<dynamic> notifications(int userId) =>
-      client.get('/notifications/user/$userId');
-  Future<dynamic> unreadNotifications(int userId) =>
-      client.get('/notifications/user/$userId/unread');
-  Future<dynamic> createNotification(Map<String, dynamic> body) =>
-      client.post('/notifications', body);
+  Future<dynamic> providerRatings({int? companyId, int? providerId}) =>
+      Future.error(UnsupportedError('Provider ratings are not supported'));
+  Future<dynamic> createProviderRating(Map<String, dynamic> body) =>
+      Future.error(
+        UnsupportedError('Provider rating mutations are not supported'),
+      );
+  Future<dynamic> updateProviderRating(int id, Map<String, dynamic> body) =>
+      Future.error(
+        UnsupportedError('Provider rating mutations are not supported'),
+      );
+
+  Future<dynamic> notifications([int? userId]) =>
+      client.get('/me/notifications');
+  Future<dynamic> unreadNotifications([int? userId]) =>
+      client.get('/me/notifications/unread');
+  Future<dynamic> createNotification(Map<String, dynamic> body) => Future.error(
+    UnsupportedError('Generic notification creation is not supported'),
+  );
   Future<dynamic> markNotificationRead(int id) =>
-      client.post('/notifications/$id/mark-as-read');
+      client.post('/me/notifications/$id/read');
   Future<dynamic> analyticsForBuyer(int companyId) =>
       client.get('/analytics/buyers/$companyId');
   Future<dynamic> analyticsForProvider(int providerId) =>
       client.get('/analytics/providers/$providerId');
 
-  Future<dynamic> replenishmentRequests(int companyId) =>
-      client.getV2('/api/v2/buyer-companies/$companyId/replenishment-requests');
-  Future<dynamic> createReplenishmentRequest(
-    int companyId,
-    Map<String, dynamic> body,
-  ) => client.postV2(
-    '/api/v2/buyer-companies/$companyId/replenishment-requests',
-    body,
-  );
+  Future<dynamic> replenishmentRequests([int? companyId]) =>
+      client.get('/replenishment-requests');
+  Future<dynamic> createReplenishmentRequest(Map<String, dynamic> body) =>
+      client.post('/replenishment-requests', body);
   Future<dynamic> tracking(int deliveryId) =>
-      client.getV2('/api/v2/deliveries/$deliveryId/tracking');
+      client.get('/deliveries/$deliveryId/tracking');
   Future<dynamic> latestTracking(int deliveryId) =>
-      client.getV2('/api/v2/deliveries/$deliveryId/tracking/latest');
+      client.get('/deliveries/$deliveryId/tracking');
   Future<dynamic> deliveryTimeline(int deliveryId) =>
-      client.getV2('/api/v2/deliveries/$deliveryId/timeline');
-  Future<dynamic> notificationsV2(int userId) =>
-      client.getV2('/api/v2/users/$userId/notifications');
+      client.get('/deliveries/$deliveryId/timeline');
+  Future<dynamic> notificationsV2([int? userId]) =>
+      client.get('/me/notifications');
   Future<dynamic> eligibleFleet({int? providerId}) {
-    final suffix = providerId == null ? '' : '?providerId=$providerId';
-    return client.getV2('/api/v2/fleet/eligible$suffix');
+    return client.get('/tankers/eligible');
   }
 
   Future<dynamic> tanks(int companyId, int siteId) =>

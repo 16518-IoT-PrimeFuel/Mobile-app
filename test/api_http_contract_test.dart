@@ -7,8 +7,12 @@ import 'package:mobile_app/data/api_client.dart';
 import 'package:mobile_app/data/fulltank_api.dart';
 
 void main() {
+  test('default API base URL uses the backend namespace', () {
+    expect(ApiClient().baseUrl, 'http://10.0.2.2:8080/api');
+  });
+
   test(
-    'mobile request sends backend path, bearer token, and JSON body',
+    'replenishment request uses backend route and organization-scoped fields',
     () async {
       final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
       final requestSeen =
@@ -30,34 +34,34 @@ void main() {
 
       try {
         final api = FullTankApi(
-          ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api/v1')
+          ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api')
             ..token = 'test-jwt',
         );
-        final result = await api.createFuelRequest({
-          'buyerCompanyId': 17,
+        final result = await api.createReplenishmentRequest({
+          'customerAccountId': 17,
+          'tankId': 'tank-4',
           'providerId': 9,
           'fuelProductId': 8,
-          'equipmentId': 6,
           'quantity': 120,
           'deliveryAddress': 'Av. Central 100',
           'deliveryDate': '2026-09-12',
-          'source': 'MOBILE',
+          'source': 'APP',
         });
         final request = await requestSeen.future;
 
         expect(request.$1, 'POST');
-        expect(request.$2, '/api/v1/fuel-requests');
+        expect(request.$2, '/api/replenishment-requests');
         expect(request.$3, 'Bearer test-jwt');
         expect(request.$4, 'application/json');
         expect(jsonDecode(request.$5), {
-          'buyerCompanyId': 17,
+          'customerAccountId': 17,
+          'tankId': 'tank-4',
           'providerId': 9,
           'fuelProductId': 8,
-          'equipmentId': 6,
           'quantity': 120,
           'deliveryAddress': 'Av. Central 100',
           'deliveryDate': '2026-09-12',
-          'source': 'MOBILE',
+          'source': 'APP',
         });
         expect(result, {'id': 42});
       } finally {
@@ -79,7 +83,7 @@ void main() {
 
     try {
       final api = FullTankApi(
-        ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api/v1'),
+        ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api'),
       );
       expect(await api.exportReport(companyId: 17), 'id,name\n1,Tank\n');
       expect(await requestSeen.future, '/api/v2/reports/buyers/17/export');
@@ -87,4 +91,59 @@ void main() {
       await server.close(force: true);
     }
   });
+
+  test(
+    'current-user notifications and delivery lifecycle use backend routes',
+    () async {
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      final seen = <(String, String, String)>[];
+      server.listen((request) async {
+        final body = await utf8.decoder.bind(request).join();
+        seen.add((request.method, request.uri.path, body));
+        request.response
+          ..statusCode = HttpStatus.noContent
+          ..close();
+      });
+
+      try {
+        final api = FullTankApi(
+          ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api'),
+        );
+        await api.notifications();
+        await api.markNotificationRead(6);
+        await api.startDelivery(8);
+        await api.completeDelivery(8, deliveredVolume: 100);
+        await api.failDelivery(9, 'Road closed');
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        expect(seen, [
+          ('GET', '/api/me/notifications', ''),
+          ('POST', '/api/me/notifications/6/read', ''),
+          ('POST', '/api/deliveries/8/start', ''),
+          ('POST', '/api/deliveries/8/complete', '{"deliveredVolume":100.0}'),
+          ('POST', '/api/deliveries/9/fail', '{"reason":"Road closed"}'),
+        ]);
+      } finally {
+        await server.close(force: true);
+      }
+    },
+  );
+
+  test(
+    'unsupported backend mutations do not issue speculative requests',
+    () async {
+      final api = FullTankApi(ApiClient(baseUrl: 'http://127.0.0.1:1/api'));
+      await expectLater(
+        api.createProviderRating({'rating': 5}),
+        throwsA(isA<UnsupportedError>()),
+      );
+      await expectLater(
+        api.deliveryForOrder(42),
+        throwsA(isA<UnsupportedError>()),
+      );
+      await expectLater(
+        api.createNotification({'message': 'hello'}),
+        throwsA(isA<UnsupportedError>()),
+      );
+    },
+  );
 }

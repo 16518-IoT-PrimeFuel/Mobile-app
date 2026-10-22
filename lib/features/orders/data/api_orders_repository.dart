@@ -6,7 +6,7 @@ import '../domain/orders_repository.dart';
 class ApiOrdersRepository implements OrdersRepository {
   const ApiOrdersRepository(
     this.api, {
-    this.companyId = 1,
+    this.companyId,
     this.providerId,
     this.providerMode = false,
   });
@@ -74,9 +74,9 @@ class ApiOrdersRepository implements OrdersRepository {
 
   @override
   Future<Order> create({
-    required int fuelProductId,
-    required int equipmentId,
-    required int providerId,
+    required int? fuelProductId,
+    required String? tankId,
+    required int? providerId,
     required String fuel,
     required double quantity,
     required String unit,
@@ -86,16 +86,18 @@ class ApiOrdersRepository implements OrdersRepository {
     final buyerId = companyId;
     if (buyerId == null)
       throw StateError('Authenticated buyer company is required');
+    if (fuelProductId == null || tankId == null || providerId == null) {
+      throw StateError('Select a fuel product, tank, and provider first');
+    }
     final raw = await api.createFuelRequest({
-      'buyerCompanyId': buyerId,
+      'customerAccountId': buyerId,
+      'tankId': tankId,
       'providerId': providerId,
       'fuelProductId': fuelProductId,
-      'equipmentId': equipmentId,
       'quantity': quantity,
       'unit': unit,
       'deliveryAddress': deliveryAddress,
       'deliveryDate': deliveryDate.toIso8601String().substring(0, 10),
-      'source': 'MOBILE',
     });
     if (raw is! Map)
       throw const FormatException('Invalid fuel request response');

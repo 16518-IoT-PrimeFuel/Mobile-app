@@ -4,15 +4,13 @@ import '../domain/driver.dart';
 import '../domain/vehicle.dart';
 
 class ApiDispatchRepository implements DispatchRepository {
-  const ApiDispatchRepository(this.api, {this.providerId = 1});
+  const ApiDispatchRepository(this.api, {this.providerId});
   final FullTankApi api;
   final int? providerId;
 
   @override
   Future<List<Vehicle>> vehicles() async {
-    final id = providerId;
-    if (id == null) return const [];
-    final raw = await api.vehicles(providerId: id);
+    final raw = await api.vehicles();
     return raw is List ? raw.whereType<Map>().map(_map).toList() : const [];
   }
 
@@ -23,10 +21,7 @@ class ApiDispatchRepository implements DispatchRepository {
     required String model,
     required double capacity,
   }) async {
-    final id = providerId;
-    if (id == null) throw StateError('Authenticated provider is required');
     final raw = await api.createVehicle({
-      'providerId': id,
       'licensePlate': plate,
       'brand': brand,
       'model': model,
@@ -46,11 +41,7 @@ class ApiDispatchRepository implements DispatchRepository {
     required String model,
     required double capacity,
   }) async {
-    final provider = providerId;
-    if (provider == null)
-      throw StateError('Authenticated provider is required');
     final raw = await api.updateVehicle(id, {
-      'providerId': provider,
       'licensePlate': plate,
       'brand': brand,
       'model': model,
@@ -63,13 +54,13 @@ class ApiDispatchRepository implements DispatchRepository {
   }
 
   @override
-  Future<void> deleteVehicle(int id) => api.deleteVehicle(id);
+  Future<void> deleteVehicle(int id) async {
+    await api.deactivateVehicle(id);
+  }
 
   @override
   Future<List<Driver>> drivers() async {
-    final id = providerId;
-    if (id == null) return const [];
-    final raw = await api.drivers(providerId: id);
+    final raw = await api.drivers();
     return raw is List
         ? raw.whereType<Map>().map(_mapDriver).toList()
         : const [];
@@ -77,46 +68,46 @@ class ApiDispatchRepository implements DispatchRepository {
 
   @override
   Future<Driver> createDriver(Driver driver) async {
-    final id = providerId;
-    if (id == null) throw StateError('Authenticated provider is required');
-    final raw = await api.createDriver(_driverBody(driver, id));
+    final raw = await api.createDriver(_driverBody(driver));
     if (raw is! Map) throw const FormatException('Invalid driver response');
     return _mapDriver(raw);
   }
 
   @override
   Future<Driver> updateDriver(Driver driver) async {
-    final id = providerId;
-    if (id == null) throw StateError('Authenticated provider is required');
-    final raw = await api.updateDriver(driver.id, _driverBody(driver, id));
+    final raw = await api.updateDriver(driver.id, _driverBody(driver));
     if (raw is! Map) throw const FormatException('Invalid driver response');
     return _mapDriver(raw);
   }
 
   @override
-  Future<void> deleteDriver(int id) => api.deleteDriver(id);
+  Future<void> deleteDriver(int id) async {
+    await api.deactivateDriver(id);
+  }
 
   @override
   Future<void> createDelivery({
     required int orderId,
     required int driverId,
-    required int vehicleId,
+    required int tankerId,
     required DateTime scheduledDate,
+    required String commandId,
+    required DateTime windowStart,
+    required DateTime windowEnd,
   }) async {
-    final id = providerId;
-    if (id == null) throw StateError('Authenticated provider is required');
     await api.createDelivery({
       'orderId': orderId,
-      'providerId': id,
+      'commandId': commandId,
       'driverId': driverId,
-      'vehicleId': vehicleId,
+      'tankerId': tankerId,
+      'windowStart': windowStart.toIso8601String(),
+      'windowEnd': windowEnd.toIso8601String(),
       'scheduledDate': scheduledDate.toIso8601String().substring(0, 10),
       'notes': '',
     });
   }
 
-  Map<String, dynamic> _driverBody(Driver driver, int id) => {
-    'providerId': id,
+  Map<String, dynamic> _driverBody(Driver driver) => {
     'firstName': driver.firstName,
     'lastName': driver.lastName,
     'licenseNumber': driver.licenseNumber,

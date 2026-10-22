@@ -24,7 +24,10 @@ abstract interface class DispatchRepository {
   Future<void> createDelivery({
     required int orderId,
     required int driverId,
-    required int vehicleId,
+    required int tankerId,
     required DateTime scheduledDate,
+    required String commandId,
+    required DateTime windowStart,
+    required DateTime windowEnd,
   });
 }

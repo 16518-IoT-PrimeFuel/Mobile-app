@@ -26,7 +26,9 @@ void main() {
     ];
 
     for (final screen in screens) {
-      await tester.pumpWidget(MaterialApp(home: screen.widget));
+      await tester.pumpWidget(
+        ProviderScope(child: MaterialApp(home: screen.widget)),
+      );
       await tester.pump();
       expect(find.text(screen.title), findsOneWidget);
     }

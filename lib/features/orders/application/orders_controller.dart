@@ -21,12 +21,18 @@ class OrdersController extends StateNotifier<AsyncValue<List<Order>>> {
     state = await AsyncValue.guard(() => _repository.list(history: history));
   }
 
-  Future<void> create({required String fuel, required double quantity}) async {
+  Future<void> create({
+    required String fuel,
+    required double quantity,
+    int? fuelProductId,
+    String? tankId,
+    int? providerId,
+  }) async {
     final result = await AsyncValue.guard(
       () => _repository.create(
-        fuelProductId: 1,
-        equipmentId: 1,
-        providerId: 1,
+        fuelProductId: fuelProductId,
+        tankId: tankId,
+        providerId: providerId,
         fuel: fuel,
         quantity: quantity,
         unit: 'LITERS',

@@ -13,7 +13,14 @@ const _useMockOrders = bool.fromEnvironment(
 
 final ordersRepositoryProvider = Provider<OrdersRepository>((ref) {
   if (_useMockOrders) return MockOrdersRepository();
-  return ApiOrdersRepository(ref.watch(fullTankApiProvider));
+  final session = ref.watch(authControllerProvider).session;
+  final isProvider = session?.roles.contains('ROLE_PROVIDER') ?? false;
+  return ApiOrdersRepository(
+    ref.watch(fullTankApiProvider),
+    companyId: session?.companyId,
+    providerId: session?.providerId,
+    providerMode: isProvider,
+  );
 });
 
 final orderProvider = FutureProvider.family<Order?, String>((ref, id) {

@@ -4,9 +4,9 @@ abstract interface class OrdersRepository {
   Future<List<Order>> list({bool history = false});
   Future<Order?> find(String id);
   Future<Order> create({
-    required int fuelProductId,
-    required int equipmentId,
-    required int providerId,
+    required int? fuelProductId,
+    required String? tankId,
+    required int? providerId,
     required String fuel,
     required double quantity,
     required String unit,

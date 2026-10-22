@@ -1,61 +1,50 @@
 part of 'missing_pages.dart';
 
-class ProviderOrdersPage extends StatelessWidget {
+class ProviderOrdersPage extends ConsumerWidget {
   const ProviderOrdersPage({super.key});
 
   @override
-  Widget build(BuildContext context) => FutureBuilder<List<ProviderOrder>>(
-    future: providerOrderRepository().list(),
-    builder: (context, snapshot) => MissingPageShell(
-      title: 'Pedidos por atender',
-      subtitle: snapshot.hasData
-          ? '${snapshot.data!.length} solicitudes requieren una decisión'
-          : '2 solicitudes requieren una decisión',
-      bottomNav: 1,
-      child: Column(
-        children: [
-          if (snapshot.hasData && snapshot.data!.isNotEmpty)
-            ...snapshot.data!.map(
-              (order) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _ProviderOrderCard(
-                  id: order.id,
-                  customer: order.customer,
-                  detail: order.detail,
-                  status: order.status,
-                  color: order.status == 'Aprobado' ? _green : _orange,
-                  onTap: () => context.push('/provider/orders/${order.id}'),
+  Widget build(BuildContext context, WidgetRef ref) =>
+      FutureBuilder<List<ProviderOrder>>(
+        future: providerOrderRepository(
+          providerId: ref.watch(authControllerProvider).session?.providerId,
+        ).list(),
+        builder: (context, snapshot) => MissingPageShell(
+          title: 'Pedidos por atender',
+          subtitle: snapshot.hasData
+              ? '${snapshot.data!.length} solicitudes requieren una decisión'
+              : 'Solicitudes de tu cuenta',
+          bottomNav: 1,
+          child: Column(
+            children: [
+              if (snapshot.hasData && snapshot.data!.isNotEmpty)
+                ...snapshot.data!.map(
+                  (order) => Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _ProviderOrderCard(
+                      id: order.id,
+                      customer: order.customer,
+                      detail: order.detail,
+                      status: order.status,
+                      color: order.status == 'Aprobado' ? _green : _orange,
+                      onTap: () => context.push('/provider/orders/${order.id}'),
+                    ),
+                  ),
+                )
+              else if (snapshot.hasData)
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text('No hay solicitudes pendientes.'),
                 ),
+              const SizedBox(height: 6),
+              _PrimaryButton(
+                label: 'Ver historial de ventas',
+                onPressed: () => context.push('/reports/sales'),
               ),
-            )
-          else ...[
-            _ProviderOrderCard(
-              id: 'FT-2098',
-              customer: 'AgroNorte',
-              detail: '12,000 L · Diésel B5 · entrega hoy',
-              status: 'Pendiente',
-              color: _orange,
-              onTap: () => context.push('/provider/orders/FT-2098'),
-            ),
-            const SizedBox(height: 10),
-            _ProviderOrderCard(
-              id: 'FT-2091',
-              customer: 'Transportes Delta',
-              detail: '8,000 L · Gasolina regular · 3:00 PM',
-              status: 'Aprobado',
-              color: _green,
-              onTap: () => context.push('/provider/orders/FT-2091/dispatch'),
-            ),
-          ],
-          const SizedBox(height: 6),
-          _PrimaryButton(
-            label: 'Ver historial de ventas',
-            onPressed: () => context.push('/reports/sales'),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
 
 class _ProviderOrderCard extends StatelessWidget {
@@ -122,16 +111,17 @@ class _ProviderOrderCard extends StatelessWidget {
   );
 }
 
-class ProviderOrderDetailPage extends StatefulWidget {
+class ProviderOrderDetailPage extends ConsumerStatefulWidget {
   const ProviderOrderDetailPage({required this.orderId, super.key});
   final String orderId;
 
   @override
-  State<ProviderOrderDetailPage> createState() =>
+  ConsumerState<ProviderOrderDetailPage> createState() =>
       _ProviderOrderDetailPageState();
 }
 
-class _ProviderOrderDetailPageState extends State<ProviderOrderDetailPage> {
+class _ProviderOrderDetailPageState
+    extends ConsumerState<ProviderOrderDetailPage> {
   bool _busy = false;
 
   @override
@@ -201,7 +191,9 @@ class _ProviderOrderDetailPageState extends State<ProviderOrderDetailPage> {
     }
     setState(() => _busy = true);
     try {
-      await providerOrderRepository().accept(id);
+      await providerOrderRepository(
+        providerId: ref.read(authControllerProvider).session?.providerId,
+      ).accept(id);
       if (mounted)
         _message(context, 'Pedido aprobado. Ahora asigna el despacho.');
     } catch (error) {
@@ -212,7 +204,7 @@ class _ProviderOrderDetailPageState extends State<ProviderOrderDetailPage> {
   }
 }
 
-class ProviderOrderActionPage extends StatefulWidget {
+class ProviderOrderActionPage extends ConsumerStatefulWidget {
   const ProviderOrderActionPage({
     required this.orderId,
     required this.action,
@@ -222,11 +214,12 @@ class ProviderOrderActionPage extends StatefulWidget {
   final String action;
 
   @override
-  State<ProviderOrderActionPage> createState() =>
+  ConsumerState<ProviderOrderActionPage> createState() =>
       _ProviderOrderActionPageState();
 }
 
-class _ProviderOrderActionPageState extends State<ProviderOrderActionPage> {
+class _ProviderOrderActionPageState
+    extends ConsumerState<ProviderOrderActionPage> {
   final _note = TextEditingController();
   bool _done = false;
   bool _busy = false;
@@ -299,7 +292,7 @@ class _ProviderOrderActionPageState extends State<ProviderOrderActionPage> {
                 labelText: isReject
                     ? 'Motivo del rechazo'
                     : isClose
-                    ? 'Nota de cierre'
+                    ? 'Delivered volume (L)'
                     : 'Indicaciones para despacho',
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -337,11 +330,17 @@ class _ProviderOrderActionPageState extends State<ProviderOrderActionPage> {
     }
     setState(() => _busy = true);
     try {
-      final repository = providerOrderRepository();
+      final repository = providerOrderRepository(
+        providerId: ref.read(authControllerProvider).session?.providerId,
+      );
       if (isReject) {
         await repository.reject(id, _note.text.trim());
       } else if (isClose) {
-        await repository.complete(id);
+        final deliveredVolume = double.tryParse(_note.text.trim());
+        if (deliveredVolume == null || deliveredVolume <= 0) {
+          throw ArgumentError('Enter a valid delivered volume');
+        }
+        await repository.complete(id, deliveredVolume);
       } else {
         await repository.dispatch(id);
       }

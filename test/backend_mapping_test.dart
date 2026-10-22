@@ -28,6 +28,41 @@ void main() {
     expect(orders.single.status, OrderStatus.inTransit);
   });
 
+  test(
+    'order adapter maps selected tank and authenticated account to replenishment DTO',
+    () async {
+      final api = _CreateReplenishmentApi();
+      final order =
+          await ApiOrdersRepository(
+            api,
+            companyId: 17,
+            providerId: null,
+            providerMode: false,
+          ).create(
+            fuelProductId: 8,
+            tankId: 'tank-4',
+            providerId: 9,
+            fuel: 'Diesel',
+            quantity: 120,
+            unit: 'LITERS',
+            deliveryAddress: 'Av. Central 100',
+            deliveryDate: DateTime(2026, 9, 12),
+          );
+
+      expect(api.body, {
+        'customerAccountId': 17,
+        'tankId': 'tank-4',
+        'providerId': 9,
+        'fuelProductId': 8,
+        'quantity': 120,
+        'unit': 'LITERS',
+        'deliveryAddress': 'Av. Central 100',
+        'deliveryDate': '2026-09-12',
+      });
+      expect(order.id, '77');
+    },
+  );
+
   test('vehicle adapter sends the backend resource fields', () async {
     final api = _VehicleBackendApi();
     final vehicle = await ApiDispatchRepository(api, providerId: 9)
@@ -40,7 +75,6 @@ void main() {
 
     expect(vehicle.id, 81);
     expect(api.body, {
-      'providerId': 9,
       'licensePlate': 'ABC-123',
       'brand': 'Freightliner',
       'model': 'M2',
@@ -66,12 +100,14 @@ void main() {
     await repository.createDelivery(
       orderId: 42,
       driverId: 7,
-      vehicleId: 81,
+      tankerId: 81,
       scheduledDate: DateTime(2026, 9, 1),
+      commandId: 'assignment-42',
+      windowStart: DateTime(2026, 9, 1, 9),
+      windowEnd: DateTime(2026, 9, 1, 12),
     );
 
     expect(api.driverBody, {
-      'providerId': 9,
       'firstName': 'Ana',
       'lastName': 'Navarro',
       'licenseNumber': 'A-2',
@@ -81,9 +117,11 @@ void main() {
     });
     expect(api.deliveryBody, {
       'orderId': 42,
-      'providerId': 9,
+      'commandId': 'assignment-42',
       'driverId': 7,
-      'vehicleId': 81,
+      'tankerId': 81,
+      'windowStart': '2026-09-01T09:00:00.000',
+      'windowEnd': '2026-09-01T12:00:00.000',
       'scheduledDate': '2026-09-01',
       'notes': '',
     });
@@ -171,6 +209,36 @@ void main() {
       'newPassword': 'NewPass123!',
     });
   });
+
+  test(
+    'sign-in preserves backend tenant and membership identity in session',
+    () async {
+      final storage = _MemoryTokenStorage();
+      final api = _SignInBackendApi();
+      final repository = AuthApiRepository(api: api, storage: storage);
+      final session = await repository.signIn(
+        'buyer@example.test',
+        'password',
+        rememberMe: true,
+      );
+
+      expect(session.userId, 44);
+      expect(session.companyId, 17);
+      expect(session.providerId, isNull);
+      expect(session.roles, ['ROLE_BUYER']);
+      expect(session.memberships, [
+        {'organizationId': 17, 'role': 'ROLE_BUYER'},
+      ]);
+      expect(storage.savedCompanyId, 17);
+      expect(storage.savedRoles, ['ROLE_BUYER']);
+
+      final restored = await repository.restoreSession();
+      expect(restored?.companyId, 17);
+      expect(restored?.roles, ['ROLE_BUYER']);
+      expect(restored?.memberships.single['organizationId'], 17);
+      expect(api.client.token, 'signed-jwt');
+    },
+  );
 }
 
 class _BackendApi extends FullTankApi {
@@ -196,6 +264,18 @@ class _BackendApi extends FullTankApi {
 
   @override
   Future<dynamic> fuelProducts({int? providerId}) async => [];
+}
+
+class _CreateReplenishmentApi extends FullTankApi {
+  _CreateReplenishmentApi() : super(ApiClient());
+
+  Map<String, dynamic>? body;
+
+  @override
+  Future<dynamic> createFuelRequest(Map<String, dynamic> body) async {
+    this.body = body;
+    return {'id': 77, 'quantity': body['quantity'], 'productName': 'Diesel'};
+  }
 }
 
 class _VehicleBackendApi extends FullTankApi {
@@ -297,4 +377,79 @@ class _RecoveryBackendApi extends FullTankApi {
   Future<dynamic> resetPassword(String token, String newPassword) async {
     resetBody = {'token': token, 'newPassword': newPassword};
   }
+}
+
+class _SignInBackendApi extends FullTankApi {
+  _SignInBackendApi() : super(ApiClient());
+
+  @override
+  Future<dynamic> signIn(String username, String password) async => {
+    'id': 44,
+    'username': username,
+    'token': 'signed-jwt',
+    'companyId': 17,
+    'providerId': null,
+    'roles': ['ROLE_BUYER'],
+    'memberships': [
+      {'organizationId': 17, 'role': 'ROLE_BUYER'},
+    ],
+  };
+}
+
+class _MemoryTokenStorage extends TokenStorage {
+  _MemoryTokenStorage() : super(const FlutterSecureStorage());
+
+  int? savedCompanyId;
+  int? savedProviderId;
+  int? savedUserId;
+  String? savedToken;
+  String? savedUsername;
+  List<String> savedRoles = const [];
+  List<Map<String, Object?>> savedMemberships = const [];
+
+  @override
+  Future<void> save({
+    required String token,
+    required String username,
+    int? userId,
+    int? companyId,
+    int? providerId,
+    List<String> roles = const [],
+    List<Map<String, Object?>> memberships = const [],
+  }) async {
+    savedCompanyId = companyId;
+    savedProviderId = providerId;
+    savedUserId = userId;
+    savedToken = token;
+    savedUsername = username;
+    savedRoles = roles;
+    savedMemberships = memberships;
+  }
+
+  @override
+  Future<
+    ({
+      String token,
+      String username,
+      int? userId,
+      int? companyId,
+      int? providerId,
+      List<String> roles,
+      List<Map<String, Object?>> memberships,
+    })?
+  >
+  read() async => savedToken == null || savedUsername == null
+      ? null
+      : (
+          token: savedToken!,
+          username: savedUsername!,
+          userId: savedUserId,
+          companyId: savedCompanyId,
+          providerId: savedProviderId,
+          roles: savedRoles,
+          memberships: savedMemberships,
+        );
+
+  @override
+  Future<void> clear() async {}
 }
