@@ -1,6 +1,6 @@
 # Mobile Backend API Alignment
 
-Align the Flutter client with the backend after its authorized merge of `origin/main`. Static reconciliation is complete; mobile source changes and all runtime tests remain pending.
+Align the Flutter client with the backend after its authorized merge of `origin/main`. Static reconciliation and the first route/session implementation are complete; broader coverage and UI input gaps remain.
 
 ## Quick path
 
@@ -58,7 +58,7 @@ These paths/methods exist in the current backend; still add contract tests for r
 - `test/api_http_contract_test.dart`: default URL prefix, v2 URL stripping, exact route/method/query/body, Bearer header, empty/CSV response handling.
 - `test/backend_mapping_test.dart`: sign-in tenant fields and persistence/restore; replenishment DTO/resource fields; order/resource status mappings; provider-scoped drivers/tankers; delivery assignment and lifecycle payloads; tank and analytics/report mappers.
 - Add focused assertions for missing-route behavior (notifications, ratings, favorite provider, order-to-delivery lookup) so no stale endpoint is silently reintroduced.
-- Flutter test command and SDK/config remain to be discovered before implementation; no Flutter tests are claimed as run.
+- Flutter runner is `flutter test` (Flutter 3.47.2 / Dart 3.13.2); behavior-first implementation tests now cover the initial route/session contract.
 
 ## Tasks
 
@@ -66,7 +66,7 @@ These paths/methods exist in the current backend; still add contract tests for r
 - [x] **MBA-1 — Inventory current backend/mobile contracts.** Compared the current `FullTankApi` surface and affected auth/order/inventory/fleet/dispatch/report adapters to backend routes, resources, role checks, and tenant derivation. Every stale path above is classified as supported, mismatched, or unsupported/no equivalent; unclear response mapping is explicitly assigned to contract tests. Route: delegated exploration. Evidence: CodeGraph both repos, current controller/resource sources, controller route scan, and no context-path config.
 - [x] **MBA-2 — Align endpoints and request/response adapters.** Updated the `/api` root, replenishment, notifications, tankers/drivers, delivery lifecycle, tracking/timeline, and current v2 tank/report routes. Unsupported rating, notification-create, request-detail, and delivery-by-order operations now fail explicitly instead of calling absent routes. Delivery creation maps command/tanker/window fields; tanker/driver deactivation uses POST routes. Completion now requires delivered volume. The provider's legacy "dispatch" action no longer mistakes an order ID for a delivery ID; assignment is surfaced as unavailable until the required command/driver/tanker/window inputs exist. Route: delegated direct writer. Evidence: strict TDD RED/GREEN and passing route/mapping checks.
 - [x] **MBA-3 — Align authentication and tenant identity.** `AuthSession` now carries company/provider IDs, roles, and memberships; secure token storage saves/restores the added context, sign-in hydrates it from the backend, and orders/reports/dispatch/provider-order adapters consume current session identity. Removed fixed tenant IDs and omitted provider IDs where the backend derives them from the principal. Bearer token behavior remains unchanged. Order creation now rejects missing tank/product/provider selections instead of sending dummy IDs; the UI still needs to expose those selections. Route: delegated direct writer. Evidence: strict TDD RED/GREEN and passing session/mapping checks.
-- [ ] **MBA-4 — Add behavior-first contract coverage and verify.** Discover the exact Flutter test command first. Under strict TDD observe RED, GREEN, REFACTOR; update the named tests for routes, bodies, response mappings, auth, and tenant isolation. Report Java checks as blocked until JDK 26 is available; do not claim cross-project test success.
+- [ ] **MBA-4 — Expand contract coverage and verify.** Continue route/mapping/auth/tenant isolation coverage beyond the implemented slices and resolve UI selection workflows for tank/product/provider and delivery assignment. Strict TDD RED/GREEN was observed; `dart format`, full `flutter test`, and `flutter analyze` pass. Report Java checks as blocked until JDK 26 is available; do not claim cross-project test success.
 
 ## Acceptance criteria
 
@@ -85,5 +85,6 @@ These paths/methods exist in the current backend; still add contract tests for r
 - Backend Maven test: attempted, blocked during compile because installed JDK is 25 while backend targets Java 26. This blocker remains open; no Java test pass is claimed.
 - Flutter: `flutter test` — PASS (55 tests); `flutter test test/missing_pages_test.dart` — PASS (5 tests); `flutter analyze` — PASS (no issues); `git diff --check` — PASS. Focused RED was observed before route/DTO and session behavior changes; GREEN followed, then `dart format` and the full test/analyzer rerun passed.
 - Mobile implementation: API root/routes, delivery/tanker/driver adapters, tenant persistence, repository session wiring, and contract tests changed; backend source untouched.
+- ODD work-unit commit: `cf0c7e7` (`fix(mobile): align backend routes and session identity`).
 - Backend focused Maven tests remain blocked by JDK 25 vs required JDK 26; no backend pass is claimed.
 - Next step: close MBA-4 with broader behavior coverage and review the UI input gaps; record commits and rerun backend checks when Java 26 is available.
