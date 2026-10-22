@@ -1,6 +1,6 @@
 # Mobile Backend API Alignment
 
-Align the Flutter client with the backend after its authorized merge of `origin/main`. Static reconciliation and the first route/session implementation are complete; broader coverage and UI input gaps remain.
+Align the Flutter client with the backend after its authorized merge of `origin/main`. Static reconciliation, route/session implementation, replenishment selection and delivery assignment UI, and mobile verification are complete; backend Maven verification remains blocked by the local JDK version.
 
 ## Quick path
 
@@ -21,7 +21,7 @@ Align the Flutter client with the backend after its authorized merge of `origin/
 
 ## Reconciliation evidence
 
-CodeGraph was checked before filesystem exploration in both repositories. The backend checkout is exactly the merged commit above. Backend source has no `server.servlet.context-path` or `spring.mvc.servlet.path` override; controllers declare `/api/...` routes (with only specific controllers under `/api/v2/...`). The mobile default `API_BASE_URL` ends in `/api/v1`, so ordinary `FullTankApi` calls currently address a non-matching prefix. `getV2` strips that suffix and addresses the server root.
+CodeGraph was checked before filesystem exploration in both repositories. The backend checkout is exactly the merged commit above. Backend source has no `server.servlet.context-path` or `spring.mvc.servlet.path` override; controllers declare `/api/...` routes (with only specific controllers under `/api/v2/...`). The initial mobile `API_BASE_URL` ended in `/api/v1`, so ordinary calls addressed a non-matching prefix; MBA-2 changed it to `/api`, and the v2 client uses its confirmed `/api/v2` paths.
 
 ### Safe route/method matches (after correcting the API root)
 
@@ -71,7 +71,7 @@ These paths/methods exist in the current backend; still add contract tests for r
 ## Acceptance criteria
 
 - [x] Static classification covers every exposed `FullTankApi` route family and affected mobile adapter call site against the merged backend's route/method, DTO/resource, auth, and tenant assumptions; unsupported paths are called out above.
-- [ ] Ordinary mobile API paths use `/api`, while only confirmed backend v2 controllers use `/api/v2`.
+- [x] Ordinary mobile API paths use `/api`, while only confirmed backend v2 controllers use `/api/v2`.
 - [x] Request/response fields and expected status/body semantics match current backend resources, including replenishment, payment completion, delivery assignment/lifecycle, tanks, auth, and CSV export.
 - [x] Tenant-scoped IDs come from the authenticated session/context or are omitted when the backend derives identity; no default-ID access remains in affected production calls.
 - [x] Unsupported features are adapted to a supported workflow or surfaced unavailable; no speculative route is introduced.
