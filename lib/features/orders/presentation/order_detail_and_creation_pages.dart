@@ -198,8 +198,84 @@ class NewOrderPage extends ConsumerStatefulWidget {
 }
 
 class _NewOrderPageState extends ConsumerState<NewOrderPage> {
-  late NewOrderState _state = widget.initialState;
-  String _fuel = 'Diésel';
+  // Query parameters and legacy callers cannot manufacture a successful order.
+  NewOrderState _state = NewOrderState.defaultState;
+  final _quantity = TextEditingController();
+  final _address = TextEditingController();
+  ReplenishmentOptions? _options;
+  List<Tank> _tanks = const [];
+  int? _siteId;
+  String? _tankId;
+  int? _providerId;
+  int? _productId;
+  DateTime? _deliveryDate;
+  bool _optionsLoading = true;
+  bool _tanksLoading = false;
+  String? _optionsError;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(_loadOptions);
+  }
+
+  @override
+  void dispose() {
+    _quantity.dispose();
+    _address.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadOptions() async {
+    final session = ref.read(authControllerProvider).session;
+    setState(() {
+      _optionsLoading = true;
+      _optionsError = null;
+    });
+    try {
+      final options = await ref
+          .read(replenishmentOptionsRepositoryProvider)
+          .load(
+            companyId: session?.companyId,
+            memberships: session?.memberships ?? const [],
+          );
+      if (!mounted) return;
+      setState(() {
+        _options = options;
+        _optionsLoading = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _optionsError = 'No se pudieron cargar las opciones: $error';
+        _optionsLoading = false;
+      });
+    }
+  }
+
+  Future<void> _selectSite(int? siteId) async {
+    setState(() {
+      _siteId = siteId;
+      _tankId = null;
+      _tanks = const [];
+      _tanksLoading = siteId != null;
+    });
+    final companyId = ref.read(authControllerProvider).session?.companyId;
+    if (companyId == null || siteId == null) return;
+    try {
+      final tanks = await ref
+          .read(replenishmentOptionsRepositoryProvider)
+          .tanks(companyId: companyId, siteId: siteId);
+      if (mounted) setState(() => _tanks = tanks);
+    } catch (error) {
+      if (mounted)
+        setState(
+          () => _optionsError = 'No se pudieron cargar los tanques: $error',
+        );
+    } finally {
+      if (mounted) setState(() => _tanksLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +298,11 @@ class _NewOrderPageState extends ConsumerState<NewOrderPage> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
-              child: _NewOrderAction(state: _state, onCreate: _create),
+              child: _NewOrderAction(
+                state: _state,
+                enabled: _canSubmit,
+                onCreate: _create,
+              ),
             ),
           ),
           const FullTankBottomNav(active: 1),
@@ -233,6 +313,12 @@ class _NewOrderPageState extends ConsumerState<NewOrderPage> {
 
   Widget _formBody(BuildContext context, {required bool loading}) {
     final error = _state == NewOrderState.error;
+    final options = _options;
+    final products =
+        options?.products
+            .where((product) => product.providerId == _providerId)
+            .toList() ??
+        const <ReplenishmentProduct>[];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -260,7 +346,25 @@ class _NewOrderPageState extends ConsumerState<NewOrderPage> {
           ],
         ),
         const SizedBox(height: 12),
-        if (loading)
+        if (_optionsLoading)
+          const Center(
+            child: CircularProgressIndicator(
+              semanticsLabel: 'Cargando opciones de pedido',
+            ),
+          )
+        else if (_optionsError != null)
+          _UnavailableCard(message: _optionsError!, onRetry: _loadOptions)
+        else if (options?.unavailableReason != null)
+          _UnavailableCard(
+            message: options!.unavailableReason!,
+            onRetry: _loadOptions,
+          )
+        else if (options == null || options.customerAccountId == null)
+          const _UnavailableCard(
+            message:
+                'No hay una cuenta de cliente disponible para esta empresa.',
+          )
+        else if (loading)
           const _CreationLoading()
         else ...[
           if (error)
@@ -269,44 +373,111 @@ class _NewOrderPageState extends ConsumerState<NewOrderPage> {
                   setState(() => _state = NewOrderState.defaultState),
             ),
           if (error) const SizedBox(height: 10),
-          _FieldCaption(label: 'TIPO DE COMBUSTIBLE', error: error),
-          const SizedBox(height: 6),
-          _FuelGrid(
-            selected: _fuel,
-            error: error,
-            onSelected: (fuel) => setState(() {
-              _fuel = fuel;
-              if (_state == NewOrderState.error)
-                _state = NewOrderState.defaultState;
+          _selectionField<int>(
+            label: 'SITIO DE ENTREGA',
+            value: _siteId,
+            items: options.sites
+                .map(
+                  (site) =>
+                      DropdownMenuItem(value: site.id, child: Text(site.name)),
+                )
+                .toList(),
+            onChanged: _selectSite,
+          ),
+          _selectionField<String>(
+            label: 'TANQUE',
+            value: _tankId,
+            items: _tanks
+                .map(
+                  (tank) => DropdownMenuItem(
+                    value: tank.id,
+                    child: Text('${tank.name} · ${tank.level}%'),
+                  ),
+                )
+                .toList(),
+            onChanged: _tanksLoading
+                ? null
+                : (value) => setState(() => _tankId = value),
+            hint: _tanksLoading ? 'Cargando tanques…' : 'Selecciona un tanque',
+          ),
+          if (_siteId != null && !_tanksLoading && _tanks.isEmpty)
+            _inlineFormMessage(
+              'Este sitio no tiene tanques activos disponibles.',
+            ),
+          _selectionField<int>(
+            label: 'PROVEEDOR',
+            value: _providerId,
+            items: options.providers
+                .map(
+                  (provider) => DropdownMenuItem(
+                    value: provider.id,
+                    child: Text(provider.name),
+                  ),
+                )
+                .toList(),
+            onChanged: (value) => setState(() {
+              _providerId = value;
+              _productId = null;
             }),
           ),
-          if (error) ...[
-            const SizedBox(height: 5),
-            const Text(
-              'ⓘ  Selecciona un combustible para continuar.',
-              style: TextStyle(
-                color: _red,
-                fontSize: 11.6,
-                fontWeight: FontWeight.w700,
+          if (_providerId != null && products.isEmpty)
+            _inlineFormMessage(
+              'Este proveedor no tiene productos activos disponibles.',
+            ),
+          _selectionField<int>(
+            label: 'PRODUCTO',
+            value: _productId,
+            items: products
+                .map(
+                  (product) => DropdownMenuItem(
+                    value: product.id,
+                    child: Text(product.name),
+                  ),
+                )
+                .toList(),
+            onChanged: (value) => setState(() => _productId = value),
+            hint: _providerId == null
+                ? 'Selecciona un proveedor primero'
+                : 'Selecciona un producto',
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _quantity,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            onChanged: (_) => setState(() {}),
+            decoration: const InputDecoration(
+              labelText: 'Cantidad (L)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _address,
+            textCapitalization: TextCapitalization.sentences,
+            onChanged: (_) => setState(() {}),
+            decoration: const InputDecoration(
+              labelText: 'Dirección de entrega',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            onPressed: _selectDeliveryDate,
+            icon: const Icon(Icons.calendar_today_outlined),
+            label: Text(
+              _deliveryDate == null
+                  ? 'Seleccionar fecha de entrega'
+                  : '${_deliveryDate!.year}-${_deliveryDate!.month.toString().padLeft(2, '0')}-${_deliveryDate!.day.toString().padLeft(2, '0')}',
+            ),
+          ),
+          if (error)
+            const Padding(
+              padding: EdgeInsets.only(top: 6),
+              child: Text(
+                'Revisa los campos obligatorios e inténtalo de nuevo.',
+                style: TextStyle(color: _red),
               ),
             ),
-          ],
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'MONTO DEPOSITADO'),
-          const SizedBox(height: 6),
-          const _MoneyCard(),
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'TANQUE ASOCIADO'),
-          const SizedBox(height: 6),
-          const _TankCard(),
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'PROVEEDOR PREFERIDO'),
-          const SizedBox(height: 6),
-          const _SupplierCard(),
-          const SizedBox(height: 12),
-          const _FieldCaption(label: 'HORARIO DE ENTREGA'),
-          const SizedBox(height: 6),
-          const _DeliveryField(),
         ],
       ],
     );
@@ -357,15 +528,37 @@ class _NewOrderPageState extends ConsumerState<NewOrderPage> {
         style: TextStyle(color: _muted, fontSize: 13.05, height: 1.45),
       ),
       const SizedBox(height: 20),
-      const _SuccessDetails(),
+      Text(
+        '${_quantity.text.trim()} L · ${_options?.products.where((item) => item.id == _productId).firstOrNull?.name ?? ''}',
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: _ink, fontWeight: FontWeight.w600),
+      ),
+      const SizedBox(height: 6),
+      Text(
+        '${_options?.sites.where((item) => item.id == _siteId).firstOrNull?.name ?? ''} · ${_address.text.trim()}',
+        textAlign: TextAlign.center,
+        style: const TextStyle(color: _muted, fontSize: 12),
+      ),
     ],
   );
 
   Future<void> _create() async {
+    if (!_canSubmit) return;
     setState(() => _state = NewOrderState.loading);
     await ref
         .read(ordersControllerProvider.notifier)
-        .create(fuel: _fuel, quantity: 0);
+        .create(
+          customerAccountId: _options!.customerAccountId!,
+          fuel: _options!.products
+              .firstWhere((item) => item.id == _productId)
+              .name,
+          quantity: double.parse(_quantity.text.trim()),
+          fuelProductId: _productId,
+          tankId: _tankId,
+          providerId: _providerId,
+          deliveryAddress: _address.text.trim(),
+          deliveryDate: _deliveryDate!,
+        );
     if (!mounted) return;
     setState(
       () => _state = ref.read(ordersControllerProvider).hasError
@@ -373,4 +566,75 @@ class _NewOrderPageState extends ConsumerState<NewOrderPage> {
           : NewOrderState.success,
     );
   }
+
+  bool get _canSubmit =>
+      !_optionsLoading &&
+      _options?.customerAccountId != null &&
+      _siteId != null &&
+      _tankId != null &&
+      _providerId != null &&
+      _productId != null &&
+      (double.tryParse(_quantity.text.trim()) ?? 0) > 0 &&
+      _address.text.trim().isNotEmpty &&
+      _deliveryDate != null &&
+      _state != NewOrderState.loading &&
+      _state != NewOrderState.success;
+
+  Future<void> _selectDeliveryDate() async {
+    final today = DateUtils.dateOnly(DateTime.now());
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _deliveryDate ?? today,
+      firstDate: today,
+      lastDate: today.add(const Duration(days: 365)),
+    );
+    if (date != null && mounted) setState(() => _deliveryDate = date);
+  }
+
+  Widget _selectionField<T>({
+    required String label,
+    required T? value,
+    required List<DropdownMenuItem<T>> items,
+    required ValueChanged<T?>? onChanged,
+    String? hint,
+  }) => Padding(
+    padding: const EdgeInsets.only(bottom: 10),
+    child: DropdownButtonFormField<T>(
+      value: value,
+      items: items,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+      ),
+      hint: Text(hint ?? 'Selecciona una opción'),
+    ),
+  );
+
+  Widget _inlineFormMessage(String message) => Padding(
+    padding: const EdgeInsets.only(bottom: 10),
+    child: Text(message, style: const TextStyle(color: _muted)),
+  );
+}
+
+class _UnavailableCard extends StatelessWidget {
+  const _UnavailableCard({required this.message, this.onRetry});
+  final String message;
+  final VoidCallback? onRetry;
+  @override
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.info_outline, semanticLabel: 'Información'),
+          const SizedBox(height: 8),
+          Text(message),
+          if (onRetry != null)
+            TextButton(onPressed: onRetry, child: const Text('Reintentar')),
+        ],
+      ),
+    ),
+  );
 }

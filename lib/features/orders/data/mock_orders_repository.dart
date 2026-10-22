@@ -30,6 +30,7 @@ class MockOrdersRepository implements OrdersRepository {
 
   @override
   Future<Order> create({
+    required int customerAccountId,
     required int? fuelProductId,
     required String? tankId,
     required int? providerId,

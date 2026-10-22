@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../features/auth/application/auth_providers.dart';
 import '../data/api_orders_repository.dart';
 import '../data/mock_orders_repository.dart';
+import '../data/replenishment_options_repository.dart';
 import '../domain/order.dart';
 import '../domain/orders_repository.dart';
 
@@ -22,6 +23,12 @@ final ordersRepositoryProvider = Provider<OrdersRepository>((ref) {
     providerMode: isProvider,
   );
 });
+
+final replenishmentOptionsRepositoryProvider =
+    Provider<ApiReplenishmentOptionsRepository>(
+      (ref) =>
+          ApiReplenishmentOptionsRepository(ref.watch(fullTankApiProvider)),
+    );
 
 final orderProvider = FutureProvider.family<Order?, String>((ref, id) {
   return ref.watch(ordersRepositoryProvider).find(id);

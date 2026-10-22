@@ -21,7 +21,7 @@ abstract interface class DispatchRepository {
   Future<Driver> createDriver(Driver driver);
   Future<Driver> updateDriver(Driver driver);
   Future<void> deleteDriver(int id);
-  Future<void> createDelivery({
+  Future<String> createDelivery({
     required int orderId,
     required int driverId,
     required int tankerId,
@@ -29,5 +29,6 @@ abstract interface class DispatchRepository {
     required String commandId,
     required DateTime windowStart,
     required DateTime windowEnd,
+    required String notes,
   });
 }

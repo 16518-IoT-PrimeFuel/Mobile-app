@@ -39,6 +39,7 @@ void main() {
             providerId: null,
             providerMode: false,
           ).create(
+            customerAccountId: 23,
             fuelProductId: 8,
             tankId: 'tank-4',
             providerId: 9,
@@ -50,7 +51,7 @@ void main() {
           );
 
       expect(api.body, {
-        'customerAccountId': 17,
+        'customerAccountId': 23,
         'tankId': 'tank-4',
         'providerId': 9,
         'fuelProductId': 8,
@@ -105,6 +106,7 @@ void main() {
       commandId: 'assignment-42',
       windowStart: DateTime(2026, 9, 1, 9),
       windowEnd: DateTime(2026, 9, 1, 12),
+      notes: 'Gate 3',
     );
 
     expect(api.driverBody, {
@@ -123,7 +125,7 @@ void main() {
       'windowStart': '2026-09-01T09:00:00.000',
       'windowEnd': '2026-09-01T12:00:00.000',
       'scheduledDate': '2026-09-01',
-      'notes': '',
+      'notes': 'Gate 3',
     });
   });
 

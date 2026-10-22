@@ -21,6 +21,9 @@ class FullTankApi {
   Future<dynamic> user(int id) => client.get('/users/$id');
   Future<dynamic> buyerCompanies() => client.get('/buyer-companies');
   Future<dynamic> buyerCompany(int id) => client.get('/buyer-companies/$id');
+  Future<dynamic> customers() => client.get('/customers');
+  Future<dynamic> customerSites(int customerId) =>
+      client.get('/customers/$customerId/sites');
   Future<dynamic> createBuyerCompany(Map<String, dynamic> body) =>
       client.post('/buyer-companies', body);
   Future<dynamic> updateBuyerCompany(int id, Map<String, dynamic> body) =>
@@ -128,6 +131,7 @@ class FullTankApi {
   }
 
   Future<dynamic> drivers() => client.get('/drivers');
+  Future<dynamic> eligibleDrivers() => client.get('/drivers/eligible');
   Future<dynamic> driver(int id) => client.get('/drivers/$id');
   Future<dynamic> createDriver(Map<String, dynamic> body) =>
       client.post('/drivers', body);

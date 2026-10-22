@@ -78,7 +78,9 @@ void main() {
     expect(find.textContaining('Descargar PDF'), findsOneWidget);
   });
 
-  testWidgets('renders new order states and creates an order', (tester) async {
+  testWidgets('new order requires real backend selections before submission', (
+    tester,
+  ) async {
     for (final state in NewOrderState.values) {
       await tester.pumpWidget(testApp(NewOrderPage(initialState: state)));
       await tester.pump();
@@ -89,9 +91,23 @@ void main() {
     await tester.pump();
     expect(find.text('Nuevo pedido'), findsOneWidget);
     expect(find.text('Crear pedido  →'), findsOneWidget);
+    await tester.pumpAndSettle();
+    expect(find.text('Tanque de diésel A-102'), findsNothing);
+    expect(find.text('Global Fuel Corp'), findsNothing);
     await tester.tap(find.text('Crear pedido  →'));
     await tester.pump();
-    expect(find.text('Pedido creado\ncorrectamente'), findsOneWidget);
-    expect(find.text('#FT-88421'), findsOneWidget);
+    expect(find.text('Crear pedido  →'), findsOneWidget);
+  });
+
+  testWidgets('new order never presents success before a real submission', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      testApp(const NewOrderPage(initialState: NewOrderState.success)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pedido creado\ncorrectamente'), findsNothing);
+    expect(find.text('Nuevo pedido'), findsOneWidget);
   });
 }

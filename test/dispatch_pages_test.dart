@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:mobile_app/features/auth/application/auth_providers.dart';
 import 'package:mobile_app/features/dispatches/presentation/dispatch_pages.dart';
 
 void main() {
@@ -50,33 +52,17 @@ void main() {
   });
 
   testWidgets(
-    'assignment flow reaches conflict and can recover with a new vehicle',
+    'assignment does not offer sample fleet without a provider session',
     (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(home: DispatchAssignmentPage()),
+        const ProviderScope(child: MaterialApp(home: DispatchAssignmentPage())),
       );
-      await tester.pump();
-      for (var i = 0; i < 3; i++) {
-        await tester.tap(find.text('Continuar  →'));
-        await tester.pump();
-      }
-      await tester.tap(find.text('Asignar recursos'));
-      await tester.pump();
-      expect(
-        find.textContaining('Conflicto de recursos detectado'),
-        findsOneWidget,
-      );
-      await tester.tap(find.text('Volver a seleccionar'));
-      await tester.pump();
-      await tester.tap(find.text('TK-2214'));
-      await tester.tap(find.text('Continuar  →'));
-      await tester.pump();
-      await tester.tap(find.text('Carlos Mendoza'));
-      await tester.tap(find.text('Continuar  →'));
-      await tester.pump();
-      await tester.tap(find.text('Asignar recursos'));
-      await tester.pump();
-      expect(find.text('Despacho asignado'), findsNWidgets(2));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('cuenta de proveedor activa'), findsOneWidget);
+      expect(find.text('TK-4421'), findsNothing);
+      expect(find.text('Juan Ramírez'), findsNothing);
+      expect(find.text('ORD-4820'), findsNothing);
     },
   );
 }

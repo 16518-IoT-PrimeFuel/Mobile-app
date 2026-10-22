@@ -86,7 +86,7 @@ class ApiDispatchRepository implements DispatchRepository {
   }
 
   @override
-  Future<void> createDelivery({
+  Future<String> createDelivery({
     required int orderId,
     required int driverId,
     required int tankerId,
@@ -94,8 +94,9 @@ class ApiDispatchRepository implements DispatchRepository {
     required String commandId,
     required DateTime windowStart,
     required DateTime windowEnd,
+    required String notes,
   }) async {
-    await api.createDelivery({
+    final raw = await api.createDelivery({
       'orderId': orderId,
       'commandId': commandId,
       'driverId': driverId,
@@ -103,8 +104,13 @@ class ApiDispatchRepository implements DispatchRepository {
       'windowStart': windowStart.toIso8601String(),
       'windowEnd': windowEnd.toIso8601String(),
       'scheduledDate': scheduledDate.toIso8601String().substring(0, 10),
-      'notes': '',
+      'notes': notes,
     });
+    final id = raw is Map ? raw['deliveryId'] ?? raw['id'] : null;
+    if (id == null || '$id'.isEmpty) {
+      throw const FormatException('Invalid delivery assignment response');
+    }
+    return '$id';
   }
 
   Map<String, dynamic> _driverBody(Driver driver) => {

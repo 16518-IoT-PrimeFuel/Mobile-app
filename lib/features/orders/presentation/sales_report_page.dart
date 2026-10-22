@@ -1,8 +1,13 @@
 part of 'order_pages.dart';
 
 class _NewOrderAction extends StatelessWidget {
-  const _NewOrderAction({required this.state, required this.onCreate});
+  const _NewOrderAction({
+    required this.state,
+    required this.enabled,
+    required this.onCreate,
+  });
   final NewOrderState state;
+  final bool enabled;
   final VoidCallback onCreate;
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,9 @@ class _NewOrderAction extends StatelessWidget {
           ? null
           : error
           ? null
-          : onCreate,
+          : enabled
+          ? onCreate
+          : null,
     );
   }
 }

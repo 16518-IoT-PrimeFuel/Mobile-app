@@ -6,6 +6,8 @@ import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 import '../application/orders_controller.dart';
 import '../application/orders_providers.dart';
 import '../domain/order.dart';
+import '../data/replenishment_options_repository.dart';
+import '../../inventory/domain/tank.dart';
 part 'orders_list_page.dart';
 part 'order_detail_and_creation_pages.dart';
 part 'new_order_fuel_fields.dart';

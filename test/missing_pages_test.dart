@@ -34,23 +34,24 @@ void main() {
     }
   });
 
-  testWidgets('payment and provider actions update their state', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const MaterialApp(home: PaymentPage()));
-    await tester.tap(find.text('Pagar S/ 42,600'));
-    await tester.pump();
-    expect(find.text('Procesando pago'), findsOneWidget);
+  testWidgets(
+    'payment updates and invalid provider actions do not fake success',
+    (tester) async {
+      await tester.pumpWidget(const MaterialApp(home: PaymentPage()));
+      await tester.tap(find.text('Pagar S/ 42,600'));
+      await tester.pump();
+      expect(find.text('Procesando pago'), findsOneWidget);
 
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: ProviderOrderActionPage(orderId: 'FT-2098', action: 'reject'),
-      ),
-    );
-    await tester.tap(find.text('Confirmar rechazo'));
-    await tester.pump();
-    expect(find.text('Acción completada'), findsOneWidget);
-  });
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: ProviderOrderActionPage(orderId: 'invalid', action: 'reject'),
+        ),
+      );
+      await tester.tap(find.text('Confirmar rechazo'));
+      await tester.pump();
+      expect(find.text('Acción completada'), findsNothing);
+    },
+  );
 
   testWidgets('signup validates, accepts terms and submits', (tester) async {
     await tester.pumpWidget(

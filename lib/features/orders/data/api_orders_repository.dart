@@ -74,6 +74,7 @@ class ApiOrdersRepository implements OrdersRepository {
 
   @override
   Future<Order> create({
+    required int customerAccountId,
     required int? fuelProductId,
     required String? tankId,
     required int? providerId,
@@ -83,14 +84,13 @@ class ApiOrdersRepository implements OrdersRepository {
     required String deliveryAddress,
     required DateTime deliveryDate,
   }) async {
-    final buyerId = companyId;
-    if (buyerId == null)
+    if (companyId == null)
       throw StateError('Authenticated buyer company is required');
     if (fuelProductId == null || tankId == null || providerId == null) {
       throw StateError('Select a fuel product, tank, and provider first');
     }
     final raw = await api.createFuelRequest({
-      'customerAccountId': buyerId,
+      'customerAccountId': customerAccountId,
       'tankId': tankId,
       'providerId': providerId,
       'fuelProductId': fuelProductId,

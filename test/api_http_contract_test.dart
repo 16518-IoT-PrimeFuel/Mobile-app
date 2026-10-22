@@ -12,6 +12,40 @@ void main() {
   });
 
   test(
+    'customer account selection APIs use the current backend routes',
+    () async {
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      final seen = <String>[];
+      server.listen((request) async {
+        seen.add('${request.method} ${request.uri.path}');
+        request.response
+          ..headers.contentType = ContentType.json
+          ..write('[]')
+          ..close();
+      });
+
+      try {
+        final api = FullTankApi(
+          ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api'),
+        );
+        await api.customers();
+        await api.customerSites(23);
+        await api.providerCompanies();
+        await api.tanks(17, 5);
+        await Future<void>.delayed(const Duration(milliseconds: 30));
+        expect(seen, [
+          'GET /api/customers',
+          'GET /api/customers/23/sites',
+          'GET /api/provider-companies',
+          'GET /api/v2/buyer-companies/17/sites/5/tanks',
+        ]);
+      } finally {
+        await server.close(force: true);
+      }
+    },
+  );
+
+  test(
     'replenishment request uses backend route and organization-scoped fields',
     () async {
       final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);

@@ -58,7 +58,7 @@ class MockDispatchRepository implements DispatchRepository {
   Future<void> deleteDriver(int id) async {}
 
   @override
-  Future<void> createDelivery({
+  Future<String> createDelivery({
     required int orderId,
     required int driverId,
     required int tankerId,
@@ -66,5 +66,6 @@ class MockDispatchRepository implements DispatchRepository {
     required String commandId,
     required DateTime windowStart,
     required DateTime windowEnd,
-  }) async {}
+    required String notes,
+  }) async => 'mock-delivery';
 }

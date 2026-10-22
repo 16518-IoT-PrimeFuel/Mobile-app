@@ -234,8 +234,28 @@ class _ProviderOrderActionPageState
   Widget build(BuildContext context) {
     final isReject = widget.action == 'reject';
     final isClose = widget.action == 'close';
+    if (widget.action == 'dispatch') {
+      return MissingPageShell(
+        title: 'Asignar entrega',
+        subtitle: '#${widget.orderId}',
+        child: _Panel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'La asignación requiere un pedido aceptado, un conductor, una cisterna y una ventana de entrega.',
+              ),
+              const SizedBox(height: 14),
+              _PrimaryButton(
+                label: 'Abrir asignación de entrega',
+                onPressed: () => context.go('/dispatches/assign'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
     final title = switch (widget.action) {
-      'dispatch' => 'Asignar despacho',
       'close' => 'Cerrar pedido',
       _ => 'Rechazar pedido',
     };
@@ -268,22 +288,6 @@ class _ProviderOrderActionPageState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.action == 'dispatch') ...[
-            const _SectionTitle('VEHÍCULO DISPONIBLE'),
-            _Panel(
-              child: RadioGroup<String>(
-                groupValue: 'TRK-044',
-                onChanged: (_) {},
-                child: const RadioListTile<String>(
-                  value: 'TRK-044',
-                  contentPadding: EdgeInsets.zero,
-                  title: Text('TRK-044 · Transportes Delta'),
-                  subtitle: Text('Cisterna 15,000 L · disponible'),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-          ],
           _Panel(
             child: TextField(
               controller: _note,
@@ -291,9 +295,7 @@ class _ProviderOrderActionPageState
               decoration: InputDecoration(
                 labelText: isReject
                     ? 'Motivo del rechazo'
-                    : isClose
-                    ? 'Delivered volume (L)'
-                    : 'Indicaciones para despacho',
+                    : 'Delivered volume (L)',
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 15,
@@ -306,11 +308,7 @@ class _ProviderOrderActionPageState
           ),
           const SizedBox(height: 14),
           _PrimaryButton(
-            label: isReject
-                ? 'Confirmar rechazo'
-                : isClose
-                ? 'Cerrar pedido'
-                : 'Asignar y notificar',
+            label: isReject ? 'Confirmar rechazo' : 'Cerrar pedido',
             onPressed: _busy ? null : () => _submit(context, isReject, isClose),
           ),
         ],
@@ -325,7 +323,7 @@ class _ProviderOrderActionPageState
   ) async {
     final id = int.tryParse(widget.orderId);
     if (id == null) {
-      setState(() => _done = true);
+      _message(context, 'El identificador del pedido no es válido.');
       return;
     }
     setState(() => _busy = true);
@@ -341,8 +339,6 @@ class _ProviderOrderActionPageState
           throw ArgumentError('Enter a valid delivered volume');
         }
         await repository.complete(id, deliveredVolume);
-      } else {
-        await repository.dispatch(id);
       }
       if (mounted) setState(() => _done = true);
     } catch (error) {
