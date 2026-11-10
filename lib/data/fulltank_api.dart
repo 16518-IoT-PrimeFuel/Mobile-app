@@ -4,10 +4,16 @@ class FullTankApi {
   const FullTankApi(this.client);
   final ApiClient client;
 
-  Future<dynamic> signIn(String username, String password) => client.post(
-    '/authentication/sign-in',
-    {'username': username, 'password': password},
-  );
+  Future<dynamic> signIn(
+    String username,
+    String password, {
+    bool rememberMe = true,
+  }) => client.post('/authentication/sign-in', {
+    'username': username,
+    'password': password,
+    'rememberMe': rememberMe,
+  });
+  Future<dynamic> signOut() => client.post('/authentication/sign-out');
   Future<dynamic> signUp(Map<String, dynamic> body) =>
       client.post('/authentication/sign-up', body);
   Future<dynamic> requestPasswordReset(String email) =>
@@ -55,9 +61,8 @@ class FullTankApi {
 
   Future<dynamic> createFuelRequest(Map<String, dynamic> body) =>
       client.post('/replenishment-requests', body);
-  Future<dynamic> fuelRequest(int id) => Future.error(
-    UnsupportedError('Replenishment request detail is not available'),
-  );
+  Future<dynamic> fuelRequest(int id) =>
+      client.get('/replenishment-requests/$id');
   Future<dynamic> acceptFuelRequest(int id) =>
       client.post('/replenishment-requests/$id/accept');
   Future<dynamic> rejectFuelRequest(int id, String reason) =>

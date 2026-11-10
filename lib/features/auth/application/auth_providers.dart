@@ -19,14 +19,17 @@ final fullTankApiProvider = Provider<FullTankApi>(
 
 const _useMockAuth = bool.fromEnvironment('USE_MOCK_AUTH', defaultValue: false);
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final storage = ref.watch(tokenStorageProvider);
-  if (_useMockAuth) return MockAuthRepository(storage);
-  return AuthApiRepository(
-    api: ref.watch(fullTankApiProvider),
-    storage: storage,
-  );
-});
+final Provider<AuthRepository> authRepositoryProvider =
+    Provider<AuthRepository>((ref) {
+      final storage = ref.watch(tokenStorageProvider);
+      if (_useMockAuth) return MockAuthRepository(storage);
+      return AuthApiRepository(
+        api: ref.watch(fullTankApiProvider),
+        storage: storage,
+        onSessionExpired: (token) =>
+            ref.read(authControllerProvider.notifier).expireSession(token),
+      );
+    });
 
 final authControllerProvider = StateNotifierProvider<AuthController, AuthState>(
   (ref) => AuthController(ref.watch(authRepositoryProvider)),

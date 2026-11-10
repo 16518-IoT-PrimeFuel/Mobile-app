@@ -13,6 +13,21 @@ import 'package:mobile_app/features/reports/data/api_reports_repository.dart';
 import 'package:mobile_app/features/inventory/data/api_inventory_repository.dart';
 
 void main() {
+  test(
+    'accept follows the backend linked order rather than treating a request as an order',
+    () async {
+      final order = await ApiOrdersRepository(
+        _AcceptedRequestApi(),
+        providerId: 9,
+        providerMode: true,
+      ).accept(77);
+      expect(order.id, '42');
+      expect(order.requestId, 77);
+      expect(order.total, 186);
+      expect(order.status, OrderStatus.approved);
+    },
+  );
+
   test('order adapter maps backend response names and statuses', () async {
     final orders = await ApiOrdersRepository(
       _BackendApi(),
@@ -385,7 +400,11 @@ class _SignInBackendApi extends FullTankApi {
   _SignInBackendApi() : super(ApiClient());
 
   @override
-  Future<dynamic> signIn(String username, String password) async => {
+  Future<dynamic> signIn(
+    String username,
+    String password, {
+    bool rememberMe = true,
+  }) async => {
     'id': 44,
     'username': username,
     'token': 'signed-jwt',
@@ -454,4 +473,26 @@ class _MemoryTokenStorage extends TokenStorage {
 
   @override
   Future<void> clear() async {}
+}
+
+class _AcceptedRequestApi extends FullTankApi {
+  _AcceptedRequestApi() : super(ApiClient());
+  @override
+  Future<dynamic> acceptFuelRequest(int id) async => {
+    'id': id,
+    'orderId': 42,
+    'status': 'ACCEPTED',
+    'quantity': 120,
+    'unitPrice': 1.55,
+  };
+  @override
+  Future<dynamic> order(int id) async {
+    expect(id, 42);
+    return {
+      'id': 42,
+      'requestId': 77,
+      'totalPrice': 186,
+      'status': 'CONFIRMED',
+    };
+  }
 }

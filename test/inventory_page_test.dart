@@ -8,6 +8,24 @@ import 'package:mobile_app/features/inventory/data/mock_inventory_repository.dar
 import 'package:mobile_app/features/inventory/presentation/inventory_page.dart';
 
 void main() {
+  testWidgets('inventory failure shows an error rather than sample tanks', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          inventoryTanksProvider.overrideWith(
+            (ref) => throw StateError('Unavailable account'),
+          ),
+        ],
+        child: const MaterialApp(home: InventoryPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Unavailable account'), findsOneWidget);
+    expect(find.text('Tanque diésel A-102'), findsNothing);
+  });
+
   testWidgets('renders inventory data and filters by status', (tester) async {
     await tester.pumpWidget(
       ProviderScope(

@@ -7,6 +7,7 @@ class ProviderOrdersPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) =>
       FutureBuilder<List<ProviderOrder>>(
         future: providerOrderRepository(
+          api: ref.read(fullTankApiProvider),
           providerId: ref.watch(authControllerProvider).session?.providerId,
         ).list(),
         builder: (context, snapshot) => MissingPageShell(
@@ -192,6 +193,7 @@ class _ProviderOrderDetailPageState
     setState(() => _busy = true);
     try {
       await providerOrderRepository(
+        api: ref.read(fullTankApiProvider),
         providerId: ref.read(authControllerProvider).session?.providerId,
       ).accept(id);
       if (mounted)
@@ -329,6 +331,7 @@ class _ProviderOrderActionPageState
     setState(() => _busy = true);
     try {
       final repository = providerOrderRepository(
+        api: ref.read(fullTankApiProvider),
         providerId: ref.read(authControllerProvider).session?.providerId,
       );
       if (isReject) {

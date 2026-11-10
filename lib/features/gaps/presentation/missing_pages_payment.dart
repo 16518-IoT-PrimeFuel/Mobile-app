@@ -1,6 +1,6 @@
 part of 'missing_pages.dart';
 
-enum PaymentState { checkout, processing, success, error }
+enum PaymentState { checkout, processing, pending, success, error }
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({
@@ -32,11 +32,18 @@ class _PaymentPageState extends State<PaymentPage> {
     try {
       final orderId = int.tryParse(widget.orderId);
       if (orderId == null) throw const FormatException('Invalid order id');
-      final api = widget.api ?? FullTankApi(ApiClient());
+      final container = ProviderScope.containerOf(context, listen: false);
+      final companyId = container
+          .read(authControllerProvider)
+          .session
+          ?.companyId;
+      if (companyId == null)
+        throw StateError('Authenticated buyer company is required');
+      final api =
+          widget.api ?? container.read<FullTankApi>(fullTankApiProvider);
       final created = await api.createPayment({
         'orderId': orderId,
-        'companyId': 1,
-        'amount': 42600,
+        'companyId': companyId,
         'paymentMethod': switch (_method) {
           'Transferencia bancaria' => 'BANK_TRANSFER',
           _ => 'CREDIT_CARD',
@@ -46,11 +53,7 @@ class _PaymentPageState extends State<PaymentPage> {
         throw const FormatException('Invalid payment response');
       final paymentId = _intValue(created['id'] ?? created['paymentId']);
       if (paymentId == null) throw const FormatException('Missing payment id');
-      await api.completePayment(
-        paymentId,
-        'MOBILE-${DateTime.now().millisecondsSinceEpoch}',
-      );
-      if (mounted) setState(() => _state = PaymentState.success);
+      if (mounted) setState(() => _state = PaymentState.pending);
     } catch (_) {
       if (mounted) setState(() => _state = PaymentState.error);
     }
@@ -64,6 +67,7 @@ class _PaymentPageState extends State<PaymentPage> {
     title: switch (_state) {
       PaymentState.checkout => 'Confirmar pago',
       PaymentState.processing => 'Procesando pago',
+      PaymentState.pending => 'Pago pendiente',
       PaymentState.success => 'Pago confirmado',
       PaymentState.error => 'No pudimos procesar el pago',
     },
@@ -71,6 +75,21 @@ class _PaymentPageState extends State<PaymentPage> {
     child: switch (_state) {
       PaymentState.checkout => _checkout(context),
       PaymentState.processing => const _PaymentProgress(),
+      PaymentState.pending => _Panel(
+        child: Column(
+          children: [
+            const Icon(Icons.schedule, color: _blue, size: 48),
+            const SizedBox(height: 14),
+            const Text(
+              'Pago registrado. La confirmación de la transacción está pendiente.',
+            ),
+            TextButton(
+              onPressed: () => context.go('/orders/${widget.orderId}'),
+              child: const Text('Ver pedido'),
+            ),
+          ],
+        ),
+      ),
       PaymentState.success => _paymentResult(context, true),
       PaymentState.error => _paymentResult(context, false),
     },
@@ -78,7 +97,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   Widget _checkout(BuildContext context) => Column(
     children: [
-      const _OrderTotalCard(),
+      _OrderTotalCard(orderId: widget.orderId),
       const SizedBox(height: 14),
       const Align(
         alignment: Alignment.centerLeft,
@@ -97,7 +116,6 @@ class _PaymentPageState extends State<PaymentPage> {
                   RadioListTile<String>(
                     value: 'Tarjeta corporativa',
                     title: Text('Tarjeta corporativa'),
-                    subtitle: Text('•••• 4242 · vence 08/28'),
                     contentPadding: EdgeInsets.zero,
                   ),
                   RadioListTile<String>(
@@ -112,9 +130,9 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
       ),
       const SizedBox(height: 14),
-      _PrimaryButton(label: 'Pagar S/ 42,600', onPressed: _submitPayment),
+      _PrimaryButton(label: 'Registrar pago', onPressed: _submitPayment),
       TextButton(
-        onPressed: () => context.push('/orders/FT-88421'),
+        onPressed: () => context.push('/orders/${widget.orderId}'),
         child: const Text('Revisar pedido'),
       ),
     ],
@@ -141,7 +159,7 @@ class _PaymentPageState extends State<PaymentPage> {
         _PrimaryButton(
           label: success ? 'Ver pedido' : 'Intentar de nuevo',
           onPressed: success
-              ? () => context.go('/orders/FT-88421')
+              ? () => context.go('/orders/${widget.orderId}')
               : () => setState(() => _state = PaymentState.checkout),
         ),
       ],
@@ -150,38 +168,19 @@ class _PaymentPageState extends State<PaymentPage> {
 }
 
 class _OrderTotalCard extends StatelessWidget {
-  const _OrderTotalCard();
+  const _OrderTotalCard({required this.orderId});
+  final String orderId;
 
   @override
   Widget build(BuildContext context) => _Panel(
     color: _blueSoft,
-    child: const Column(
-      children: [
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(Icons.local_shipping_outlined, color: _blue),
-          ),
-          title: Text('Diésel B5'),
-          subtitle: Text('12,000 L · Entrega 8 sep'),
-        ),
-        Divider(color: _line),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Total', style: TextStyle(fontWeight: FontWeight.w700)),
-            Text(
-              'S/ 42,600',
-              style: TextStyle(
-                fontSize: 29.0,
-                fontWeight: FontWeight.w800,
-                color: _ink,
-              ),
-            ),
-          ],
-        ),
-      ],
+    child: ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: const Icon(Icons.receipt_long_outlined, color: _blue),
+      title: Text('Pedido #$orderId'),
+      subtitle: const Text(
+        'El importe se determina a partir del total del pedido. Registrar el pago no confirma el cobro.',
+      ),
     ),
   );
 }
@@ -196,7 +195,7 @@ class _PaymentProgress extends StatelessWidget {
         const CircularProgressIndicator(color: _blue),
         const SizedBox(height: 18),
         const Text(
-          'Conectando con tu banco...',
+          'Registrando pago...',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 6),

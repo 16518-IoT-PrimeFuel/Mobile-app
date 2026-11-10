@@ -4,13 +4,14 @@ import '../domain/inventory_repository.dart';
 import '../domain/tank.dart';
 
 class ApiInventoryRepository implements InventoryRepository {
-  const ApiInventoryRepository(this.api);
+  const ApiInventoryRepository(this.api, {this.providerId});
+  final int? providerId;
 
   final FullTankApi api;
 
   @override
   Future<List<FuelProduct>> list() async {
-    final raw = await api.fuelProducts();
+    final raw = await api.fuelProducts(providerId: providerId);
     if (raw is! List) return const [];
     return raw.whereType<Map>().map(_map).toList();
   }

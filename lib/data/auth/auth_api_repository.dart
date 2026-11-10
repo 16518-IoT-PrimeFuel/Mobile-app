@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import '../../core/storage/token_storage.dart';
 import '../../domain/auth/auth_failure.dart';
 import '../../domain/auth/auth_repository.dart';
@@ -7,7 +10,31 @@ import '../api_client.dart';
 import '../fulltank_api.dart';
 
 class AuthApiRepository implements AuthRepository {
-  const AuthApiRepository({required this.api, required this.storage});
+  AuthApiRepository({
+    required this.api,
+    required this.storage,
+    this.onSessionExpired,
+  }) {
+    api.client.onUnauthorized = _expireSession;
+  }
+
+  final void Function(String token)? onSessionExpired;
+  Future<void> _storageWork = Future.value();
+  int _sessionOperation = 0;
+
+  Future<void> _persist(Future<void> Function() operation) {
+    return _storageWork = _storageWork.then(
+      (_) => operation(),
+      onError: (_) => operation(),
+    );
+  }
+
+  Future<void> _expireSession(String expectedToken) async {
+    if (api.client.token != expectedToken) return;
+    api.client.token = null;
+    onSessionExpired?.call(expectedToken);
+    await _persist(storage.clear);
+  }
 
   final FullTankApi api;
   final TokenStorage storage;
@@ -58,8 +85,10 @@ class AuthApiRepository implements AuthRepository {
     String password, {
     required bool rememberMe,
   }) async {
+    final operation = ++_sessionOperation;
     try {
-      final raw = await api.signIn(username, password);
+      final raw = await api.signIn(username, password, rememberMe: rememberMe);
+      if (operation != _sessionOperation) throw AuthFailure.unknown();
       final data = raw is Map ? raw : const <String, dynamic>{};
       final token = data['token'] as String?;
       if (token == null || token.isEmpty) throw AuthFailure.unknown();
@@ -80,17 +109,19 @@ class AuthApiRepository implements AuthRepository {
       );
       api.client.token = session.token;
       if (rememberMe) {
-        await storage.save(
-          token: session.token,
-          username: session.username,
-          userId: session.userId,
-          companyId: session.companyId,
-          providerId: session.providerId,
-          roles: session.roles,
-          memberships: session.memberships,
+        await _persist(
+          () => storage.save(
+            token: session.token,
+            username: session.username,
+            userId: session.userId,
+            companyId: session.companyId,
+            providerId: session.providerId,
+            roles: session.roles,
+            memberships: session.memberships,
+          ),
         );
       } else {
-        await storage.clear();
+        await _persist(storage.clear);
       }
       return session;
     } on AuthFailure {
@@ -110,8 +141,13 @@ class AuthApiRepository implements AuthRepository {
 
   @override
   Future<AuthSession?> restoreSession() async {
+    final operation = _sessionOperation;
     final saved = await storage.read();
-    if (saved == null) return null;
+    if (saved == null || operation != _sessionOperation) return null;
+    if (_tokenExpired(saved.token)) {
+      await _persist(storage.clear);
+      return null;
+    }
     api.client.token = saved.token;
     return AuthSession(
       userId: saved.userId,
@@ -126,8 +162,32 @@ class AuthApiRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {
-    api.client.token = null;
-    await storage.clear();
+    _sessionOperation++;
+    final signingOutToken = api.client.token;
+    try {
+      if (signingOutToken != null) {
+        await api.signOut().timeout(const Duration(seconds: 10));
+      }
+    } catch (_) {
+      // Offline/server failure must not prevent local logout.
+    } finally {
+      if (api.client.token == signingOutToken) {
+        api.client.token = null;
+        await _persist(storage.clear);
+      }
+    }
+  }
+
+  bool _tokenExpired(String token) {
+    try {
+      final payload = jsonDecode(
+        utf8.decode(base64Url.decode(base64Url.normalize(token.split('.')[1]))),
+      );
+      final exp = payload is Map ? payload['exp'] : null;
+      return exp is num && exp * 1000 <= DateTime.now().millisecondsSinceEpoch;
+    } catch (_) {
+      return false; // The API remains responsible for validating opaque/legacy tokens.
+    }
   }
 
   int? _intValue(Object? value) {

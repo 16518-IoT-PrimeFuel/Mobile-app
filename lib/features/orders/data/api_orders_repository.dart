@@ -109,7 +109,13 @@ class ApiOrdersRepository implements OrdersRepository {
     final raw = await api.acceptFuelRequest(requestId);
     if (raw is! Map)
       throw const FormatException('Invalid accepted order response');
-    return _mapOrder(raw);
+    final orderId = _int(raw['orderId']);
+    if (orderId == null)
+      throw const FormatException('Accepted request has no linked order');
+    final order = await api.order(orderId);
+    if (order is! Map)
+      throw const FormatException('Invalid linked order response');
+    return _mapOrder(order);
   }
 
   @override

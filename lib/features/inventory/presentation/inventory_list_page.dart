@@ -168,7 +168,34 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final remoteTanks = ref.watch(inventoryTanksProvider).valueOrNull;
+    final tankState = ref.watch(inventoryTanksProvider);
+    final preview = ref.watch(inventoryPreviewProvider);
+    if (!preview && !tankState.hasValue) {
+      final error = tankState.error;
+      return _InventoryShell(
+        title: 'Inventario',
+        subtitle: 'Tanques',
+        children: [
+          _ProductState(
+            message: tankState.isLoading
+                ? 'Cargando tanques…'
+                : error is StateError
+                ? '${error.message}'
+                : 'No se pudieron cargar los tanques',
+            icon: tankState.isLoading
+                ? Icons.hourglass_empty
+                : Icons.error_outline,
+            action: tankState.isLoading
+                ? null
+                : TextButton(
+                    onPressed: () => ref.invalidate(inventoryTanksProvider),
+                    child: const Text('Reintentar'),
+                  ),
+          ),
+        ],
+      );
+    }
+    final remoteTanks = tankState.valueOrNull;
     final tanks = remoteTanks == null
         ? _tanks
         : remoteTanks.map(TankData.fromTank).toList();
@@ -192,7 +219,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
             onPressed: () async {
               final selected = await showSearch<TankData?>(
                 context: context,
-                delegate: _TankSearchDelegate(),
+                delegate: _TankSearchDelegate(tanks),
               );
               if (context.mounted && selected != null) {
                 context.go('/inventory/tank/${selected.id}');
@@ -221,7 +248,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
             Expanded(
               child: _SummaryMetric(
                 label: 'Advertencia',
-                count: _tanks
+                count: tanks
                     .where((tank) => tank.level >= 20 && tank.level < 40)
                     .length,
                 status: _TankStatus.warning,

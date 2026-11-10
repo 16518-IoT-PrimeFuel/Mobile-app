@@ -7,6 +7,29 @@ import 'package:mobile_app/data/api_client.dart';
 import 'package:mobile_app/data/fulltank_api.dart';
 
 void main() {
+  test(
+    'request detail uses the current authorized replenishment route',
+    () async {
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      final seen = <String>[];
+      server.listen((request) {
+        seen.add('${request.method} ${request.uri.path}');
+        request.response
+          ..write('{"id":77,"quantity":120}')
+          ..close();
+      });
+      try {
+        final api = FullTankApi(
+          ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api'),
+        );
+        expect(await api.fuelRequest(77), {'id': 77, 'quantity': 120});
+        expect(seen, ['GET /api/replenishment-requests/77']);
+      } finally {
+        await server.close(force: true);
+      }
+    },
+  );
+
   test('default API base URL uses the backend namespace', () {
     expect(ApiClient().baseUrl, 'http://10.0.2.2:8080/api');
   });

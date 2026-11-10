@@ -139,15 +139,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/orders/:orderId/payment',
-        builder: (context, state) => PaymentPage(
-          orderId: state.pathParameters['orderId'] ?? 'FT-88421',
-          initialState: switch (state.uri.queryParameters['state']) {
-            'processing' => PaymentState.processing,
-            'success' => PaymentState.success,
-            'error' => PaymentState.error,
-            _ => PaymentState.checkout,
-          },
-        ),
+        builder: (context, state) =>
+            PaymentPage(orderId: state.pathParameters['orderId'] ?? 'FT-88421'),
       ),
       GoRoute(
         path: '/orders/:orderId',

@@ -2,7 +2,6 @@ import '../../../shared/theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../data/api_client.dart';
 import '../../../data/fulltank_api.dart';
 import '../../auth/application/auth_providers.dart';
 import '../../../shared/widgets/fulltank_bottom_navigation.dart';

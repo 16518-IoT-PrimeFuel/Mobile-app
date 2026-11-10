@@ -7,7 +7,36 @@ class TankDetailPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final apiTank = ref.watch(inventoryTankProvider(tankId)).valueOrNull;
+    final tankState = ref.watch(inventoryTankProvider(tankId));
+    final preview = ref.watch(inventoryPreviewProvider);
+    if (!preview && (!tankState.hasValue || tankState.valueOrNull == null)) {
+      final error = tankState.error;
+      return _InventoryShell(
+        title: 'Tanque',
+        subtitle: tankId,
+        back: true,
+        children: [
+          _ProductState(
+            message: tankState.isLoading
+                ? 'Cargando tanque…'
+                : error is StateError
+                ? '${error.message}'
+                : 'Tanque no disponible',
+            icon: tankState.isLoading
+                ? Icons.hourglass_empty
+                : Icons.error_outline,
+            action: tankState.isLoading
+                ? null
+                : TextButton(
+                    onPressed: () =>
+                        ref.invalidate(inventoryTankProvider(tankId)),
+                    child: const Text('Reintentar'),
+                  ),
+          ),
+        ],
+      );
+    }
+    final apiTank = tankState.valueOrNull;
     final tank = apiTank == null
         ? _tankForId(tankId)
         : TankData.fromTank(apiTank);

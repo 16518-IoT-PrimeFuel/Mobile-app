@@ -38,7 +38,7 @@ void main() {
     'payment updates and invalid provider actions do not fake success',
     (tester) async {
       await tester.pumpWidget(const MaterialApp(home: PaymentPage()));
-      await tester.tap(find.text('Pagar S/ 42,600'));
+      await tester.tap(find.text('Registrar pago'));
       await tester.pump();
       expect(find.text('Procesando pago'), findsOneWidget);
 

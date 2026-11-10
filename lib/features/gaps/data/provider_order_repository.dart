@@ -116,7 +116,10 @@ class MockProviderOrderRepository implements ProviderOrderRepository {
   Future<void> complete(int deliveryId, double deliveredVolume) async {}
 }
 
-ProviderOrderRepository providerOrderRepository({int? providerId}) =>
+ProviderOrderRepository providerOrderRepository({
+  int? providerId,
+  FullTankApi? api,
+}) =>
     const bool.fromEnvironment('USE_MOCK_PROVIDER_ORDERS', defaultValue: false)
     ? MockProviderOrderRepository()
-    : ApiProviderOrderRepository(providerId: providerId);
+    : ApiProviderOrderRepository(providerId: providerId, api: api);

@@ -36,14 +36,16 @@ class AuthController extends StateNotifier<AuthState> {
   AuthController(this._repository) : super(const AuthState());
 
   final AuthRepository _repository;
+  int _operation = 0;
 
   Future<void> restoreSession() async {
+    final operation = ++_operation;
     try {
       final session = await _repository.restoreSession();
-      if (session == null) return;
+      if (session == null || operation != _operation) return;
       state = AuthState(status: AuthStatus.authenticated, session: session);
     } catch (_) {
-      await _repository.signOut();
+      if (operation == _operation) await _repository.signOut();
     }
   }
 
@@ -52,6 +54,7 @@ class AuthController extends StateNotifier<AuthState> {
     required String password,
     required bool rememberMe,
   }) async {
+    final operation = ++_operation;
     state = const AuthState(status: AuthStatus.loading);
     try {
       final session = await _repository.signIn(
@@ -59,12 +62,15 @@ class AuthController extends StateNotifier<AuthState> {
         password,
         rememberMe: rememberMe,
       );
+      if (operation != _operation) return false;
       state = AuthState(status: AuthStatus.authenticated, session: session);
       return true;
     } on AuthFailure catch (failure) {
+      if (operation != _operation) return false;
       state = AuthState(status: AuthStatus.failure, failure: failure);
       return false;
     } catch (_) {
+      if (operation != _operation) return false;
       state = AuthState(
         status: AuthStatus.failure,
         failure: AuthFailure.unknown(),
@@ -73,7 +79,14 @@ class AuthController extends StateNotifier<AuthState> {
     }
   }
 
+  void expireSession(String token) {
+    if (state.session?.token != token) return;
+    _operation++;
+    state = const AuthState();
+  }
+
   void continueAsGuest() {
+    _operation++;
     state = const AuthState(
       status: AuthStatus.authenticated,
       session: AuthSession(username: 'Invitado', token: 'guest'),
@@ -81,7 +94,11 @@ class AuthController extends StateNotifier<AuthState> {
   }
 
   Future<void> signOut() async {
-    await _repository.signOut();
-    state = const AuthState();
+    final operation = ++_operation;
+    try {
+      await _repository.signOut();
+    } finally {
+      if (operation == _operation) state = const AuthState();
+    }
   }
 }
