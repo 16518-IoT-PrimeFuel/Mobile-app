@@ -9,7 +9,7 @@ Align the existing Flutter app's colors, typography, component styling, and supp
 - Mobile baseline: `da7ef88`, previous branch `feat/mobile-backend-integration`; working branch `feat/frontend-mobile-parity`.
 - Reference: sibling `primefuel-frontend-reference`, develop `0457aaa`. Its only change beyond main `2a5a412` is 3D/WebGL tank visualization, explicitly excluded.
 - Corporate palette: primary `#1E3A8A`, accent `#F59E0B`, background `#F4F6F9`, white surfaces; text `#1F2937` / `#4B5563`; Roboto typography. Sources: frontend `src/material-theme.scss`, `src/styles.css`, shared layout CSS.
-- Mobile currently has no explicit global theme in `lib/app/fulltank_app.dart`; 171 corporate/text/background color occurrences were found across presentation files. Reuse existing widgets and layouts, no added framework or design dependency.
+- At the styling baseline, mobile had no explicit global theme in `lib/app/fulltank_app.dart`; 171 corporate/text/background color occurrences were found across presentation files. Reuse existing widgets and layouts, no added framework or design dependency.
 - Preserve prior backend alignment described in `odd/tasks/mobile-backend-api-alignment.md`. Local backend `CustomerTanksController` explicitly supports the current nested `/api/v2/buyer-companies/{companyId}/sites/{siteId}/tanks` route. Do not replace it merely because the web uses `/api/tanks`.
 - Local backend `SignInResource` accepts `rememberMe`; `AuthenticationController` exposes server-side sign-out. Mobile currently omits the rememberMe payload and clears tokens locally on sign-out.
 - Backend CodeGraph reported stale auth source; current controller was read directly. Frontend CodeGraph initialization previously failed; filesystem fallback used. No backend/frontend source edits.
@@ -48,15 +48,15 @@ Align the existing Flutter app's colors, typography, component styling, and supp
 - SDK resolution: current Flutter requires matcher 0.12.20 and test_api 0.7.12, meta ^1.18.3 and vector_math ^2.4.0, verified in installed SDK pubspec files. The four resulting transitive lock updates are retained for reproducible checks; no dependency was added for styling.
 - Runtime harness: focused widget tests exercise primary action, active bottom navigation, shared typography/surfaces and font loading. No live API/backend or device rendering was performed.
 - Rollback: revert the style work-unit commit to remove only theme/palette/font/test changes; prior API/tenant alignment remains intact.
-- Native review: not started; parent-owned.
-- Next step: parent assesses the styling commit. FMP-2 API/auth work and FMP-3 mobile-device visual validation remain pending. No remote PR has been opened; intended first slice targets local integration branch `feat/frontend-mobile-parity`.
+- Styling candidate review was declined; fresh API candidate review is parent-owned and not started by this worker.
+- Next step: parent assesses/builds the API commit; FMP-3 mobile-device visual validation remains pending. No remote PR has been opened; intended first slice targets local integration branch `feat/frontend-mobile-parity`.
 
 ## FMP-2 resumed scope
 
 - API slice branch: `feat/frontend-mobile-parity-api` from main `c780b29`; parent owns merge/push and fresh native review. Preserve `.atl/` and `.aws` without reading credentials.
 - Implement existing auth rememberMe/server sign-out/expired-session restore and authenticated 401 handling, including stale-response guards. Verify existing request detail/accept behavior and audit the existing facade route families against reference/backend; preserve supported v2 tanks and explicitly unsupported operations.
 - Strict TDD remains enabled. Focused/full runner: `/home/ejos/flutter/bin/flutter test --no-pub`; analyze `--no-pub` has 17 accepted baseline diagnostics. Parent/verifier owns final Android debug build.
-- FMP-1 is complete; device-rendered visual validation remains pending. FMP-2 implementation and fresh review remain pending. Mirror reconciliation readback is recorded in worker handoff.
+- FMP-1 and FMP-2 implementation are complete; device-rendered visual validation and fresh API review remain pending. Mirror reconciliation readback is recorded in worker handoff.
 
 - Parent authorized the bounded inventory identity fix discovered during the API audit: remove fixed tenant/site=1 and silent API-error-to-mock fallback. Reuse existing customer/site lookup, require a unique site in the absence of a site-selection UI, retain explicit mock/guest previews, and surface real-session loading/errors. Add provider and widget RED/GREEN assertions. No new inventory layout/screens.
 
@@ -87,4 +87,4 @@ Align the existing Flutter app's colors, typography, component styling, and supp
 - Final Dart format normalization completed before checks; `git diff --check` passes. Final `flutter analyze --no-pub` exits 1 with exactly 17 baseline diagnostics and no new diagnostics; this is a known nonzero check, not a clean pass. Parent/verifier must build Android debug APK for the final API candidate.
 - Rollback boundary: this API-slice commit removes only auth/client/affected inventory-order-payment adapters, safe UI states and their tests/docs; styling main commit `c780b29` remains intact. Parent owns fresh native RDD candidate consent/review, merge and push. Styling decline does not apply to this candidate.
 - Device visual/motion validation remains pending. Existing illustrative telemetry/alerts/restock preview content and web-only organization/administration/device-management features were not expanded into new mobile features. These are not claimed as runtime API parity or live telemetry verification.
-- Work-unit commit identity and actual authored line count will be returned in handoff after local commit. FMP-3 final APK/device checks remain pending; no main mutation or remote push by this worker.
+- Work-unit commit: `199d87e1aca52c3c91f346abdc09d91a34b80aaf` (`fix(mobile): align authenticated API workflows`), base `c780b29`, local branch `feat/frontend-mobile-parity-api`. It contains 835 additions + 172 deletions = **1,007 authored text lines** across 24 files. This coherent existing-workflow slice exceeds the heuristic without code-golf; integration-chain strategy was already authorized. FMP-3 final APK/device checks remain pending; no main mutation or remote push by this worker.
