@@ -19,11 +19,11 @@ class _ContactRow extends StatelessWidget {
     decoration: last
         ? null
         : const BoxDecoration(
-            border: Border(bottom: BorderSide(color: Color(0xFFE2E8F0))),
+            border: Border(bottom: BorderSide(color: FullTankColors.border)),
           ),
     child: Row(
       children: [
-        _AccountIconTile(icon: icon, color: Color(0xFF4A5568)),
+        _AccountIconTile(icon: icon, color: FullTankColors.textSecondary),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -53,8 +53,8 @@ class _AccountStatusCard extends StatelessWidget {
             Text('ESTADO DE CUENTA', style: _microLabel),
             _StatusPill(
               label: 'AL CORRIENTE',
-              color: Color(0xFF10B981),
-              softColor: Color(0xFFECFDF5),
+              color: FullTankColors.success,
+              softColor: FullTankColors.successSoft,
             ),
           ],
         ),
@@ -158,7 +158,7 @@ class _EditProfileState extends State<_EditProfile> {
         child: FilledButton(
           onPressed: () => _showMessage(context, 'Cambios guardados.'),
           style: FilledButton.styleFrom(
-            backgroundColor: Color(0xFF1E40AF),
+            backgroundColor: FullTankColors.primary,
             minimumSize: const Size.fromHeight(52),
             padding: const EdgeInsets.symmetric(horizontal: 20),
             shape: const StadiumBorder(),
@@ -199,7 +199,7 @@ class _PhotoCard extends StatelessWidget {
         TextButton(
           onPressed: onChange,
           style: TextButton.styleFrom(
-            backgroundColor: Color(0xFFEFF4FF),
+            backgroundColor: FullTankColors.primarySoft,
             minimumSize: Size.zero,
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
           ),

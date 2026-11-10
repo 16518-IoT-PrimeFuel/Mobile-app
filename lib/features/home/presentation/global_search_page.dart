@@ -18,7 +18,7 @@ class _Card extends StatelessWidget {
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(20.3),
-      border: Border.all(color: const Color(0xFFF0F2F5)),
+      border: Border.all(color: FullTankColors.background),
       boxShadow: [
         BoxShadow(
           color: const Color(0x0D1A202C),
@@ -117,7 +117,7 @@ class _DarkButton extends StatelessWidget {
     child: Container(
       padding: EdgeInsets.symmetric(horizontal: 14.5, vertical: 8.7),
       decoration: BoxDecoration(
-        color: Color(0xFF1A202C),
+        color: FullTankColors.text,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
@@ -142,18 +142,18 @@ class _SectionLabel extends StatelessWidget {
 }
 
 const _labelStyle = TextStyle(
-  color: Color(0xFF4A5568),
+  color: FullTankColors.textSecondary,
   fontSize: 13.775,
   fontWeight: FontWeight.w800,
   letterSpacing: .25,
 );
 const _metaStyle = TextStyle(
-  color: Color(0xFF94A3B8),
+  color: FullTankColors.muted,
   fontSize: 13.775,
   fontWeight: FontWeight.w600,
 );
 const _valueStyle = TextStyle(
-  color: Color(0xFF1A202C),
+  color: FullTankColors.text,
   fontSize: 27.55,
   height: 1,
   fontWeight: FontWeight.w800,
@@ -182,17 +182,17 @@ class GlobalSearchPage extends StatelessWidget {
                 height: 44,
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF3F4F6),
+                  color: FullTankColors.background,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.search, size: 18, color: Color(0xFF94A3B8)),
+                    Icon(Icons.search, size: 18, color: FullTankColors.muted),
                     SizedBox(width: 8),
                     Text(
                       'Buscar "diésel"',
                       style: TextStyle(
-                        color: Color(0xFF94A3B8),
+                        color: FullTankColors.muted,
                         fontSize: 17.4,
                       ),
                     ),
@@ -223,32 +223,32 @@ class GlobalSearchPage extends StatelessWidget {
                 eyebrow: 'PEDIDO · FT-2041',
                 title: 'Diésel B5 · 8.000 L',
                 detail: 'Despachado · Hoy · 4:30 PM',
-                color: Color(0xFF1E40AF),
-                softColor: Color(0xFFEFF4FF),
+                color: FullTankColors.primary,
+                softColor: FullTankColors.primarySoft,
               ),
               const _SearchResult(
                 icon: Icons.receipt_long_outlined,
                 eyebrow: 'PEDIDO · FT-2038',
                 title: 'Diésel B5 · 12.000 L',
                 detail: 'Entregado · Ayer',
-                color: Color(0xFF1E40AF),
-                softColor: Color(0xFFEFF4FF),
+                color: FullTankColors.primary,
+                softColor: FullTankColors.primarySoft,
               ),
               const _SearchResult(
                 icon: Icons.person_outline,
                 eyebrow: 'CLIENTE · C002',
                 title: 'Transportes Delta',
                 detail: 'Transporte · Nuevo León · 142 pedidos',
-                color: Color(0xFF0F9B91),
-                softColor: Color(0xFFEAFBF8),
+                color: FullTankColors.success,
+                softColor: FullTankColors.successSoft,
               ),
               const _SearchResult(
                 icon: Icons.person_outline,
                 eyebrow: 'CLIENTE · C001',
                 title: 'AgroNorte S.A.',
                 detail: 'Agricultura · Sonora · 84 pedidos',
-                color: Color(0xFF0F9B91),
-                softColor: Color(0xFFEAFBF8),
+                color: FullTankColors.success,
+                softColor: FullTankColors.successSoft,
               ),
               const _SearchResult(
                 icon: Icons.opacity_outlined,

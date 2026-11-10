@@ -69,7 +69,7 @@ class _RecoverPageState extends State<RecoverPage> {
                 const Text(
                   'Recuperar contraseña',
                   style: TextStyle(
-                    color: Color(0xFF1A202C),
+                    color: FullTankColors.text,
                     fontSize: 40.6,
                     fontWeight: FontWeight.w700,
                     letterSpacing: -0.7,
@@ -79,7 +79,7 @@ class _RecoverPageState extends State<RecoverPage> {
                 const Text(
                   'Ingresa tu email corporativo para recibir instrucciones de recuperación.',
                   style: TextStyle(
-                    color: Color(0xFF4A5568),
+                    color: FullTankColors.textSecondary,
                     fontSize: 19.575,
                     height: 1.55,
                   ),
@@ -116,7 +116,7 @@ class _RecoverPageState extends State<RecoverPage> {
                   child: TextButton(
                     onPressed: () => context.pop(),
                     style: TextButton.styleFrom(
-                      foregroundColor: Color(0xFF1E40AF),
+                      foregroundColor: FullTankColors.primary,
                       textStyle: const TextStyle(
                         fontSize: 18.85,
                         fontWeight: FontWeight.w600,
@@ -158,7 +158,7 @@ class _RecoverPageState extends State<RecoverPage> {
             'Revisa tu bandeja',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF1A202C),
+              color: FullTankColors.text,
               fontSize: 33.35,
               fontWeight: FontWeight.w700,
               letterSpacing: -0.4,
@@ -177,7 +177,7 @@ class _RecoverPageState extends State<RecoverPage> {
           TextButton(
             onPressed: () {},
             style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF1E40AF),
+              foregroundColor: FullTankColors.primary,
               minimumSize: const Size(double.infinity, 44),
               textStyle: const TextStyle(
                 fontSize: 17.4,

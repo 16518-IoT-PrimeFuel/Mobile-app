@@ -61,8 +61,8 @@ class _RequesterHome extends StatelessWidget {
               child: _QuickAction(
                 icon: Icons.note_add_outlined,
                 label: 'Crear\npedido',
-                color: Color(0xFF1E40AF),
-                softColor: Color(0xFFEFF4FF),
+                color: FullTankColors.primary,
+                softColor: FullTankColors.primarySoft,
                 onTap: () => context.push('/home/quick-actions'),
               ),
             ),
@@ -71,8 +71,8 @@ class _RequesterHome extends StatelessWidget {
               child: _QuickAction(
                 icon: Icons.receipt_long_outlined,
                 label: 'Ver\npedidos',
-                color: const Color(0xFF0F9B91),
-                softColor: const Color(0xFFEAFBF8),
+                color: FullTankColors.success,
+                softColor: FullTankColors.successSoft,
                 onTap: () => context.push('/orders/history'),
               ),
             ),
@@ -81,8 +81,8 @@ class _RequesterHome extends StatelessWidget {
               child: _QuickAction(
                 icon: Icons.show_chart,
                 label: 'Consumo',
-                color: const Color(0xFFC56B2C),
-                softColor: const Color(0xFFFFF4E9),
+                color: FullTankColors.accent,
+                softColor: FullTankColors.warningSoft,
                 onTap: () => context.push('/reports/consumption'),
               ),
             ),

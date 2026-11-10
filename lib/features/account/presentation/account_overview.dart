@@ -58,8 +58,8 @@ class _AccountOverview extends StatelessWidget {
             child: _QuickAccess(
               icon: Icons.edit_outlined,
               label: 'Editar\nperfil',
-              color: Color(0xFF1E40AF),
-              softColor: Color(0xFFEFF4FF),
+              color: FullTankColors.primary,
+              softColor: FullTankColors.primarySoft,
               onTap: () => context.push('/account/profile'),
             ),
           ),
@@ -78,8 +78,8 @@ class _AccountOverview extends StatelessWidget {
             child: _QuickAccess(
               icon: Icons.tune_outlined,
               label: 'Preferencias',
-              color: const Color(0xFFC56B2C),
-              softColor: const Color(0xFFFFF4E9),
+              color: FullTankColors.accent,
+              softColor: FullTankColors.warningSoft,
               onTap: () => context.push('/account/notifications'),
             ),
           ),
@@ -100,7 +100,7 @@ class _ProfileSummary extends StatelessWidget {
         height: 47,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Color(0xFF1A202C),
+          color: FullTankColors.text,
           borderRadius: BorderRadius.circular(13),
         ),
         child: const Text(
@@ -120,7 +120,7 @@ class _ProfileSummary extends StatelessWidget {
             Text(
               'PetroAndes',
               style: TextStyle(
-                color: Color(0xFF1A202C),
+                color: FullTankColors.text,
                 fontSize: 21.75,
                 fontWeight: FontWeight.w800,
               ),
@@ -128,7 +128,7 @@ class _ProfileSummary extends StatelessWidget {
             Text(
               'Solicitante · Operaciones de flota',
               style: TextStyle(
-                color: Color(0xFF4A5568),
+                color: FullTankColors.textSecondary,
                 fontSize: 13.05,
                 fontWeight: FontWeight.w500,
               ),

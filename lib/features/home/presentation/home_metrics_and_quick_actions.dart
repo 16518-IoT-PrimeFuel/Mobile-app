@@ -51,7 +51,7 @@ class _SummaryMetric extends StatelessWidget {
                 TextSpan(
                   text: ' $unit',
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: FullTankColors.muted,
                     fontSize: 14.5,
                     fontWeight: FontWeight.w600,
                   ),
@@ -90,7 +90,7 @@ class _ActionRequiredCard extends StatelessWidget {
       color: Colors.white,
       border: Border(
         left: BorderSide(color: color, width: 3),
-        bottom: const BorderSide(color: Color(0xFFE2E8F0)),
+        bottom: const BorderSide(color: FullTankColors.border),
       ),
     ),
     child: Row(
@@ -122,7 +122,7 @@ class _ActionRequiredCard extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 16.675,
                   height: 1.12,
                   fontWeight: FontWeight.w800,
@@ -132,7 +132,7 @@ class _ActionRequiredCard extends StatelessWidget {
               Text(
                 detail,
                 style: const TextStyle(
-                  color: Color(0xFF4A5568),
+                  color: FullTankColors.textSecondary,
                   fontSize: 13.05,
                   height: 1.2,
                 ),
@@ -174,7 +174,7 @@ class _QuickAction extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 4.35, vertical: 11.6),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: const Color(0xFFF0F2F5)),
+        border: Border.all(color: FullTankColors.background),
         borderRadius: BorderRadius.circular(17.4),
         boxShadow: [
           BoxShadow(
@@ -193,7 +193,7 @@ class _QuickAction extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 2,
             style: const TextStyle(
-              color: Color(0xFF2D3748),
+              color: FullTankColors.text,
               fontSize: 12.325,
               height: 1.05,
               fontWeight: FontWeight.w700,

@@ -1,3 +1,4 @@
+import '../../../../shared/theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 
 class AuthTextField extends StatefulWidget {
@@ -54,13 +55,13 @@ class _AuthTextFieldState extends State<AuthTextField> {
     final hasError = widget.errorText != null;
     final active = _focusNode.hasFocus;
     final borderColor = hasError
-        ? Color(0xFFEF4444)
+        ? FullTankColors.error
         : active
-        ? Color(0xFF1E40AF)
-        : Color(0xFFE2E8F0);
+        ? FullTankColors.primary
+        : FullTankColors.border;
     final iconColor = hasError || active
-        ? (hasError ? Color(0xFFEF4444) : Color(0xFF1E40AF))
-        : Color(0xFF94A3B8);
+        ? (hasError ? FullTankColors.error : FullTankColors.primary)
+        : FullTankColors.muted;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +69,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
         Text(
           widget.label.toUpperCase(),
           style: TextStyle(
-            color: hasError ? Color(0xFFEF4444) : Color(0xFF4A5568),
+            color: hasError
+                ? FullTankColors.error
+                : FullTankColors.textSecondary,
             fontSize: widget.largeText ? 15.95 : 11,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.15,
@@ -79,7 +82,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
           duration: const Duration(milliseconds: 150),
           height: 46,
           decoration: BoxDecoration(
-            color: active ? Colors.white : Color(0xFFF3F4F6),
+            color: active ? Colors.white : FullTankColors.background,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: borderColor, width: 1.5),
           ),
@@ -92,15 +95,15 @@ class _AuthTextFieldState extends State<AuthTextField> {
             autocorrect: false,
             enableSuggestions: !widget.obscureText,
             style: TextStyle(
-              color: Color(0xFF1A202C),
+              color: FullTankColors.text,
               fontSize: widget.largeText ? 20.3 : 14,
               fontWeight: FontWeight.w500,
             ),
-            cursorColor: Color(0xFF1E40AF),
+            cursorColor: FullTankColors.primary,
             decoration: InputDecoration(
               hintText: widget.hintText,
               hintStyle: TextStyle(
-                color: Color(0xFF94A3B8),
+                color: FullTankColors.muted,
                 fontSize: widget.largeText ? 20.3 : 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -117,7 +120,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
                         size: 18,
-                        color: Color(0xFF94A3B8),
+                        color: FullTankColors.muted,
                       ),
                     ),
               border: InputBorder.none,
@@ -133,14 +136,14 @@ class _AuthTextFieldState extends State<AuthTextField> {
               const Icon(
                 Icons.cancel_outlined,
                 size: 14,
-                color: Color(0xFFEF4444),
+                color: FullTankColors.error,
               ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   widget.errorText!,
                   style: TextStyle(
-                    color: Color(0xFFEF4444),
+                    color: FullTankColors.error,
                     fontSize: widget.largeText ? 15.225 : 10.5,
                     fontWeight: FontWeight.w600,
                   ),

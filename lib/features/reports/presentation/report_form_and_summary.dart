@@ -10,7 +10,7 @@ class _BarChartPainter extends CustomPainter {
     final groupWidth = (right - left) / 6;
     final barWidth = groupWidth * .22;
     final grid = Paint()
-      ..color = Color(0xFFE2E8F0)
+      ..color = FullTankColors.border
       ..strokeWidth = 1;
     for (final y in [top, (top + bottom) / 2, bottom])
       canvas.drawLine(Offset(left, y), Offset(right, y), grid);
@@ -22,7 +22,7 @@ class _BarChartPainter extends CustomPainter {
       final previousHeight = (bottom - top) * previous[i] / 65;
       canvas.drawRect(
         Rect.fromLTWH(x, bottom - currentHeight, barWidth, currentHeight),
-        Paint()..color = Color(0xFF1E40AF),
+        Paint()..color = FullTankColors.primary,
       );
       canvas.drawRect(
         Rect.fromLTWH(
@@ -37,7 +37,7 @@ class _BarChartPainter extends CustomPainter {
         canvas,
         ['MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO'][i],
         Offset(left + i * groupWidth + groupWidth * .13, bottom + 10),
-        Color(0xFF94A3B8),
+        FullTankColors.muted,
         6,
       );
     }
@@ -45,14 +45,14 @@ class _BarChartPainter extends CustomPainter {
       canvas,
       'Anterior',
       Offset(left, size.height - 18),
-      Color(0xFF4A5568),
+      FullTankColors.textSecondary,
       6,
     );
     _drawText(
       canvas,
       'Actual',
       Offset(left + 42, size.height - 18),
-      Color(0xFF4A5568),
+      FullTankColors.textSecondary,
       6,
     );
     canvas.drawRect(
@@ -61,7 +61,7 @@ class _BarChartPainter extends CustomPainter {
     );
     canvas.drawRect(
       Rect.fromLTWH(left + 33, size.height - 20, 5, 5),
-      Paint()..color = Color(0xFF1E40AF),
+      Paint()..color = FullTankColors.primary,
     );
   }
 
@@ -111,7 +111,7 @@ class _FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) => Text(
     text,
     style: const TextStyle(
-      color: Color(0xFF4A5568),
+      color: FullTankColors.textSecondary,
       fontSize: 10.15,
       fontWeight: FontWeight.w800,
     ),
@@ -127,7 +127,7 @@ class _SelectField extends StatelessWidget {
     margin: const EdgeInsets.only(top: 6),
     padding: const EdgeInsets.symmetric(horizontal: 13),
     decoration: BoxDecoration(
-      color: Color(0xFFF3F4F6),
+      color: FullTankColors.background,
       borderRadius: BorderRadius.circular(9),
     ),
     child: Row(
@@ -136,12 +136,12 @@ class _SelectField extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-            color: Color(0xFF2D3748),
+            color: FullTankColors.text,
             fontSize: 11.6,
             fontWeight: FontWeight.w700,
           ),
         ),
-        const Icon(Icons.chevron_right, size: 13, color: Color(0xFF94A3B8)),
+        const Icon(Icons.chevron_right, size: 13, color: FullTankColors.muted),
       ],
     ),
   );
@@ -156,7 +156,7 @@ class _SummaryCard extends StatelessWidget {
     margin: const EdgeInsets.only(top: 6),
     padding: const EdgeInsets.all(13),
     decoration: BoxDecoration(
-      color: Color(0xFFEFF4FF),
+      color: FullTankColors.primarySoft,
       borderRadius: BorderRadius.circular(10),
     ),
     child: Column(
@@ -166,14 +166,14 @@ class _SummaryCard extends StatelessWidget {
           children: [
             Icon(
               Icons.description_outlined,
-              color: Color(0xFF1E40AF),
+              color: FullTankColors.primary,
               size: 14,
             ),
             SizedBox(width: 6),
             Text(
               'Reporte de ventas · AGO 2026',
               style: TextStyle(
-                color: Color(0xFF1A202C),
+                color: FullTankColors.text,
                 fontSize: 11.6,
                 fontWeight: FontWeight.w800,
               ),
@@ -183,7 +183,10 @@ class _SummaryCard extends StatelessWidget {
         SizedBox(height: 2),
         Text(
           'PDF · A4 · 2 páginas · 980 KB',
-          style: TextStyle(color: Color(0xFF4A5568), fontSize: 10.15),
+          style: TextStyle(
+            color: FullTankColors.textSecondary,
+            fontSize: 10.15,
+          ),
         ),
         SizedBox(height: 10),
         Row(

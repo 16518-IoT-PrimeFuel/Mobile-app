@@ -1,3 +1,4 @@
+import '../theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,7 +22,7 @@ class FullTankBottomNav extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(11.6, 11.6, 11.6, 13.05),
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE2E8F0))),
+        border: Border(top: BorderSide(color: FullTankColors.border)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -38,16 +39,16 @@ class FullTankBottomNav extends StatelessWidget {
                     icons[index],
                     size: 26.1,
                     color: index == active
-                        ? const Color(0xFF1E40AF)
-                        : const Color(0xFF94A3B8),
+                        ? FullTankColors.primary
+                        : FullTankColors.muted,
                   ),
                   const SizedBox(height: 4.35),
                   Text(
                     labels[index],
                     style: TextStyle(
                       color: index == active
-                          ? const Color(0xFF1E40AF)
-                          : const Color(0xFF94A3B8),
+                          ? FullTankColors.primary
+                          : FullTankColors.muted,
                       fontSize: 12.325,
                       fontWeight: index == active
                           ? FontWeight.w700

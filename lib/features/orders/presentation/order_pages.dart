@@ -1,3 +1,4 @@
+import '../../../shared/theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,16 +27,16 @@ part 'sales_report_empty_and_actions.dart';
 part 'order_action_buttons.dart';
 
 const _ink = Color(0xFF172033);
-const _muted = Color(0xFF64748B);
-const _subtle = Color(0xFF94A3B8);
+const _muted = FullTankColors.muted;
+const _subtle = FullTankColors.muted;
 const _line = Color(0xFFE7ECF2);
 const _panel = Color(0xFFF8FAFC);
 const _blue = Color(0xFF2563EB);
-const _blueSoft = Color(0xFFEFF4FF);
-const _orange = Color(0xFFFF8A0A);
-const _green = Color(0xFF10B981);
+const _blueSoft = FullTankColors.primarySoft;
+const _orange = FullTankColors.accent;
+const _green = FullTankColors.success;
 const _greenSoft = Color(0xFFE9FBF4);
-const _red = Color(0xFFEF4444);
+const _red = FullTankColors.error;
 
 enum OrderPageState { content, loading, empty, error }
 

@@ -11,7 +11,7 @@ class _SummaryMetric extends StatelessWidget {
       Text(
         label,
         style: const TextStyle(
-          color: Color(0xFF4A5568),
+          color: FullTankColors.textSecondary,
           fontSize: 7.975,
           fontWeight: FontWeight.w800,
         ),
@@ -19,7 +19,7 @@ class _SummaryMetric extends StatelessWidget {
       Text(
         value,
         style: const TextStyle(
-          color: Color(0xFF1A202C),
+          color: FullTankColors.text,
           fontSize: 11.6,
           fontWeight: FontWeight.w800,
         ),
@@ -40,7 +40,7 @@ class _DownloadButton extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFFFB300), Color(0xFFFFA500)],
+          colors: [FullTankColors.accent, FullTankColors.accent],
         ),
         borderRadius: BorderRadius.circular(99),
         boxShadow: const [
@@ -81,7 +81,7 @@ class _IndustryRows extends StatelessWidget {
         liters: '184.000 L',
         percent: '42%',
         widthFactor: .42,
-        color: Color(0xFF1E40AF),
+        color: FullTankColors.primary,
       ),
       _IndustryRow(
         icon: Icons.agriculture_outlined,
@@ -89,7 +89,7 @@ class _IndustryRows extends StatelessWidget {
         liters: '118.000 L',
         percent: '27%',
         widthFactor: .27,
-        color: Color(0xFF0F9B91),
+        color: FullTankColors.success,
       ),
       _IndustryRow(
         icon: Icons.factory_outlined,
@@ -97,7 +97,7 @@ class _IndustryRows extends StatelessWidget {
         liters: '81.000 L',
         percent: '18%',
         widthFactor: .18,
-        color: Color(0xFFC56B2C),
+        color: FullTankColors.accent,
       ),
       _IndustryRow(
         icon: Icons.construction_outlined,
@@ -154,7 +154,7 @@ class _IndustryRow extends StatelessWidget {
                   Text(
                     label,
                     style: const TextStyle(
-                      color: Color(0xFF1A202C),
+                      color: FullTankColors.text,
                       fontSize: 11.6,
                       fontWeight: FontWeight.w800,
                     ),
@@ -162,7 +162,7 @@ class _IndustryRow extends StatelessWidget {
                   Text(
                     liters,
                     style: const TextStyle(
-                      color: Color(0xFF94A3B8),
+                      color: FullTankColors.muted,
                       fontSize: 9.425,
                     ),
                   ),
@@ -172,7 +172,7 @@ class _IndustryRow extends StatelessWidget {
             Text(
               percent,
               style: const TextStyle(
-                color: Color(0xFF1A202C),
+                color: FullTankColors.text,
                 fontSize: 11.6,
                 fontWeight: FontWeight.w800,
               ),

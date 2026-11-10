@@ -1,3 +1,4 @@
+import '../../../shared/theme/fulltank_theme.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,11 +17,11 @@ part 'home_bottom_navigation.dart';
 
 enum HomeRole { requester, provider }
 
-const _green = Color(0xFF10B981);
-const _greenSoft = Color(0xFFECFDF5);
-const _amber = Color(0xFFF59E0B);
-const _amberSoft = Color(0xFFFFFBEB);
-const _red = Color(0xFFEF4444);
-const _redSoft = Color(0xFFFEF2F2);
+const _green = FullTankColors.success;
+const _greenSoft = FullTankColors.successSoft;
+const _amber = FullTankColors.accent;
+const _amberSoft = FullTankColors.warningSoft;
+const _red = FullTankColors.error;
+const _redSoft = FullTankColors.errorSoft;
 const _purple = Color(0xFF8B5CF6);
 const _purpleSoft = Color(0xFFF5F3FF);

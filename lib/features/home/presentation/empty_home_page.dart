@@ -35,8 +35,8 @@ class EmptyHomePage extends StatelessWidget {
                       icon: provider
                           ? Icons.link_outlined
                           : Icons.inbox_outlined,
-                      color: Color(0xFF94A3B8),
-                      softColor: const Color(0xFFF5F7FA),
+                      color: FullTankColors.muted,
+                      softColor: FullTankColors.background,
                       size: 42,
                     ),
                     const SizedBox(height: 14),
@@ -45,7 +45,7 @@ class EmptyHomePage extends StatelessWidget {
                           ? 'No hay operaciones hoy'
                           : 'No hay pedidos activos',
                       style: const TextStyle(
-                        color: Color(0xFF1A202C),
+                        color: FullTankColors.text,
                         fontSize: 20.3,
                         fontWeight: FontWeight.w800,
                       ),
@@ -57,7 +57,7 @@ class EmptyHomePage extends StatelessWidget {
                           : 'Cuando crees tu primer pedido o el sensor active una alerta, aparecerá aquí.',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        color: Color(0xFF4A5568),
+                        color: FullTankColors.textSecondary,
                         fontSize: 15.225,
                         height: 1.4,
                       ),
@@ -117,7 +117,7 @@ class _SubpageHeader extends StatelessWidget {
         onPressed: () => context.pop(),
         icon: const Icon(Icons.arrow_back, size: 18),
         style: IconButton.styleFrom(
-          backgroundColor: Color(0xFFF3F4F6),
+          backgroundColor: FullTankColors.background,
           fixedSize: const Size(36, 36),
           padding: EdgeInsets.zero,
         ),
@@ -130,7 +130,7 @@ class _SubpageHeader extends StatelessWidget {
             Text(
               title,
               style: const TextStyle(
-                color: Color(0xFF1A202C),
+                color: FullTankColors.text,
                 fontSize: 30.45,
                 fontWeight: FontWeight.w800,
                 letterSpacing: -.5,
@@ -139,7 +139,7 @@ class _SubpageHeader extends StatelessWidget {
             Text(
               subtitle,
               style: const TextStyle(
-                color: Color(0xFF4A5568),
+                color: FullTankColors.textSecondary,
                 fontSize: 15.225,
               ),
             ),
@@ -161,13 +161,13 @@ class _FilterChip extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
     decoration: BoxDecoration(
-      color: selected ? Color(0xFF1A202C) : Color(0xFFF3F4F6),
+      color: selected ? FullTankColors.text : FullTankColors.background,
       borderRadius: BorderRadius.circular(999),
     ),
     child: Text(
       label,
       style: TextStyle(
-        color: selected ? Colors.white : Color(0xFF2D3748),
+        color: selected ? Colors.white : FullTankColors.text,
         fontSize: 13.775,
         fontWeight: FontWeight.w700,
       ),
@@ -198,7 +198,7 @@ class _SearchResult extends StatelessWidget {
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: Color(0xFFE2E8F0)),
+      border: Border.all(color: FullTankColors.border),
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
@@ -221,7 +221,7 @@ class _SearchResult extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 15.225,
                   fontWeight: FontWeight.w800,
                 ),
@@ -229,14 +229,14 @@ class _SearchResult extends StatelessWidget {
               Text(
                 detail,
                 style: const TextStyle(
-                  color: Color(0xFF4A5568),
+                  color: FullTankColors.textSecondary,
                   fontSize: 12.325,
                 ),
               ),
             ],
           ),
         ),
-        const Icon(Icons.chevron_right, size: 16, color: Color(0xFF94A3B8)),
+        const Icon(Icons.chevron_right, size: 16, color: FullTankColors.muted),
       ],
     ),
   );

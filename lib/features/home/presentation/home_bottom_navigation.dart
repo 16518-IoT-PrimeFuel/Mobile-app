@@ -18,14 +18,14 @@ class _SetupRow extends StatelessWidget {
     margin: const EdgeInsets.only(bottom: 7),
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
-      color: Color(0xFFF3F4F6),
+      color: FullTankColors.background,
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
       children: [
         _IconTile(
           icon: icon,
-          color: Color(0xFF1E40AF),
+          color: FullTankColors.primary,
           softColor: Colors.white,
           size: 30,
         ),
@@ -37,7 +37,7 @@ class _SetupRow extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 15.225,
                   fontWeight: FontWeight.w800,
                 ),
@@ -49,7 +49,7 @@ class _SetupRow extends StatelessWidget {
         Icon(
           done ? Icons.check_circle : Icons.chevron_right,
           size: 17,
-          color: done ? _green : Color(0xFF94A3B8),
+          color: done ? _green : FullTankColors.muted,
         ),
       ],
     ),

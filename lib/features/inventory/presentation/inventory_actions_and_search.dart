@@ -12,7 +12,7 @@ class _PrimaryButton extends StatelessWidget {
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFFFFA500),
+        backgroundColor: FullTankColors.accent,
         foregroundColor: Colors.white,
         shape: const StadiumBorder(),
         elevation: 5,

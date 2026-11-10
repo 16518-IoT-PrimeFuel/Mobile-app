@@ -166,7 +166,10 @@ class _InventoryAlertsPageState extends State<InventoryAlertsPage> {
                       ),
                       title: Text(option.$2),
                       trailing: _filter == option.$1
-                          ? const Icon(Icons.check, color: Color(0xFF1E40AF))
+                          ? const Icon(
+                              Icons.check,
+                              color: FullTankColors.primary,
+                            )
                           : null,
                       onTap: () => Navigator.pop(context, option.$1),
                     ),

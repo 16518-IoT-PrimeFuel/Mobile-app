@@ -8,7 +8,7 @@ class _InventorySectionLabel extends StatelessWidget {
   Widget build(BuildContext context) => Text(
     text.toUpperCase(),
     style: const TextStyle(
-      color: Color(0xFF4A5568),
+      color: FullTankColors.textSecondary,
       fontSize: 15.95,
       fontWeight: FontWeight.w700,
       letterSpacing: .6,
@@ -56,7 +56,10 @@ class _CriticalBanner extends StatelessWidget {
               ),
               const Text(
                 'Se recomienda reponer de inmediato',
-                style: TextStyle(color: Color(0xFF4A5568), fontSize: 15.95),
+                style: TextStyle(
+                  color: FullTankColors.textSecondary,
+                  fontSize: 15.95,
+                ),
               ),
             ],
           ),
@@ -95,7 +98,7 @@ class _AlertGroupLabel extends StatelessWidget {
           ),
         ),
         SizedBox(width: 11.6),
-        const Expanded(child: Divider(color: Color(0xFFE2E8F0), height: 1)),
+        const Expanded(child: Divider(color: FullTankColors.border, height: 1)),
       ],
     ),
   );
@@ -139,7 +142,7 @@ class _AlertRow extends StatelessWidget {
           padding: EdgeInsets.all(20.3),
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Color(0xFFE2E8F0)),
+            border: Border.all(color: FullTankColors.border),
             borderRadius: BorderRadius.circular(11.6),
             boxShadow: [
               BoxShadow(
@@ -175,7 +178,7 @@ class _AlertRow extends StatelessWidget {
                             alert.tank,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              color: Color(0xFF1A202C),
+                              color: FullTankColors.text,
                               fontSize: 18.85,
                               fontWeight: FontWeight.w700,
                             ),
@@ -197,7 +200,7 @@ class _AlertRow extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                           size: 20.3,
-                          color: Color(0xFF4A5568),
+                          color: FullTankColors.textSecondary,
                         ),
                         SizedBox(width: 7.25),
                         Expanded(
@@ -205,7 +208,7 @@ class _AlertRow extends StatelessWidget {
                             alert.location,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              color: Color(0xFF4A5568),
+                              color: FullTankColors.textSecondary,
                               fontSize: 15.95,
                             ),
                           ),
@@ -223,7 +226,7 @@ class _AlertRow extends StatelessWidget {
                               const Icon(
                                 Icons.access_time,
                                 size: 13,
-                                color: Color(0xFF94A3B8),
+                                color: FullTankColors.muted,
                               ),
                               SizedBox(width: 5.8),
                               Expanded(
@@ -231,7 +234,7 @@ class _AlertRow extends StatelessWidget {
                                   alert.eta,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                    color: Color(0xFF94A3B8),
+                                    color: FullTankColors.muted,
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -244,7 +247,7 @@ class _AlertRow extends StatelessWidget {
                           onPressed: () =>
                               context.go('/inventory/restock/${alert.tankId}'),
                           style: TextButton.styleFrom(
-                            backgroundColor: Color(0xFF1A202C),
+                            backgroundColor: FullTankColors.text,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -267,7 +270,7 @@ class _AlertRow extends StatelessWidget {
                     Text(
                       alert.time,
                       style: const TextStyle(
-                        color: Color(0xFF94A3B8),
+                        color: FullTankColors.muted,
                         fontSize: 14.5,
                       ),
                     ),

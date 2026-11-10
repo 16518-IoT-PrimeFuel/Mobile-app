@@ -19,7 +19,7 @@ class _GradientAction extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFFFB300), Color(0xFFFFA500)],
+          colors: [FullTankColors.accent, FullTankColors.accent],
         ),
         borderRadius: BorderRadius.circular(999),
         boxShadow: const [
@@ -84,7 +84,7 @@ class _SheetAction extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 14.5,
                   fontWeight: FontWeight.w800,
                 ),
@@ -93,7 +93,7 @@ class _SheetAction extends StatelessWidget {
             ],
           ),
         ),
-        const Icon(Icons.chevron_right, size: 16, color: Color(0xFF94A3B8)),
+        const Icon(Icons.chevron_right, size: 16, color: FullTankColors.muted),
       ],
     ),
   );
@@ -139,7 +139,7 @@ class _ActivityItem extends StatelessWidget {
     padding: const EdgeInsets.all(10),
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: Color(0xFFE2E8F0)),
+      border: Border.all(color: FullTankColors.border),
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
@@ -154,7 +154,7 @@ class _ActivityItem extends StatelessWidget {
               Text(
                 title,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 15.225,
                   fontWeight: FontWeight.w800,
                 ),
@@ -163,7 +163,7 @@ class _ActivityItem extends StatelessWidget {
               Text(
                 detail,
                 style: const TextStyle(
-                  color: Color(0xFF4A5568),
+                  color: FullTankColors.textSecondary,
                   fontSize: 12.325,
                 ),
               ),

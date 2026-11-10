@@ -24,7 +24,7 @@ class _HomeHeader extends StatelessWidget {
           width: 47,
           height: 47,
           decoration: BoxDecoration(
-            color: Color(0xFF1A202C),
+            color: FullTankColors.text,
             borderRadius: BorderRadius.circular(13),
           ),
           alignment: Alignment.center,
@@ -45,7 +45,7 @@ class _HomeHeader extends StatelessWidget {
               Text(
                 eyebrow,
                 style: const TextStyle(
-                  color: Color(0xFF94A3B8),
+                  color: FullTankColors.muted,
                   fontSize: 12.325,
                   fontWeight: FontWeight.w700,
                   letterSpacing: .25,
@@ -55,7 +55,7 @@ class _HomeHeader extends StatelessWidget {
               Text(
                 name,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 21.75,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -.2,
@@ -64,7 +64,7 @@ class _HomeHeader extends StatelessWidget {
               Text(
                 subtitle,
                 style: const TextStyle(
-                  color: Color(0xFF4A5568),
+                  color: FullTankColors.textSecondary,
                   fontSize: 13.775,
                   fontWeight: FontWeight.w500,
                 ),
@@ -102,7 +102,7 @@ class _HomeHeader extends StatelessWidget {
             width: 47,
             height: 47,
             decoration: BoxDecoration(
-              color: Color(0xFFF3F4F6),
+              color: FullTankColors.background,
               borderRadius: BorderRadius.circular(13),
             ),
             child: Stack(
@@ -164,7 +164,7 @@ class _TankSummaryCard extends StatelessWidget {
                             Icon(
                               Icons.location_on_outlined,
                               size: 15,
-                              color: Color(0xFF4A5568),
+                              color: FullTankColors.textSecondary,
                             ),
                             SizedBox(width: 4),
                             Text('Norte · Sector 4', style: _metaStyle),
@@ -195,7 +195,7 @@ class _TankSummaryCard extends StatelessWidget {
                           TextSpan(
                             text: '68',
                             style: TextStyle(
-                              color: Color(0xFF1A202C),
+                              color: FullTankColors.text,
                               fontSize: 60.9,
                               height: 1,
                               fontWeight: FontWeight.w800,
@@ -221,7 +221,7 @@ class _TankSummaryCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              const Divider(height: 1, color: Color(0xFFE2E8F0)),
+              const Divider(height: 1, color: FullTankColors.border),
               const SizedBox(height: 13),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -234,7 +234,7 @@ class _TankSummaryCard extends StatelessWidget {
                   ),
                   const Row(
                     children: [
-                      Icon(Icons.sync, size: 15, color: Color(0xFF94A3B8)),
+                      Icon(Icons.sync, size: 15, color: FullTankColors.muted),
                       SizedBox(width: 5),
                       Text('Actualizado hace 5 min', style: _metaStyle),
                     ],

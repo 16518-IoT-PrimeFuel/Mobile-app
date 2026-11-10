@@ -38,7 +38,7 @@ class SplashPage extends StatelessWidget {
             onPressed: () => context.go('/login'),
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
-              side: const BorderSide(color: Color(0xFF64748B)),
+              side: const BorderSide(color: FullTankColors.muted),
               minimumSize: const Size.fromHeight(52),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               shape: const StadiumBorder(),

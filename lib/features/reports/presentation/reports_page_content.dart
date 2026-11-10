@@ -110,7 +110,7 @@ class _ReportState extends StatelessWidget {
                     ? 'Completa operaciones para generar métricas.'
                     : 'Intenta nuevamente más tarde.',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Color(0xFF4A5568)),
+                style: const TextStyle(color: FullTankColors.textSecondary),
               ),
       ),
     ),
@@ -281,7 +281,7 @@ class _ReportFrame extends StatelessWidget {
             onPressed: () => context.pop(),
             icon: const Icon(Icons.arrow_back, size: 18),
             style: IconButton.styleFrom(
-              backgroundColor: Color(0xFFF3F4F6),
+              backgroundColor: FullTankColors.background,
               fixedSize: const Size(47, 47),
               padding: EdgeInsets.zero,
             ),
@@ -294,7 +294,7 @@ class _ReportFrame extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    color: Color(0xFF1A202C),
+                    color: FullTankColors.text,
                     fontSize: 27.55,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -.5,
@@ -303,7 +303,7 @@ class _ReportFrame extends StatelessWidget {
                 Text(
                   subtitle,
                   style: const TextStyle(
-                    color: Color(0xFF4A5568),
+                    color: FullTankColors.textSecondary,
                     fontSize: 13.775,
                   ),
                 ),
@@ -315,7 +315,7 @@ class _ReportFrame extends StatelessWidget {
               onPressed: () {},
               icon: Icon(trailing, size: 16),
               style: IconButton.styleFrom(
-                backgroundColor: Color(0xFFF3F4F6),
+                backgroundColor: FullTankColors.background,
                 fixedSize: const Size(42, 42),
                 padding: EdgeInsets.zero,
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/auth/application/auth_providers.dart';
+import '../shared/theme/fulltank_theme.dart';
 import 'app_router.dart';
 
 class FullTankApp extends ConsumerStatefulWidget {
@@ -26,6 +27,7 @@ class _FullTankAppState extends ConsumerState<FullTankApp> {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'FullTank',
+      theme: fullTankTheme,
       routerConfig: router,
     );
   }

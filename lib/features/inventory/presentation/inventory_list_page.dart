@@ -399,7 +399,7 @@ class _ProductSection extends StatelessWidget {
         style: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w800,
-          color: Color(0xFF1A202C),
+          color: FullTankColors.text,
         ),
       ),
       const SizedBox(height: 8),
@@ -448,11 +448,11 @@ class _ProductState extends StatelessWidget {
     decoration: BoxDecoration(
       color: const Color(0xFFF8FAFC),
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: const Color(0xFFE2E8F0)),
+      border: Border.all(color: FullTankColors.border),
     ),
     child: Row(
       children: [
-        Icon(icon, color: const Color(0xFF64748B)),
+        Icon(icon, color: FullTankColors.muted),
         const SizedBox(width: 12),
         Expanded(
           child: Text(
@@ -477,7 +477,7 @@ class _ProductTile extends StatelessWidget {
     margin: const EdgeInsets.only(bottom: 8),
     elevation: 0,
     shape: RoundedRectangleBorder(
-      side: const BorderSide(color: Color(0xFFE2E8F0)),
+      side: const BorderSide(color: FullTankColors.border),
       borderRadius: BorderRadius.circular(12),
     ),
     child: ListTile(

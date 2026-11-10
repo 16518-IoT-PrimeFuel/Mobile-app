@@ -1,3 +1,4 @@
+import '../../../shared/theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -57,16 +58,16 @@ class _PublicCard extends StatelessWidget {
     margin: const EdgeInsets.only(bottom: 10),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: Color(0xFFF3F4F6),
+      color: FullTankColors.background,
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Color(0xFFE2E8F0)),
+      border: Border.all(color: FullTankColors.border),
     ),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircleAvatar(
-          backgroundColor: Color(0xFFEFF4FF),
-          foregroundColor: Color(0xFF1E40AF),
+          backgroundColor: FullTankColors.primarySoft,
+          foregroundColor: FullTankColors.primary,
           child: Text(item.icon, style: const TextStyle(fontSize: 23.2)),
         ),
         const SizedBox(width: 12),
@@ -86,26 +87,26 @@ class _PublicCard extends StatelessWidget {
 }
 
 const _titleStyle = TextStyle(
-  color: Color(0xFF1A202C),
+  color: FullTankColors.text,
   fontSize: 40.6,
   fontWeight: FontWeight.w800,
   height: 1.1,
 );
 
 const _subtitleStyle = TextStyle(
-  color: Color(0xFF4A5568),
+  color: FullTankColors.textSecondary,
   fontSize: 21.75,
   height: 1.4,
 );
 
 const _itemTitleStyle = TextStyle(
-  color: Color(0xFF1A202C),
+  color: FullTankColors.text,
   fontSize: 21.75,
   fontWeight: FontWeight.w800,
 );
 
 const _itemDescriptionStyle = TextStyle(
-  color: Color(0xFF4A5568),
+  color: FullTankColors.textSecondary,
   fontSize: 18.85,
   height: 1.35,
 );

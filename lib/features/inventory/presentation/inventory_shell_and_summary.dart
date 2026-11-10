@@ -36,7 +36,7 @@ class _InventoryShell extends StatelessWidget {
                       tooltip: 'Volver',
                       icon: const Icon(Icons.arrow_back, size: 18),
                       style: IconButton.styleFrom(
-                        backgroundColor: Color(0xFFF3F4F6),
+                        backgroundColor: FullTankColors.background,
                         fixedSize: Size.square(58.0),
                         padding: EdgeInsets.zero,
                       ),
@@ -52,7 +52,7 @@ class _InventoryShell extends StatelessWidget {
                         title,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          color: Color(0xFF1A202C),
+                          color: FullTankColors.text,
                           fontSize: 31.9,
                           fontWeight: FontWeight.w800,
                           letterSpacing: -.5,
@@ -61,7 +61,7 @@ class _InventoryShell extends StatelessWidget {
                       Text(
                         subtitle,
                         style: const TextStyle(
-                          color: Color(0xFF4A5568),
+                          color: FullTankColors.textSecondary,
                           fontSize: 17.4,
                         ),
                       ),
@@ -144,7 +144,7 @@ class _HeaderIconButton extends StatelessWidget {
         ],
       ),
       style: IconButton.styleFrom(
-        backgroundColor: Color(0xFFF3F4F6),
+        backgroundColor: FullTankColors.background,
         fixedSize: Size.square(58.0),
         padding: EdgeInsets.zero,
       ),
@@ -186,7 +186,7 @@ class _SummaryMetric extends StatelessWidget {
         Text(
           count.toString().padLeft(2, '0'),
           style: const TextStyle(
-            color: Color(0xFF1A202C),
+            color: FullTankColors.text,
             fontSize: 31.9,
             fontWeight: FontWeight.w800,
             letterSpacing: -.5,

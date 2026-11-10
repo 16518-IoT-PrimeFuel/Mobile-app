@@ -12,7 +12,7 @@ class _LevelBar extends StatelessWidget {
       child: LinearProgressIndicator(
         minHeight: 8.7,
         value: value,
-        backgroundColor: Color(0xFFE2E8F0),
+        backgroundColor: FullTankColors.border,
         valueColor: AlwaysStoppedAnimation(_statusColor(status)),
       ),
     );
@@ -57,7 +57,7 @@ class _GaugeCard extends StatelessWidget {
     padding: EdgeInsets.fromLTRB(23.2, 29.0, 23.2, 26.1),
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: Color(0xFFE2E8F0)),
+      border: Border.all(color: FullTankColors.border),
       borderRadius: BorderRadius.circular(11.6),
     ),
     child: Column(
@@ -77,7 +77,7 @@ class _GaugeCard extends StatelessWidget {
                     TextSpan(
                       text: '${tank.level}',
                       style: const TextStyle(
-                        color: Color(0xFF1A202C),
+                        color: FullTankColors.text,
                         fontSize: 63.8,
                         fontWeight: FontWeight.w800,
                         letterSpacing: -1.5,
@@ -86,7 +86,7 @@ class _GaugeCard extends StatelessWidget {
                         TextSpan(
                           text: '%',
                           style: TextStyle(
-                            color: Color(0xFF94A3B8),
+                            color: FullTankColors.muted,
                             fontSize: 29.0,
                             fontWeight: FontWeight.w600,
                           ),
@@ -97,7 +97,7 @@ class _GaugeCard extends StatelessWidget {
                   const Text(
                     'CURRENT LEVEL',
                     style: TextStyle(
-                      color: Color(0xFF4A5568),
+                      color: FullTankColors.textSecondary,
                       fontSize: 15.95,
                       fontWeight: FontWeight.w600,
                       letterSpacing: .8,
@@ -115,7 +115,7 @@ class _GaugeCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _GaugeMetric(label: 'Actual', value: tank.current),
-            Container(width: 1, height: 52.2, color: Color(0xFFE2E8F0)),
+            Container(width: 1, height: 52.2, color: FullTankColors.border),
             _GaugeMetric(label: 'Capacidad', value: tank.capacity),
           ],
         ),
@@ -135,7 +135,7 @@ class _GaugeMetric extends StatelessWidget {
       Text(
         label.toUpperCase(),
         style: const TextStyle(
-          color: Color(0xFF4A5568),
+          color: FullTankColors.textSecondary,
           fontSize: 14.5,
           fontWeight: FontWeight.w600,
           letterSpacing: .5,
@@ -145,7 +145,7 @@ class _GaugeMetric extends StatelessWidget {
         TextSpan(
           text: _liters(value),
           style: const TextStyle(
-            color: Color(0xFF1A202C),
+            color: FullTankColors.text,
             fontSize: 23.2,
             fontWeight: FontWeight.w800,
           ),
@@ -153,7 +153,7 @@ class _GaugeMetric extends StatelessWidget {
             TextSpan(
               text: ' L',
               style: TextStyle(
-                color: Color(0xFF94A3B8),
+                color: FullTankColors.muted,
                 fontSize: 15.95,
                 fontWeight: FontWeight.w600,
               ),
@@ -176,7 +176,7 @@ class _GaugePainter extends CustomPainter {
     final radius = size.shortestSide / 2 - 23.2;
     final rect = Rect.fromCircle(center: center, radius: radius);
     final track = Paint()
-      ..color = Color(0xFFE2E8F0)
+      ..color = FullTankColors.border
       ..style = PaintingStyle.stroke
       ..strokeWidth = 17.4
       ..strokeCap = StrokeCap.round;

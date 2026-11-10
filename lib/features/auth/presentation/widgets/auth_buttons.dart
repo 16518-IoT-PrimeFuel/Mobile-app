@@ -1,3 +1,4 @@
+import '../../../../shared/theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 
 class PrimaryAuthButton extends StatelessWidget {
@@ -25,18 +26,8 @@ class PrimaryAuthButton extends StatelessWidget {
         height: 52,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFFFFB300), Color(0xFFFFA500)],
-            ),
+            color: FullTankColors.primary,
             borderRadius: BorderRadius.circular(999),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x66FFA500),
-                blurRadius: 22,
-                offset: Offset(0, 10),
-                spreadRadius: -10,
-              ),
-            ],
           ),
           child: Material(
             type: MaterialType.transparency,
@@ -103,8 +94,8 @@ class SecondaryAuthButton extends StatelessWidget {
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
           backgroundColor: Colors.white,
-          foregroundColor: Color(0xFF1A202C),
-          side: const BorderSide(color: Color(0xFFE2E8F0), width: 1.5),
+          foregroundColor: FullTankColors.text,
+          side: const BorderSide(color: FullTankColors.border, width: 1.5),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           minimumSize: const Size.fromHeight(52),
           padding: const EdgeInsets.symmetric(horizontal: 20),

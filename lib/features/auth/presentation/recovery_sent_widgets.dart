@@ -25,9 +25,9 @@ class _LightBackButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BackButtonShell(
       onPressed: onPressed,
-      backgroundColor: Color(0xFFF3F4F6),
+      backgroundColor: FullTankColors.background,
       borderColor: Colors.transparent,
-      iconColor: Color(0xFF1A202C),
+      iconColor: FullTankColors.text,
     );
   }
 }
@@ -82,13 +82,13 @@ class _SentEnvelope extends StatelessWidget {
             width: 58,
             height: 58,
             decoration: const BoxDecoration(
-              color: Color(0xFFECFDF5),
+              color: FullTankColors.successSoft,
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.email_outlined,
               size: 31,
-              color: Color(0xFF10B981),
+              color: FullTankColors.success,
             ),
           ),
         ),
@@ -108,7 +108,7 @@ class _SentCopy extends StatelessWidget {
       textAlign: TextAlign.center,
       text: TextSpan(
         style: const TextStyle(
-          color: Color(0xFF4A5568),
+          color: FullTankColors.textSecondary,
           fontSize: 17.4,
           height: 1.5,
         ),
@@ -117,7 +117,7 @@ class _SentCopy extends StatelessWidget {
           TextSpan(
             text: email,
             style: const TextStyle(
-              color: Color(0xFF1A202C),
+              color: FullTankColors.text,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -139,7 +139,7 @@ class _SentEmailCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Color(0xFFF3F4F6),
+        color: FullTankColors.background,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -154,7 +154,7 @@ class _SentEmailCard extends StatelessWidget {
             child: const Icon(
               Icons.mail_outline,
               size: 18,
-              color: Color(0xFF1E40AF),
+              color: FullTankColors.primary,
             ),
           ),
           const SizedBox(width: 10),
@@ -165,7 +165,7 @@ class _SentEmailCard extends StatelessWidget {
                 const Text(
                   'ENVIADO A',
                   style: TextStyle(
-                    color: Color(0xFF4A5568),
+                    color: FullTankColors.textSecondary,
                     fontSize: 13.775,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
@@ -175,7 +175,7 @@ class _SentEmailCard extends StatelessWidget {
                 Text(
                   email,
                   style: const TextStyle(
-                    color: Color(0xFF1A202C),
+                    color: FullTankColors.text,
                     fontSize: 17.4,
                     fontWeight: FontWeight.w700,
                   ),
@@ -186,13 +186,13 @@ class _SentEmailCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFFECFDF5),
+              color: FullTankColors.successSoft,
               borderRadius: BorderRadius.circular(999),
             ),
             child: const Text(
               '• ENVIADO',
               style: TextStyle(
-                color: Color(0xFF10B981),
+                color: FullTankColors.success,
                 fontSize: 13.775,
                 fontWeight: FontWeight.w700,
               ),

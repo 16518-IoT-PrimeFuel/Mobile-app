@@ -1,3 +1,4 @@
+import '../../../shared/theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,7 +25,7 @@ class OutOfScopePage extends StatelessWidget {
             message,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              color: Color(0xFF4A5568),
+              color: FullTankColors.textSecondary,
               fontSize: 21.75,
               height: 1.5,
             ),

@@ -1,16 +1,16 @@
 part of 'missing_pages.dart';
 
-const _ink = Color(0xFF1A202C);
-const _muted = Color(0xFF4A5568);
-const _line = Color(0xFFE2E8F0);
-const _blue = Color(0xFF1E40AF);
-const _blueSoft = Color(0xFFEFF4FF);
-const _green = Color(0xFF0F9B91);
-const _greenSoft = Color(0xFFEAFBF8);
-const _orange = Color(0xFFFF8A0A);
-const _orangeSoft = Color(0xFFFFF4E9);
-const _red = Color(0xFFEF4444);
-const _redSoft = Color(0xFFFEF2F2);
+const _ink = FullTankColors.text;
+const _muted = FullTankColors.textSecondary;
+const _line = FullTankColors.border;
+const _blue = FullTankColors.primary;
+const _blueSoft = FullTankColors.primarySoft;
+const _green = FullTankColors.success;
+const _greenSoft = FullTankColors.successSoft;
+const _orange = FullTankColors.accent;
+const _orangeSoft = FullTankColors.warningSoft;
+const _red = FullTankColors.error;
+const _redSoft = FullTankColors.errorSoft;
 
 class MissingPageShell extends StatelessWidget {
   const MissingPageShell({

@@ -22,7 +22,7 @@ class _MetricCard extends StatelessWidget {
     padding: EdgeInsets.all(17.4),
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: Color(0xFFE2E8F0)),
+      border: Border.all(color: FullTankColors.border),
       borderRadius: BorderRadius.circular(11.6),
     ),
     child: Column(
@@ -56,7 +56,7 @@ class _MetricCard extends StatelessWidget {
         Text(
           label.toUpperCase(),
           style: const TextStyle(
-            color: Color(0xFF4A5568),
+            color: FullTankColors.textSecondary,
             fontSize: 15.225,
             fontWeight: FontWeight.w600,
             letterSpacing: .5,
@@ -66,7 +66,7 @@ class _MetricCard extends StatelessWidget {
           TextSpan(
             text: value,
             style: const TextStyle(
-              color: Color(0xFF1A202C),
+              color: FullTankColors.text,
               fontSize: 29.0,
               fontWeight: FontWeight.w800,
               letterSpacing: -.4,
@@ -76,7 +76,7 @@ class _MetricCard extends StatelessWidget {
                 TextSpan(
                   text: ' $unit',
                   style: const TextStyle(
-                    color: Color(0xFF94A3B8),
+                    color: FullTankColors.muted,
                     fontSize: 15.95,
                     fontWeight: FontWeight.w600,
                   ),
@@ -97,7 +97,7 @@ class _SensorCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(17.4),
     decoration: BoxDecoration(
-      color: Color(0xFFF3F4F6),
+      color: FullTankColors.background,
       borderRadius: BorderRadius.circular(11.6),
     ),
     child: Row(
@@ -110,7 +110,10 @@ class _SensorCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(11.6),
           ),
           alignment: Alignment.center,
-          child: const Icon(Icons.wifi_tethering, color: Color(0xFF1E40AF)),
+          child: const Icon(
+            Icons.wifi_tethering,
+            color: FullTankColors.primary,
+          ),
         ),
         SizedBox(width: 14.5),
         Expanded(
@@ -121,7 +124,7 @@ class _SensorCard extends StatelessWidget {
               Text(
                 tank.sensor,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 18.85,
                   fontWeight: FontWeight.w700,
                 ),
@@ -136,7 +139,7 @@ class _SensorCard extends StatelessWidget {
             Text(
               tank.updated,
               style: const TextStyle(
-                color: Color(0xFF1A202C),
+                color: FullTankColors.text,
                 fontSize: 17.4,
                 fontWeight: FontWeight.w600,
               ),
@@ -149,7 +152,7 @@ class _SensorCard extends StatelessWidget {
 }
 
 const _metaLabelStyle = TextStyle(
-  color: Color(0xFF4A5568),
+  color: FullTankColors.textSecondary,
   fontSize: 14.5,
   fontWeight: FontWeight.w600,
   letterSpacing: .4,

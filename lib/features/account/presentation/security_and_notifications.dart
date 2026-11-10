@@ -26,7 +26,7 @@ class _ProfileField extends StatelessWidget {
           keyboardType: keyboardType,
           style: _fieldText,
           decoration: InputDecoration(
-            prefixIcon: Icon(icon, size: 15, color: Color(0xFF94A3B8)),
+            prefixIcon: Icon(icon, size: 15, color: FullTankColors.muted),
             filled: true,
             fillColor: Colors.white,
             contentPadding: const EdgeInsets.symmetric(
@@ -36,11 +36,11 @@ class _ProfileField extends StatelessWidget {
             isDense: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(9),
-              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+              borderSide: const BorderSide(color: FullTankColors.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(9),
-              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+              borderSide: const BorderSide(color: FullTankColors.border),
             ),
           ),
         ),
@@ -76,7 +76,7 @@ class _SecuritySettingsState extends State<_SecuritySettings> {
         children: [
           _SettingsRow(
             icon: Icons.key_outlined,
-            color: Color(0xFF1E40AF),
+            color: FullTankColors.primary,
             title: 'Cambiar contraseña',
             detail: 'Última actualización hace 3 meses',
             onTap: () =>
@@ -105,7 +105,7 @@ class _SecuritySettingsState extends State<_SecuritySettings> {
             onPressed: () => _showMessage(context, 'Sesiones cerradas.'),
             child: const Text(
               'Cerrar todas',
-              style: TextStyle(color: Color(0xFFEF4444)),
+              style: TextStyle(color: FullTankColors.error),
             ),
           ),
         ],
@@ -187,7 +187,7 @@ class _NotificationSettingsState extends State<_NotificationSettings> {
         children: [
           _NotificationRow(
             icon: Icons.local_gas_station_outlined,
-            color: const Color(0xFFEF4444),
+            color: FullTankColors.error,
             title: 'Alertas de combustible',
             detail: 'Umbrales críticos y advertencias\nde nivel',
             value: enabled[0],
@@ -195,7 +195,7 @@ class _NotificationSettingsState extends State<_NotificationSettings> {
           ),
           _NotificationRow(
             icon: Icons.receipt_long_outlined,
-            color: Color(0xFF1E40AF),
+            color: FullTankColors.primary,
             title: 'Actualizaciones de\npedidos',
             detail: 'Aprobado · despachado ·\nentregado',
             value: enabled[1],
@@ -218,7 +218,7 @@ class _NotificationSettingsState extends State<_NotificationSettings> {
         children: [
           _NotificationRow(
             icon: Icons.notifications_none_outlined,
-            color: Color(0xFF94A3B8),
+            color: FullTankColors.muted,
             title: 'Novedades del producto',
             detail: 'Nuevas funciones y mejoras',
             value: enabled[3],

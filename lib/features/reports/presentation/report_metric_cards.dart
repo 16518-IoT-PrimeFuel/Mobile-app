@@ -32,7 +32,7 @@ class _PeriodCard extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            color: Color(0xFF4A5568),
+            color: FullTankColors.textSecondary,
             fontSize: 10.15,
             fontWeight: FontWeight.w800,
           ),
@@ -41,14 +41,17 @@ class _PeriodCard extends StatelessWidget {
         Text(
           value,
           style: const TextStyle(
-            color: Color(0xFF1A202C),
+            color: FullTankColors.text,
             fontSize: 24.65,
             fontWeight: FontWeight.w800,
           ),
         ),
         Text(
           detail,
-          style: const TextStyle(color: Color(0xFF4A5568), fontSize: 10.875),
+          style: const TextStyle(
+            color: FullTankColors.textSecondary,
+            fontSize: 10.875,
+          ),
         ),
       ],
     ),
@@ -89,7 +92,7 @@ class _MetricCard extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            color: Color(0xFF4A5568),
+            color: FullTankColors.textSecondary,
             fontSize: 8.7,
             fontWeight: FontWeight.w800,
           ),
@@ -104,7 +107,7 @@ class _MetricCard extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 17.4,
                   fontWeight: FontWeight.w800,
                 ),
@@ -112,7 +115,10 @@ class _MetricCard extends StatelessWidget {
             ),
             Text(
               detail,
-              style: const TextStyle(color: Color(0xFF4A5568), fontSize: 8.7),
+              style: const TextStyle(
+                color: FullTankColors.textSecondary,
+                fontSize: 8.7,
+              ),
             ),
           ],
         ),
@@ -147,7 +153,7 @@ class _CurrentPeriodCard extends StatelessWidget {
         Text(
           'PERÍODO ACTUAL',
           style: TextStyle(
-            color: Color(0xFF4A5568),
+            color: FullTankColors.textSecondary,
             fontSize: 10.15,
             fontWeight: FontWeight.w800,
           ),
@@ -158,14 +164,17 @@ class _CurrentPeriodCard extends StatelessWidget {
             Text(
               _currency(revenue),
               style: TextStyle(
-                color: Color(0xFF1A202C),
+                color: FullTankColors.text,
                 fontSize: 23.2,
                 fontWeight: FontWeight.w800,
               ),
             ),
             Text(
               ' MXN',
-              style: TextStyle(color: Color(0xFF4A5568), fontSize: 11.6),
+              style: TextStyle(
+                color: FullTankColors.textSecondary,
+                fontSize: 11.6,
+              ),
             ),
           ],
         ),
@@ -175,7 +184,10 @@ class _CurrentPeriodCard extends StatelessWidget {
           children: [
             Text(
               'Período seleccionado',
-              style: TextStyle(color: Color(0xFF4A5568), fontSize: 10.875),
+              style: TextStyle(
+                color: FullTankColors.textSecondary,
+                fontSize: 10.875,
+              ),
             ),
           ],
         ),

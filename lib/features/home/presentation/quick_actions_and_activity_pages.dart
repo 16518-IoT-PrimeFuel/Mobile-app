@@ -41,7 +41,7 @@ class _QuickActionsSheet extends StatelessWidget {
           width: 28,
           height: 3,
           decoration: BoxDecoration(
-            color: Color(0xFFE2E8F0),
+            color: FullTankColors.border,
             borderRadius: BorderRadius.circular(99),
           ),
         ),
@@ -55,7 +55,7 @@ class _QuickActionsSheet extends StatelessWidget {
                   Text(
                     'Acciones rápidas',
                     style: TextStyle(
-                      color: Color(0xFF1A202C),
+                      color: FullTankColors.text,
                       fontSize: 20.3,
                       fontWeight: FontWeight.w800,
                     ),
@@ -69,7 +69,7 @@ class _QuickActionsSheet extends StatelessWidget {
               onPressed: onClose,
               icon: const Icon(Icons.close, size: 17),
               style: IconButton.styleFrom(
-                backgroundColor: Color(0xFFF3F4F6),
+                backgroundColor: FullTankColors.background,
                 fixedSize: const Size(28, 28),
                 padding: EdgeInsets.zero,
               ),
@@ -87,16 +87,16 @@ class _QuickActionsSheet extends StatelessWidget {
           icon: Icons.receipt_long_outlined,
           title: 'Ver pedidos',
           detail: '12 activos · 3 pendientes',
-          color: Color(0xFF0F9B91),
-          softColor: Color(0xFFEAFBF8),
+          color: FullTankColors.success,
+          softColor: FullTankColors.successSoft,
         ),
         const SizedBox(height: 7),
         const _SheetAction(
           icon: Icons.description_outlined,
           title: 'Reportes',
           detail: 'Ventas · consumo · exportar',
-          color: Color(0xFF1E40AF),
-          softColor: Color(0xFFEFF4FF),
+          color: FullTankColors.primary,
+          softColor: FullTankColors.primarySoft,
         ),
         const SizedBox(height: 7),
         const _SheetAction(
@@ -173,8 +173,8 @@ class ActivityCenterPage extends StatelessWidget {
                   title: 'Pedido aprobado · #FT-2041',
                   detail: 'Aprobado por FuelMex Logistics',
                   time: 'hace 2 h',
-                  color: Color(0xFF1E40AF),
-                  softColor: Color(0xFFEFF4FF),
+                  color: FullTankColors.primary,
+                  softColor: FullTankColors.primarySoft,
                 ),
                 _ActivityItem(
                   icon: Icons.sensors_outlined,
@@ -203,8 +203,8 @@ class ActivityCenterPage extends StatelessWidget {
                   title: 'Factura #INV-8102 pagada',
                   detail: '\$192.400 MXN · FuelMex Logistics',
                   time: 'Hace 2 días',
-                  color: Color(0xFF0F9B91),
-                  softColor: Color(0xFFEAFBF8),
+                  color: FullTankColors.success,
+                  softColor: FullTankColors.successSoft,
                 ),
                 _ActivityItem(
                   icon: Icons.show_chart,

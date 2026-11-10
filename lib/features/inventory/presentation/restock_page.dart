@@ -108,7 +108,7 @@ class _RestockPageState extends State<RestockPage> {
             Text(
               'máx. ${_liters(maxQuantity)} L',
               style: const TextStyle(
-                color: Color(0xFF94A3B8),
+                color: FullTankColors.muted,
                 fontSize: 15.225,
                 fontWeight: FontWeight.w600,
               ),
@@ -187,11 +187,11 @@ class _RestockPageState extends State<RestockPage> {
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.shield_outlined, size: 14, color: Color(0xFF94A3B8)),
+            Icon(Icons.shield_outlined, size: 14, color: FullTankColors.muted),
             SizedBox(width: 5),
             Text(
               'Transmisión cifrada · SLA garantizado',
-              style: TextStyle(color: Color(0xFF94A3B8), fontSize: 15.95),
+              style: TextStyle(color: FullTankColors.muted, fontSize: 15.95),
             ),
           ],
         ),

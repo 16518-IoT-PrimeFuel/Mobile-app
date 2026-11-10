@@ -10,7 +10,7 @@ class _TargetTankCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.3),
       decoration: BoxDecoration(
-        color: Color(0xFFF3F4F6),
+        color: FullTankColors.background,
         borderRadius: BorderRadius.circular(11.6),
       ),
       child: Row(
@@ -25,7 +25,7 @@ class _TargetTankCard extends StatelessWidget {
                 Text(
                   tank.name,
                   style: const TextStyle(
-                    color: Color(0xFF1A202C),
+                    color: FullTankColors.text,
                     fontSize: 20.3,
                     fontWeight: FontWeight.w700,
                   ),
@@ -37,7 +37,7 @@ class _TargetTankCard extends StatelessWidget {
                     Text(
                       '${_liters(tank.current)} / ${_liters(tank.capacity)} L',
                       style: const TextStyle(
-                        color: Color(0xFF4A5568),
+                        color: FullTankColors.textSecondary,
                         fontSize: 15.95,
                         fontWeight: FontWeight.w600,
                       ),
@@ -82,8 +82,10 @@ class _PriorityChip extends StatelessWidget {
         style: TextButton.styleFrom(
           padding: EdgeInsets.all(17.4),
           alignment: Alignment.centerLeft,
-          backgroundColor: selected ? _statusSoft(status) : Color(0xFFF3F4F6),
-          foregroundColor: selected ? color : Color(0xFF1A202C),
+          backgroundColor: selected
+              ? _statusSoft(status)
+              : FullTankColors.background,
+          foregroundColor: selected ? color : FullTankColors.text,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(11.6),
             side: BorderSide(
@@ -107,7 +109,7 @@ class _PriorityChip extends StatelessWidget {
                 Text(
                   detail,
                   style: const TextStyle(
-                    color: Color(0xFF4A5568),
+                    color: FullTankColors.textSecondary,
                     fontSize: 15.225,
                   ),
                 ),
@@ -153,7 +155,7 @@ class _QuantityPicker extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(23.2),
     decoration: BoxDecoration(
-      color: Color(0xFFF3F4F6),
+      color: FullTankColors.background,
       borderRadius: BorderRadius.circular(11.6),
     ),
     child: Column(
@@ -177,7 +179,7 @@ class _QuantityPicker extends StatelessWidget {
                   isDense: true,
                 ),
                 style: const TextStyle(
-                  color: Color(0xFF1A202C),
+                  color: FullTankColors.text,
                   fontSize: 49.3,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -1,
@@ -188,7 +190,7 @@ class _QuantityPicker extends StatelessWidget {
             const Text(
               'L',
               style: TextStyle(
-                color: Color(0xFF94A3B8),
+                color: FullTankColors.muted,
                 fontSize: 23.2,
                 fontWeight: FontWeight.w600,
               ),

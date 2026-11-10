@@ -24,7 +24,7 @@ class _QuickAccess extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: const Color(0xFFF0F2F5)),
+        border: Border.all(color: FullTankColors.background),
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
@@ -114,7 +114,7 @@ class _Avatar extends StatelessWidget {
     height: size,
     alignment: Alignment.center,
     decoration: BoxDecoration(
-      color: Color(0xFF1A202C),
+      color: FullTankColors.text,
       borderRadius: BorderRadius.circular(size * .25),
     ),
     child: Text(
@@ -173,29 +173,32 @@ void _showMessage(BuildContext context, String message) {
 }
 
 const _headerTitle = TextStyle(
-  color: Color(0xFF1A202C),
+  color: FullTankColors.text,
   fontSize: 27.55,
   fontWeight: FontWeight.w800,
   letterSpacing: -.5,
 );
 const _bodyStrong = TextStyle(
-  color: Color(0xFF1A202C),
+  color: FullTankColors.text,
   fontSize: 13.05,
   fontWeight: FontWeight.w800,
 );
-const _smallText = TextStyle(color: Color(0xFF4A5568), fontSize: 10.15);
+const _smallText = TextStyle(
+  color: FullTankColors.textSecondary,
+  fontSize: 10.15,
+);
 const _microLabel = TextStyle(
-  color: Color(0xFF4A5568),
+  color: FullTankColors.textSecondary,
   fontSize: 9.425,
   fontWeight: FontWeight.w800,
 );
 const _contactValue = TextStyle(
-  color: Color(0xFF1A202C),
+  color: FullTankColors.text,
   fontSize: 11.6,
   fontWeight: FontWeight.w700,
 );
 const _fieldText = TextStyle(
-  color: Color(0xFF2D3748),
+  color: FullTankColors.text,
   fontSize: 11.6,
   fontWeight: FontWeight.w600,
 );
@@ -205,7 +208,7 @@ const _scoreText = TextStyle(
   fontWeight: FontWeight.w800,
 );
 const _quickText = TextStyle(
-  color: Color(0xFF2D3748),
+  color: FullTankColors.text,
   fontSize: 10.15,
   height: 1.05,
   fontWeight: FontWeight.w700,

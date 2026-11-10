@@ -26,8 +26,10 @@ class _FilterChip extends StatelessWidget {
         onPressed: onPressed,
         style: TextButton.styleFrom(
           padding: EdgeInsets.symmetric(horizontal: 17.4, vertical: 10.15),
-          backgroundColor: selected ? Color(0xFF1A202C) : Color(0xFFF3F4F6),
-          foregroundColor: selected ? Colors.white : Color(0xFF1A202C),
+          backgroundColor: selected
+              ? FullTankColors.text
+              : FullTankColors.background,
+          foregroundColor: selected ? Colors.white : FullTankColors.text,
           shape: const StadiumBorder(),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
@@ -56,7 +58,7 @@ class _FilterChip extends StatelessWidget {
             Text(
               '$count',
               style: TextStyle(
-                color: selected ? Colors.white70 : Color(0xFF94A3B8),
+                color: selected ? Colors.white70 : FullTankColors.muted,
                 fontSize: 15.95,
                 fontWeight: FontWeight.w700,
               ),
@@ -88,7 +90,7 @@ class _TankRow extends StatelessWidget {
           padding: EdgeInsets.all(20.3),
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Color(0xFFE2E8F0)),
+            border: Border.all(color: FullTankColors.border),
             borderRadius: BorderRadius.circular(11.6),
           ),
           child: Row(
@@ -106,7 +108,7 @@ class _TankRow extends StatelessWidget {
                             tank.name,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              color: Color(0xFF1A202C),
+                              color: FullTankColors.text,
                               fontSize: 20.3,
                               fontWeight: FontWeight.w700,
                             ),
@@ -128,7 +130,7 @@ class _TankRow extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                           size: 20.3,
-                          color: Color(0xFF4A5568),
+                          color: FullTankColors.textSecondary,
                         ),
                         SizedBox(width: 5.8),
                         Expanded(
@@ -136,7 +138,7 @@ class _TankRow extends StatelessWidget {
                             '${tank.location} · ${tank.type}',
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              color: Color(0xFF4A5568),
+                              color: FullTankColors.textSecondary,
                               fontSize: 15.95,
                             ),
                           ),
@@ -153,7 +155,7 @@ class _TankRow extends StatelessWidget {
                           size: 18.85,
                           color: status == _TankStatus.critical
                               ? color
-                              : Color(0xFF94A3B8),
+                              : FullTankColors.muted,
                         ),
                         SizedBox(width: 4.35),
                         Text(
@@ -161,7 +163,7 @@ class _TankRow extends StatelessWidget {
                           style: TextStyle(
                             color: status == _TankStatus.critical
                                 ? color
-                                : Color(0xFF94A3B8),
+                                : FullTankColors.muted,
                             fontSize: 14.5,
                             fontWeight: FontWeight.w600,
                           ),

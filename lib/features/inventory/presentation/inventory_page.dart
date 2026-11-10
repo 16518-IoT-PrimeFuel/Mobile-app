@@ -1,3 +1,4 @@
+import '../../../shared/theme/fulltank_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,11 +19,11 @@ part 'restock_tank_and_quantity_widgets.dart';
 part 'restock_summary_widgets.dart';
 part 'inventory_actions_and_search.dart';
 
-const _green = Color(0xFF10B981);
-const _greenSoft = Color(0xFFECFDF5);
-const _amber = Color(0xFFF59E0B);
-const _amberSoft = Color(0xFFFFFBEB);
-const _red = Color(0xFFEF4444);
-const _redSoft = Color(0xFFFEF2F2);
+const _green = FullTankColors.success;
+const _greenSoft = FullTankColors.successSoft;
+const _amber = FullTankColors.accent;
+const _amberSoft = FullTankColors.warningSoft;
+const _red = FullTankColors.error;
+const _redSoft = FullTankColors.errorSoft;
 
 enum _TankStatus { critical, warning, optimal }

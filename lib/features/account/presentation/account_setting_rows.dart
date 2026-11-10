@@ -36,7 +36,7 @@ class _NotificationRow extends StatelessWidget {
         Switch(
           value: value,
           onChanged: onChanged,
-          activeThumbColor: Color(0xFF1E40AF),
+          activeThumbColor: FullTankColors.primary,
         ),
       ],
     ),
@@ -63,7 +63,7 @@ class _DeviceRow extends StatelessWidget {
     padding: const EdgeInsets.symmetric(vertical: 13),
     child: Row(
       children: [
-        _AccountIconTile(icon: icon, color: Color(0xFF1E40AF)),
+        _AccountIconTile(icon: icon, color: FullTankColors.primary),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
@@ -77,15 +77,15 @@ class _DeviceRow extends StatelessWidget {
         if (current)
           const _StatusPill(
             label: 'AHORA',
-            color: Color(0xFF1E40AF),
-            softColor: Color(0xFFEFF4FF),
+            color: FullTankColors.primary,
+            softColor: FullTankColors.primarySoft,
           )
         else
           TextButton(
             onPressed: onClose,
             child: const Text(
               'Cerrar',
-              style: TextStyle(color: Color(0xFFEF4444)),
+              style: TextStyle(color: FullTankColors.error),
             ),
           ),
       ],
@@ -130,7 +130,11 @@ class _HelpRow extends StatelessWidget {
           ),
           if (badge != null)
             _StatusPill(label: badge!, color: _teal, softColor: _tealSoft),
-          const Icon(Icons.chevron_right, size: 16, color: Color(0xFF94A3B8)),
+          const Icon(
+            Icons.chevron_right,
+            size: 16,
+            color: FullTankColors.muted,
+          ),
         ],
       ),
     ),
@@ -150,7 +154,7 @@ class _LanguageSelector extends StatelessWidget {
       height: 42,
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-        color: Color(0xFFF3F4F6),
+        color: FullTankColors.background,
         borderRadius: BorderRadius.circular(99),
       ),
       child: Row(
@@ -164,14 +168,14 @@ class _LanguageSelector extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: selected == i
-                        ? Color(0xFF1E40AF)
+                        ? FullTankColors.primary
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(99),
                   ),
                   child: Text(
                     languages[i],
                     style: TextStyle(
-                      color: selected == i ? Colors.white : Color(0xFF2D3748),
+                      color: selected == i ? Colors.white : FullTankColors.text,
                       fontSize: 10.875,
                       fontWeight: FontWeight.w700,
                     ),
