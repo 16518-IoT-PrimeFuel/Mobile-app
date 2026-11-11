@@ -52,167 +52,16 @@ class SplashPage extends StatelessWidget {
   );
 }
 
-enum SignupRole { requester, provider }
-
-class SignupPage extends StatefulWidget {
-  const SignupPage({required this.role, super.key});
-  final SignupRole role;
-
-  @override
-  State<SignupPage> createState() => _SignupPageState();
-}
-
-class _SignupPageState extends State<SignupPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _company = TextEditingController();
-  final _name = TextEditingController();
-  final _email = TextEditingController();
-  final _phone = TextEditingController();
-  final _password = TextEditingController();
-  bool _accepted = false;
-  bool _submitted = false;
-
-  @override
-  void dispose() {
-    for (final controller in [_company, _name, _email, _phone, _password]) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final title = widget.role == SignupRole.provider
-        ? 'Registra tu empresa proveedora'
-        : 'Crea tu cuenta empresarial';
-    if (_submitted) {
-      return MissingPageShell(
-        title: 'Solicitud enviada',
-        child: _Panel(
-          color: _greenSoft,
-          child: Column(
-            children: [
-              const Icon(
-                Icons.mark_email_read_outlined,
-                color: _green,
-                size: 48,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Revisaremos tus datos y te avisaremos por correo cuando tu cuenta esté lista.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: _ink, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 14),
-              _PrimaryButton(
-                label: 'Volver al inicio de sesión',
-                onPressed: () => context.go('/login'),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return MissingPageShell(
-      title: title,
-      subtitle: 'Completa la información para comenzar',
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Panel(
-              child: Column(
-                children: [
-                  _FormField(label: 'Empresa', controller: _company),
-                  _FormField(label: 'Nombre completo', controller: _name),
-                  _FormField(
-                    label: 'Correo corporativo',
-                    controller: _email,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) => value != null && value.contains('@')
-                        ? null
-                        : 'Ingresa un correo válido',
-                  ),
-                  _FormField(
-                    label: 'Teléfono',
-                    controller: _phone,
-                    keyboardType: TextInputType.phone,
-                  ),
-                  _FormField(
-                    label: 'Contraseña',
-                    controller: _password,
-                    obscureText: true,
-                    validator: (value) => value != null && value.length >= 8
-                        ? null
-                        : 'Usa al menos 8 caracteres',
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            CheckboxListTile(
-              value: _accepted,
-              onChanged: (value) => setState(() => _accepted = value ?? false),
-              contentPadding: EdgeInsets.zero,
-              controlAffinity: ListTileControlAffinity.leading,
-              title: const Text(
-                'Acepto los términos y la política de privacidad',
-              ),
-            ),
-            _PrimaryButton(label: 'Enviar solicitud', onPressed: _submit),
-            Center(
-              child: TextButton(
-                onPressed: () => context.go('/login'),
-                child: const Text('Ya tengo una cuenta'),
-              ),
-            ),
-            Center(
-              child: TextButton(
-                onPressed: () => context.go(
-                  widget.role == SignupRole.provider
-                      ? '/signup/requester'
-                      : '/signup/provider',
-                ),
-                child: Text(
-                  widget.role == SignupRole.provider
-                      ? '¿Solicitas combustible? Regístrate como cliente'
-                      : '¿Provees combustible? Regístrate como proveedor',
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _submit() {
-    final valid = _formKey.currentState?.validate() ?? false;
-    if (!_accepted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Acepta los términos para continuar.')),
-      );
-      return;
-    }
-    if (valid) {
-      setState(() => _submitted = true);
-    }
-  }
-}
-
 class _FormField extends StatelessWidget {
   const _FormField({
     required this.label,
     required this.controller,
     this.keyboardType,
-    this.obscureText = false,
     this.validator,
   });
   final String label;
   final TextEditingController controller;
   final TextInputType? keyboardType;
-  final bool obscureText;
   final String? Function(String?)? validator;
 
   @override
@@ -221,7 +70,6 @@ class _FormField extends StatelessWidget {
     child: TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      obscureText: obscureText,
       validator:
           validator ??
           (value) => value == null || value.trim().isEmpty

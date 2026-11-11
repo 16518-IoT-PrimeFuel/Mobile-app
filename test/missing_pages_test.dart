@@ -13,10 +13,6 @@ void main() {
   testWidgets('renders the missing feature entry screens', (tester) async {
     final screens = <({Widget widget, String title})>[
       (widget: const SplashPage(), title: 'FullTank'),
-      (
-        widget: const SignupPage(role: SignupRole.requester),
-        title: 'Crea tu cuenta empresarial',
-      ),
       (widget: const PaymentPage(), title: 'Confirmar pago'),
       (widget: const ProviderOrdersPage(), title: 'Pedidos por atender'),
       (widget: const SupportHelpPage(), title: 'Centro de ayuda'),
@@ -52,30 +48,6 @@ void main() {
       expect(find.text('Acción completada'), findsNothing);
     },
   );
-
-  testWidgets('signup validates, accepts terms and submits', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(home: SignupPage(role: SignupRole.provider)),
-    );
-    await tester.ensureVisible(find.text('Enviar solicitud'));
-    await tester.tap(find.text('Enviar solicitud'));
-    await tester.pump();
-    expect(find.text('Este campo es obligatorio'), findsWidgets);
-
-    final fields = find.byType(TextFormField);
-    for (var i = 0; i < fields.evaluate().length; i++) {
-      await tester.enterText(
-        fields.at(i),
-        i == 2 ? 'provider@example.com' : 'valor válido',
-      );
-    }
-    await tester.ensureVisible(find.byType(Checkbox));
-    await tester.tap(find.byType(Checkbox));
-    await tester.ensureVisible(find.text('Enviar solicitud').last);
-    await tester.tap(find.text('Enviar solicitud'));
-    await tester.pump();
-    expect(find.text('Solicitud enviada'), findsOneWidget);
-  });
 
   testWidgets('new routes resolve through the authenticated app router', (
     tester,

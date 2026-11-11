@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import '../features/auth/application/auth_providers.dart';
 import '../features/auth/presentation/login_page.dart';
+import '../domain/auth/sign_up_request.dart';
 import '../features/auth/presentation/recover_page.dart';
+import '../features/auth/presentation/sign_up_page.dart';
 import '../features/account/presentation/account_page.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/inventory/presentation/inventory_page.dart';
@@ -337,19 +339,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/signup/requester',
         builder: (context, state) =>
-            const SignupPage(role: SignupRole.requester),
+            const SignUpPage(initialRole: BusinessRole.buyer),
       ),
       GoRoute(
         path: '/signup/provider',
         builder: (context, state) =>
-            const SignupPage(role: SignupRole.provider),
+            const SignUpPage(initialRole: BusinessRole.provider),
       ),
       GoRoute(
         path: '/signup',
-        builder: (context, state) => SignupPage(
-          role: state.uri.queryParameters['role'] == 'provider'
-              ? SignupRole.provider
-              : SignupRole.requester,
+        builder: (context, state) => SignUpPage(
+          initialRole: state.uri.queryParameters['role'] == 'provider'
+              ? BusinessRole.provider
+              : BusinessRole.buyer,
         ),
       ),
     ],
