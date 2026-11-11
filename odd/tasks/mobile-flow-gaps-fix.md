@@ -25,8 +25,8 @@ A static review of the app (wireframes in `../Mobile-app-wireframes/`) found scr
 - [x] **T4** Home variant derived from `session.roles` (`ROLE_PROVIDER`), plus router role guards for provider-only and buyer-only routes.
 - [x] **T5** Account profile edit loads and saves company data (`PUT /buyer-companies/{id}` or `/provider-companies/{id}`); security screen signs out via API and offers the reset-email path instead of a fake password change.
 - [x] **T6** Unsupported buttons ("Descargar factura", buyer "Seguimiento en vivo") hidden or disabled with a clear message; provider tracking wired; history CSV export wired only if a save/share path exists.
-- [ ] **T7** Home dashboard numbers from analytics, orders and tanks instead of constants.
-- [ ] **T8** Provider customers list from `GET /api/provider/buyer-companies`.
+- [x] **T7** Home dashboard numbers from analytics, orders and tanks instead of constants.
+- [x] **T8** Provider customers list from `GET /api/provider/buyer-companies`.
 
 ## Acceptance
 
@@ -51,7 +51,10 @@ Branch created. Baseline and tasks pending. Engram mirror `odd/mobile-flow-gaps-
 - T5: RED = compile failure (no `CompanyProfileRepository`, no `companyProfileRepositoryProvider`); GREEN = 4 repository tests (load, buyer/provider full-replace payload, failure) + 10 widget tests (load, save, save error, RUC validation, load error, guest preview, reset email, reset error, sign-out, fake rows gone). `account_page_test` now wraps a ProviderScope.
 - T6: RED = 3 behavioural failures visible in `orders_unsupported_actions_test.dart` (invoice button, live tracking button, old export label) plus missing export tooltip; GREEN = 6/6.
 - End of T6: `flutter analyze` 17 issues (same pre-existing set, none new); `flutter test` 128 passed, 0 failed.
-- Route evidence: delegated writer (single writer thread) for T1, T2, T4; second delegated writer for T4b, T3, T5, T6.
+- T7: RED = `test/home_summary_test.dart` failed to compile (no `homeSummaryProvider`, `HomeAnalyticsRepository`, `homeGreeting`); GREEN = 8/8 (buyer real values, order link to real id, provider pendingOrders/totalFuelSoldLitres, empty hides order card, error + Reintentar, loading, guest "Vista previa", greeting from clock). `home_page_test`/`login_page_test` updated to the new data-driven Home.
+- T8: RED = `test/provider_customers_test.dart` failed to compile (no `ProviderCustomersRepository`); GREEN = 7 widget tests (list, empty, error+retry, search, detail, create, create failure) + API contract test in `api_http_contract_test.dart` (GET/POST `/api/provider/buyer-companies`, Bearer header, payload).
+- End of T8: `flutter analyze` 17 issues (same pre-existing set, none new); `flutter test` 144 passed, 0 failed.
+- Route evidence: delegated writer (single writer thread) for T1, T2, T4; second delegated writer for T4b, T3, T5, T6; third delegated writer for T7, T8.
 
 ## Commits
 
@@ -62,7 +65,9 @@ Branch created. Baseline and tasks pending. Engram mirror `odd/mobile-flow-gaps-
 - T3 `29b5df1` fix(inventory): submit restock requests through the replenishment API
 - T5 `a7407c2` fix(account): load and save company profile and wire security actions
 - T6 `a28fde5` fix(orders): remove actions the backend cannot back
+- T7 `b8d7d76` feat(home): load dashboard numbers from the backend
+- T8 `7ab3aa0` feat(customers): list provider customers from the API
 
 ## Next step
 
-T1-T6 done. Next: T7 (home dashboard numbers), T8 (provider customers list). Open follow-ups: provider tracking view not built (hidden for all, delivery-id lookup is not small); Account overview still shows static plan/member-since/sessions card and quick actions sheet "Crear pedido" is buyer-only; native deep link needs device check.
+T1-T8 done. Open follow-ups: provider home has no active-deliveries or customers tiles (no clean backend source yet); no provider pending-actions list on Home; customer link-by-RUC lookup (`GET /provider/buyer-companies/lookup`, `POST {buyerCompanyId}`) not built, only create by name + RUC; customer edit/archive have no backend endpoint; provider tracking view not built; Account overview still shows static plan/member-since/sessions card; native deep link needs device check.
