@@ -260,14 +260,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CustomerFormPage(),
       ),
       GoRoute(
-        path: '/customers/:customerId/edit',
-        builder: (context, state) =>
-            CustomerFormPage(customerId: state.pathParameters['customerId']),
-      ),
-      GoRoute(
         path: '/customers/:customerId',
         builder: (context, state) => CustomerDetailPage(
-          customerId: state.pathParameters['customerId'] ?? 'agronorte',
+          customerId: state.pathParameters['customerId'] ?? '',
         ),
       ),
       GoRoute(
