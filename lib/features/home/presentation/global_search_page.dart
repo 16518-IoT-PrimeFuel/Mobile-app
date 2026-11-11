@@ -105,33 +105,6 @@ class _TinyPill extends StatelessWidget {
   );
 }
 
-class _DarkButton extends StatelessWidget {
-  const _DarkButton({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.5, vertical: 8.7),
-      decoration: BoxDecoration(
-        color: FullTankColors.text,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 13.05,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-    ),
-  );
-}
-
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel(this.text);
 

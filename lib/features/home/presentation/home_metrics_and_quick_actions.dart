@@ -5,7 +5,6 @@ class _SummaryMetric extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
-    required this.trend,
     required this.color,
     required this.softColor,
     this.unit,
@@ -14,7 +13,6 @@ class _SummaryMetric extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  final String trend;
   final Color color;
   final Color softColor;
   final String? unit;
@@ -29,14 +27,6 @@ class _SummaryMetric extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _IconTile(icon: icon, color: color, softColor: softColor, size: 27),
-            Text(
-              '↑ $trend',
-              style: const TextStyle(
-                color: _green,
-                fontSize: 13.05,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
           ],
         ),
         const Spacer(),
@@ -58,92 +48,6 @@ class _SummaryMetric extends StatelessWidget {
                 ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-}
-
-class _ActionRequiredCard extends StatelessWidget {
-  const _ActionRequiredCard({
-    required this.color,
-    required this.priority,
-    required this.reference,
-    required this.title,
-    required this.detail,
-    required this.button,
-    this.onTap,
-  });
-
-  final Color color;
-  final String priority;
-  final String reference;
-  final String title;
-  final String detail;
-  final String button;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.fromLTRB(11, 11, 9, 11),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border(
-        left: BorderSide(color: color, width: 3),
-        bottom: const BorderSide(color: FullTankColors.border),
-      ),
-    ),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _IconTile(
-          icon: Icons.check,
-          color: color,
-          softColor: color == _red ? _redSoft : _amberSoft,
-          size: 31,
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  _TinyPill(
-                    label: priority,
-                    color: color,
-                    softColor: color == _red ? _redSoft : _amberSoft,
-                  ),
-                  const SizedBox(width: 5),
-                  Text(reference, style: _metaStyle),
-                ],
-              ),
-              const SizedBox(height: 3),
-              Text(
-                title,
-                style: const TextStyle(
-                  color: FullTankColors.text,
-                  fontSize: 16.675,
-                  height: 1.12,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                detail,
-                style: const TextStyle(
-                  color: FullTankColors.textSecondary,
-                  fontSize: 13.05,
-                  height: 1.2,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 6),
-        Padding(
-          padding: const EdgeInsets.only(top: 14),
-          child: _DarkButton(label: button, onTap: onTap ?? () {}),
         ),
       ],
     ),

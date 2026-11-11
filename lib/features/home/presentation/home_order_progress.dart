@@ -31,7 +31,9 @@ class _VerticalLevelBar extends StatelessWidget {
 }
 
 class _OrderStatusCard extends StatelessWidget {
-  const _OrderStatusCard();
+  const _OrderStatusCard({required this.order});
+
+  final Order order;
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +44,20 @@ class _OrderStatusCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('PEDIDO ACTIVO', style: _labelStyle),
-                  SizedBox(height: 2),
-                  Text('#FT-2041', style: _valueStyle),
-                  Text('8.000 L · Diésel B5', style: _metaStyle),
+                  const Text('PEDIDO ACTIVO', style: _labelStyle),
+                  const SizedBox(height: 2),
+                  Text('#${order.id}', style: _valueStyle),
+                  Text(
+                    '${_litres(order.quantity)} L · ${order.fuel}',
+                    style: _metaStyle,
+                  ),
                 ],
               ),
               TextButton(
-                onPressed: () => context.push('/orders/FT-88421'),
+                onPressed: () => context.push('/orders/${order.id}'),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(0, 32),
@@ -80,30 +85,7 @@ class _OrderStatusCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 14),
-          const _OrderProgress(),
-          const SizedBox(height: 13),
-          const Divider(height: 1, color: FullTankColors.border),
-          const SizedBox(height: 10),
-          const Row(
-            children: [
-              Icon(
-                Icons.schedule,
-                size: 13,
-                color: FullTankColors.textSecondary,
-              ),
-              SizedBox(width: 4),
-              Text(
-                'ETA Hoy · 4:30 PM',
-                style: TextStyle(
-                  color: FullTankColors.text,
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Spacer(),
-              Text('de FuelMex Logistics', style: _metaStyle),
-            ],
-          ),
+          _OrderProgress(status: order.status),
         ],
       ),
     );
@@ -111,35 +93,45 @@ class _OrderStatusCard extends StatelessWidget {
 }
 
 class _OrderProgress extends StatelessWidget {
-  const _OrderProgress();
+  const _OrderProgress({required this.status});
+
+  final OrderStatus status;
 
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      _ProgressNode(
-        label: 'APROBADO',
-        icon: Icons.check,
-        color: _green,
-        active: true,
-      ),
-      const Expanded(child: Divider(color: _green, thickness: 1.5)),
-      _ProgressNode(
-        label: 'DESPACHADO',
-        icon: Icons.local_shipping_outlined,
-        color: _green,
-        active: true,
-      ),
-      const Expanded(
-        child: Divider(color: FullTankColors.border, thickness: 1.5),
-      ),
-      _ProgressNode(
-        label: 'ENTREGADO',
-        icon: Icons.flag_outlined,
-        color: FullTankColors.muted,
-        active: false,
-      ),
-    ],
-  );
+  Widget build(BuildContext context) {
+    final approved =
+        status == OrderStatus.approved ||
+        status == OrderStatus.inTransit ||
+        status == OrderStatus.delivered;
+    final dispatched =
+        status == OrderStatus.inTransit || status == OrderStatus.delivered;
+    final delivered = status == OrderStatus.delivered;
+    Color line(bool on) => on ? _green : FullTankColors.border;
+    return Row(
+      children: [
+        _ProgressNode(
+          label: 'APROBADO',
+          icon: Icons.check,
+          color: approved ? _green : FullTankColors.muted,
+          active: approved,
+        ),
+        Expanded(child: Divider(color: line(dispatched), thickness: 1.5)),
+        _ProgressNode(
+          label: 'DESPACHADO',
+          icon: Icons.local_shipping_outlined,
+          color: dispatched ? _green : FullTankColors.muted,
+          active: dispatched,
+        ),
+        Expanded(child: Divider(color: line(delivered), thickness: 1.5)),
+        _ProgressNode(
+          label: 'ENTREGADO',
+          icon: Icons.flag_outlined,
+          color: delivered ? _green : FullTankColors.muted,
+          active: delivered,
+        ),
+      ],
+    );
+  }
 }
 
 class _ProgressNode extends StatelessWidget {
@@ -182,7 +174,10 @@ class _ProgressNode extends StatelessWidget {
 }
 
 class _SummaryGrid extends StatelessWidget {
-  const _SummaryGrid();
+  const _SummaryGrid({this.pendingOrders, this.totalFuelSoldLitres});
+
+  final int? pendingOrders;
+  final double? totalFuelSoldLitres;
 
   @override
   Widget build(BuildContext context) => GridView.count(
@@ -192,40 +187,24 @@ class _SummaryGrid extends StatelessWidget {
     childAspectRatio: 1.65,
     shrinkWrap: true,
     physics: const NeverScrollableScrollPhysics(),
-    children: const [
-      _SummaryMetric(
-        icon: Icons.description_outlined,
-        label: 'PEDIDOS PENDIENTES',
-        value: '12',
-        trend: '+8%',
-        color: FullTankColors.primary,
-        softColor: FullTankColors.primarySoft,
-      ),
-      _SummaryMetric(
-        icon: Icons.local_shipping_outlined,
-        label: 'ENTREGAS ACTIVAS',
-        value: '7',
-        trend: '+2%',
-        color: _amber,
-        softColor: _amberSoft,
-      ),
-      _SummaryMetric(
-        icon: Icons.business_center_outlined,
-        label: 'CLIENTES',
-        value: '48',
-        trend: '+4%',
-        color: FullTankColors.success,
-        softColor: FullTankColors.successSoft,
-      ),
-      _SummaryMetric(
-        icon: Icons.opacity_outlined,
-        label: 'COMBUSTIBLE VENDIDO',
-        value: '74',
-        unit: 'kL',
-        trend: '+15%',
-        color: FullTankColors.accent,
-        softColor: Color(0xFFFFF1E8),
-      ),
+    children: [
+      if (pendingOrders != null)
+        _SummaryMetric(
+          icon: Icons.description_outlined,
+          label: 'PEDIDOS PENDIENTES',
+          value: '$pendingOrders',
+          color: FullTankColors.primary,
+          softColor: FullTankColors.primarySoft,
+        ),
+      if (totalFuelSoldLitres != null)
+        _SummaryMetric(
+          icon: Icons.opacity_outlined,
+          label: 'COMBUSTIBLE VENDIDO',
+          value: _litres(totalFuelSoldLitres!),
+          unit: 'L',
+          color: FullTankColors.accent,
+          softColor: const Color(0xFFFFF1E8),
+        ),
     ],
   );
 }

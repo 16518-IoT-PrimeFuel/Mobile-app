@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_app/data/api_client.dart';
 import 'package:mobile_app/data/fulltank_api.dart';
+import 'package:mobile_app/features/gaps/data/provider_customers_repository.dart';
 
 void main() {
   test(
@@ -203,4 +204,61 @@ void main() {
       );
     },
   );
+
+  test('list and create use the provider buyer-companies contract', () async {
+    final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+    final seen = <String>[];
+    final bodies = <String>[];
+    server.listen((request) async {
+      seen.add(
+        '${request.method} ${request.uri.path} '
+        '${request.headers.value(HttpHeaders.authorizationHeader)}',
+      );
+      bodies.add(await utf8.decoder.bind(request).join());
+      request.response.headers.contentType = ContentType.json;
+      if (request.method == 'GET') {
+        request.response.write(
+          jsonEncode([
+            {
+              'id': 5,
+              'name': 'AgroNorte S.A.',
+              'ruc': '20123456789',
+              'sector': 'Agro',
+              'tankCount': 3,
+              'criticalTankCount': 1,
+              'activeOrderCount': 2,
+              'historicalOrderCount': 14,
+              'sites': [
+                {'id': 8, 'name': 'Sede Norte', 'address': 'Av. Lima 1'},
+              ],
+            },
+          ]),
+        );
+      } else {
+        request.response.statusCode = 201;
+        request.response.write('{"id":6,"name":"Nuevo"}');
+      }
+      await request.response.close();
+    });
+    try {
+      final client = ApiClient(baseUrl: 'http://127.0.0.1:${server.port}/api')
+        ..token = 'tok';
+      final repository = ProviderCustomersRepository(FullTankApi(client));
+      final customers = await repository.list();
+      await repository.create(name: 'Nuevo', ruc: '20123456789');
+      expect(seen.first, 'GET /api/provider/buyer-companies Bearer tok');
+      expect(seen.last, 'POST /api/provider/buyer-companies Bearer tok');
+      expect(jsonDecode(bodies.last), {'name': 'Nuevo', 'ruc': '20123456789'});
+      final customer = customers.single;
+      expect(customer.id, 5);
+      expect(customer.tankCount, 3);
+      expect(customer.criticalTankCount, 1);
+      expect(customer.activeOrderCount, 2);
+      expect(customer.historicalOrderCount, 14);
+      expect(customer.sites.single.name, 'Sede Norte');
+      expect(customer.sites.single.address, 'Av. Lima 1');
+    } finally {
+      await server.close(force: true);
+    }
+  });
 }

@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../shared/widgets/fulltank_bottom_navigation.dart';
 import '../../auth/application/auth_providers.dart';
+import '../../inventory/domain/tank.dart';
+import '../../orders/domain/order.dart';
+import '../application/home_summary.dart';
 part 'home_dashboard.dart';
 part 'home_header_and_tank_summary.dart';
 part 'home_order_progress.dart';
@@ -25,3 +28,14 @@ const _red = FullTankColors.error;
 const _redSoft = FullTankColors.errorSoft;
 const _purple = Color(0xFF8B5CF6);
 const _purpleSoft = Color(0xFFF5F3FF);
+
+/// Spanish thousands grouping: 10200 -> `10.200`.
+String _litres(double value) {
+  final digits = value.round().toString();
+  final buffer = StringBuffer();
+  for (var i = 0; i < digits.length; i++) {
+    if (i > 0 && (digits.length - i) % 3 == 0) buffer.write('.');
+    buffer.write(digits[i]);
+  }
+  return buffer.toString();
+}

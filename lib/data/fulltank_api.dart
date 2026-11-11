@@ -34,6 +34,10 @@ class FullTankApi {
       client.post('/buyer-companies', body);
   Future<dynamic> updateBuyerCompany(int id, Map<String, dynamic> body) =>
       client.put('/buyer-companies/$id', body);
+  Future<dynamic> providerBuyerCompanies() =>
+      client.get('/provider/buyer-companies');
+  Future<dynamic> createProviderBuyerCompany(Map<String, dynamic> body) =>
+      client.post('/provider/buyer-companies', body);
   Future<dynamic> providerCompanies() => client.get('/provider-companies');
   Future<dynamic> providerCompany(int id) =>
       client.get('/provider-companies/$id');

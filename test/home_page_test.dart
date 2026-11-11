@@ -7,15 +7,16 @@ import 'package:mobile_app/domain/auth/auth_repository.dart';
 import 'package:mobile_app/domain/auth/auth_session.dart';
 import 'package:mobile_app/domain/auth/sign_up_request.dart';
 import 'package:mobile_app/features/auth/application/auth_providers.dart';
+import 'package:mobile_app/features/home/application/home_summary.dart';
 import 'package:mobile_app/features/home/presentation/home_page.dart';
+import 'package:mobile_app/features/inventory/domain/tank.dart';
 
 void main() {
   testWidgets('renders every requested Home-related screen', (tester) async {
     final screens = <({Widget screen, String title})>[
-      (screen: const HomePage(role: HomeRole.requester), title: 'PetroAndes'),
       (
-        screen: const HomePage(role: HomeRole.provider),
-        title: 'FuelMex Logistics',
+        screen: const HomePage(role: HomeRole.requester),
+        title: 'Empresa de ejemplo',
       ),
       (screen: const GlobalSearchPage(), title: 'Búsqueda global'),
       (screen: const QuickActionsPage(), title: 'Acciones rápidas'),
@@ -35,6 +36,7 @@ void main() {
         ProviderScope(
           overrides: [
             authRepositoryProvider.overrideWithValue(_NoopAuthRepository()),
+            homeSummaryProvider.overrideWith((ref) async => _sample),
           ],
           child: MaterialApp(home: entry.screen),
         ),
@@ -60,10 +62,13 @@ void main() {
     );
 
     await tester.pumpWidget(
-      ProviderScope(child: MaterialApp.router(routerConfig: router)),
+      ProviderScope(
+        overrides: [homeSummaryProvider.overrideWith((ref) async => _sample)],
+        child: MaterialApp.router(routerConfig: router),
+      ),
     );
     await tester.pump();
-    final tank = find.text('TANQUE PRINCIPAL · A-102 DIÉSEL');
+    final tank = find.textContaining('TANQUE MÁS BAJO');
     await tester.ensureVisible(tank);
     await tester.tap(tank);
     await tester.pumpAndSettle();
@@ -71,6 +76,23 @@ void main() {
     expect(find.text('Inventario abierto'), findsOneWidget);
   });
 }
+
+final _sample = HomeSummary(
+  isProvider: false,
+  companyName: 'Empresa de ejemplo',
+  fetchedAt: DateTime(2026, 11, 11, 9),
+  tank: const Tank(
+    id: 'T1',
+    siteId: 1,
+    name: 'A-102',
+    fuelType: 'Diésel',
+    capacity: 10000,
+    unit: 'L',
+    currentLevel: 4500,
+    status: 'OPTIMAL',
+    lastReadingAt: null,
+  ),
+);
 
 class _NoopAuthRepository implements AuthRepository {
   @override
