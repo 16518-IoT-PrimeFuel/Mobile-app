@@ -5,6 +5,7 @@ import '../features/auth/application/auth_providers.dart';
 import '../features/auth/presentation/login_page.dart';
 import '../domain/auth/sign_up_request.dart';
 import '../features/auth/presentation/recover_page.dart';
+import '../features/auth/presentation/reset_password_page.dart';
 import '../features/auth/presentation/sign_up_page.dart';
 import '../features/account/presentation/account_page.dart';
 import '../features/home/presentation/home_page.dart';
@@ -335,6 +336,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/recover',
         builder: (context, state) => const RecoverPage(),
+      ),
+      // Deliberately not in the auth-route redirect above: a reset link must
+      // open even when a session (including the guest preview) already exists.
+      GoRoute(
+        path: '/reset-password',
+        builder: (context, state) =>
+            ResetPasswordPage(token: state.uri.queryParameters['token'] ?? ''),
       ),
       GoRoute(
         path: '/signup/requester',
