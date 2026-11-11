@@ -9,6 +9,7 @@ import '../features/auth/presentation/reset_password_page.dart';
 import '../features/auth/presentation/sign_up_page.dart';
 import '../features/account/presentation/account_page.dart';
 import '../features/home/presentation/home_page.dart';
+import 'role_routing.dart';
 import '../features/inventory/presentation/inventory_page.dart';
 import '../features/orders/presentation/order_pages.dart';
 import '../features/dispatches/presentation/dispatch_pages.dart';
@@ -43,7 +44,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               location.startsWith('/customers')))
         return '/login';
       if (authenticated && isAuthRoute) return '/home';
-      return null;
+      return roleGuardRedirect(auth.session, location);
     },
     routes: [
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
@@ -76,14 +77,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/home',
         builder: (context, state) => HomePage(
-          role: state.uri.queryParameters['role'] == 'provider'
-              ? HomeRole.provider
-              : HomeRole.requester,
+          role: homeRoleFor(
+            auth.session,
+            previewRole: state.uri.queryParameters['role'],
+          ),
         ),
       ),
       GoRoute(
         path: '/home/provider',
-        builder: (context, state) => const HomePage(role: HomeRole.provider),
+        builder: (context, state) =>
+            HomePage(role: homeRoleFor(auth.session, previewRole: 'provider')),
       ),
       GoRoute(
         path: '/inventory',
