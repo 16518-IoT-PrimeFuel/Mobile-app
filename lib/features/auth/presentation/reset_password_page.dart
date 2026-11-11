@@ -28,7 +28,32 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      widget.token.isEmpty ? _buildInvalidLink(context) : _buildForm(context);
+
+  Widget _buildInvalidLink(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Nueva contraseña')),
+    body: SafeArea(
+      child: ListView(
+        padding: const EdgeInsets.all(24),
+        children: [
+          Text(
+            'Enlace no válido',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 16),
+          const Text('El enlace no es válido o ya venció.'),
+          const SizedBox(height: 20),
+          FilledButton(
+            onPressed: () => context.go('/recover'),
+            child: const Text('Solicitar un nuevo enlace'),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildForm(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('Nueva contraseña')),
     body: SafeArea(
       child: ListView(

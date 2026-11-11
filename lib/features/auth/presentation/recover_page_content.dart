@@ -1,16 +1,17 @@
 part of 'recover_page.dart';
 
-class RecoverPage extends StatefulWidget {
+class RecoverPage extends ConsumerStatefulWidget {
   const RecoverPage({super.key});
 
   @override
-  State<RecoverPage> createState() => _RecoverPageState();
+  ConsumerState<RecoverPage> createState() => _RecoverPageState();
 }
 
-class _RecoverPageState extends State<RecoverPage> {
+class _RecoverPageState extends ConsumerState<RecoverPage> {
   final _emailController = TextEditingController();
   _RecoverStage _stage = _RecoverStage.form;
   bool _submitted = false;
+  bool _sending = false;
 
   @override
   void dispose() {
@@ -43,7 +44,7 @@ class _RecoverPageState extends State<RecoverPage> {
 
   Widget _buildFormState(BuildContext context) {
     final errorText = switch (_stage) {
-      _RecoverStage.notFound => 'No encontramos ninguna cuenta con este email',
+      _RecoverStage.failed => 'No pudimos enviar el enlace. Intenta de nuevo.',
       _ =>
         !_submitted
             ? null
@@ -107,7 +108,7 @@ class _RecoverPageState extends State<RecoverPage> {
                 const SizedBox(height: 8),
                 PrimaryAuthButton(
                   label: 'Enviar enlace de recuperación',
-                  onPressed: _submit,
+                  onPressed: _sending ? null : _submit,
                   largeText: true,
                 ),
                 SizedBox(
@@ -175,7 +176,7 @@ class _RecoverPageState extends State<RecoverPage> {
             largeText: true,
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: _sending ? null : _send,
             style: TextButton.styleFrom(
               foregroundColor: FullTankColors.primary,
               minimumSize: const Size(double.infinity, 44),
@@ -184,7 +185,7 @@ class _RecoverPageState extends State<RecoverPage> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            child: const Text('Reenviar en 60s'),
+            child: const Text('Reenviar enlace'),
           ),
         ],
       ),
@@ -195,12 +196,28 @@ class _RecoverPageState extends State<RecoverPage> {
     final email = _emailController.text.trim();
     setState(() => _submitted = true);
     if (email.isEmpty || !_isValidEmail(email)) return;
+    _send();
+  }
 
-    setState(() {
-      _stage = email.toLowerCase() == 'noexiste@empresa.com'
-          ? _RecoverStage.notFound
-          : _RecoverStage.sent;
-    });
+  /// The API answers 202 whether or not the account exists, so every
+  /// completed request shows the sent stage; only transport failures differ.
+  Future<void> _send() async {
+    setState(() => _sending = true);
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .requestPasswordReset(_emailController.text.trim());
+      if (mounted) setState(() => _stage = _RecoverStage.sent);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _stage = _RecoverStage.failed;
+          _submitted = false;
+        });
+      }
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
   }
 
   bool _isValidEmail(String value) =>

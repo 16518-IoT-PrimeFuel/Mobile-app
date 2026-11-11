@@ -6,7 +6,10 @@ import '../../../domain/auth/sign_up_request.dart';
 import '../application/auth_providers.dart';
 
 class SignUpPage extends ConsumerStatefulWidget {
-  const SignUpPage({super.key});
+  const SignUpPage({super.key, this.initialRole = BusinessRole.buyer});
+
+  /// Account type preselected when the screen opens.
+  final BusinessRole initialRole;
 
   @override
   ConsumerState<SignUpPage> createState() => _SignUpPageState();
@@ -22,7 +25,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final _address = TextEditingController();
   final _phone = TextEditingController();
   final _description = TextEditingController();
-  BusinessRole _role = BusinessRole.buyer;
+  late BusinessRole _role = widget.initialRole;
   String _fuelType = 'DIESEL';
   bool _loading = false;
   String? _error;
