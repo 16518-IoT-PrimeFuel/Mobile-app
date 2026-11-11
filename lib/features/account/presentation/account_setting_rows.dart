@@ -43,56 +43,6 @@ class _NotificationRow extends StatelessWidget {
   );
 }
 
-class _DeviceRow extends StatelessWidget {
-  const _DeviceRow({
-    required this.icon,
-    required this.title,
-    required this.detail,
-    this.current = false,
-    this.onClose,
-  });
-
-  final IconData icon;
-  final String title;
-  final String detail;
-  final bool current;
-  final VoidCallback? onClose;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 13),
-    child: Row(
-      children: [
-        _AccountIconTile(icon: icon, color: FullTankColors.primary),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: _bodyStrong),
-              Text(detail, style: _smallText),
-            ],
-          ),
-        ),
-        if (current)
-          const _StatusPill(
-            label: 'AHORA',
-            color: FullTankColors.primary,
-            softColor: FullTankColors.primarySoft,
-          )
-        else
-          TextButton(
-            onPressed: onClose,
-            child: const Text(
-              'Cerrar',
-              style: TextStyle(color: FullTankColors.error),
-            ),
-          ),
-      ],
-    ),
-  );
-}
-
 class _HelpRow extends StatelessWidget {
   const _HelpRow({
     required this.icon,

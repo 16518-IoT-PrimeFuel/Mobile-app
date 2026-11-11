@@ -6,12 +6,14 @@ class _ProfileField extends StatelessWidget {
     required this.icon,
     required this.controller,
     this.keyboardType,
+    this.errorText,
   });
 
   final String label;
   final IconData icon;
   final TextEditingController controller;
   final TextInputType? keyboardType;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -26,6 +28,7 @@ class _ProfileField extends StatelessWidget {
           keyboardType: keyboardType,
           style: _fieldText,
           decoration: InputDecoration(
+            errorText: errorText,
             prefixIcon: Icon(icon, size: 15, color: FullTankColors.muted),
             filled: true,
             fillColor: Colors.white,
@@ -49,116 +52,85 @@ class _ProfileField extends StatelessWidget {
   );
 }
 
-class _SecuritySettings extends StatefulWidget {
+class _SecuritySettings extends ConsumerStatefulWidget {
   const _SecuritySettings();
 
   @override
-  State<_SecuritySettings> createState() => _SecuritySettingsState();
+  ConsumerState<_SecuritySettings> createState() => _SecuritySettingsState();
 }
 
-class _SecuritySettingsState extends State<_SecuritySettings> {
-  bool twoFactor = true;
+class _SecuritySettingsState extends ConsumerState<_SecuritySettings> {
+  bool _busy = false;
+
+  Future<void> _sendResetEmail() async {
+    final session = ref.read(authControllerProvider).session;
+    if (_busy || session == null || isGuestSession(session)) return;
+    setState(() => _busy = true);
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .requestPasswordReset(session.username);
+      if (mounted) {
+        _showMessage(
+          context,
+          'Te enviamos un correo para cambiar tu contraseña.',
+        );
+      }
+    } catch (_) {
+      if (mounted) _showMessage(context, 'No se pudo enviar el correo.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _signOut() async {
+    await ref.read(authControllerProvider.notifier).signOut();
+    if (mounted) context.go('/login');
+  }
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const _AccountHeader(
-        title: 'Seguridad',
-        subtitle: 'Protege tu cuenta y sesiones',
-      ),
-      const SizedBox(height: 16),
-      const _ProtectedCard(),
-      const SizedBox(height: 16),
-      const _AccountSectionLabel('AUTENTICACIÓN'),
-      const SizedBox(height: 8),
-      _SettingsPanel(
-        children: [
-          _SettingsRow(
-            icon: Icons.key_outlined,
-            color: FullTankColors.primary,
-            title: 'Cambiar contraseña',
-            detail: 'Última actualización hace 3 meses',
-            onTap: () =>
-                _showMessage(context, 'Flujo de cambio de contraseña.'),
-          ),
-          _SettingsRow(
-            icon: Icons.phonelink_lock_outlined,
-            color: _teal,
-            title: 'Autenticación\nen dos pasos',
-            detail: 'SMS al +52 81\n8340 2205',
-            trailing: Switch(
-              value: twoFactor,
-              onChanged: (value) => setState(() => twoFactor = value),
-              activeThumbColor: _teal,
-            ),
-            badge: twoFactor ? 'ACTIVO' : null,
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const _AccountSectionLabel('SESIONES ACTIVAS'),
-          TextButton(
-            onPressed: () => _showMessage(context, 'Sesiones cerradas.'),
-            child: const Text(
-              'Cerrar todas',
-              style: TextStyle(color: FullTankColors.error),
-            ),
-          ),
-        ],
-      ),
-      _SettingsPanel(
-        children: [
-          _DeviceRow(
-            icon: Icons.phone_iphone_outlined,
-            title: 'iPhone 14 Pro ·\nMonterrey',
-            detail: 'Sesión actual · Safari · hace 2 min',
-            current: true,
-          ),
-          _DeviceRow(
-            icon: Icons.laptop_mac_outlined,
-            title: 'MacBook Pro · CDMX',
-            detail: 'Chrome · hace 3 horas',
-            onClose: () => _showMessage(context, 'Sesión cerrada.'),
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
-      const _AccountSectionLabel('DISPOSITIVOS CONECTADOS'),
-    ],
-  );
-}
-
-class _ProtectedCard extends StatelessWidget {
-  const _ProtectedCard();
-
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(13),
-    decoration: BoxDecoration(
-      color: _tealSoft,
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
+  Widget build(BuildContext context) {
+    final guest = isGuestSession(ref.watch(authControllerProvider).session);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _AccountIconTile(icon: Icons.shield_outlined, color: _teal),
-        const SizedBox(width: 10),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Cuenta protegida', style: _bodyStrong),
-              Text('Nivel de seguridad · Alto', style: _smallText),
-            ],
-          ),
+        const _AccountHeader(
+          title: 'Seguridad',
+          subtitle: 'Protege tu cuenta y sesiones',
         ),
-        const Text('92/100', style: _scoreText),
+        const SizedBox(height: 16),
+        const _AccountSectionLabel('AUTENTICACIÓN'),
+        const SizedBox(height: 8),
+        _SettingsPanel(
+          children: [
+            _SettingsRow(
+              icon: Icons.key_outlined,
+              color: FullTankColors.primary,
+              title: 'Cambiar contraseña por correo',
+              detail: guest
+                  ? 'Vista previa: requiere una cuenta'
+                  : 'Te enviamos un enlace para restablecerla',
+              onTap: guest ? null : _sendResetEmail,
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        const _AccountSectionLabel('SESIÓN'),
+        const SizedBox(height: 8),
+        _SettingsPanel(
+          children: [
+            _SettingsRow(
+              icon: Icons.logout,
+              color: FullTankColors.error,
+              title: 'Cerrar sesión',
+              detail: 'Finaliza la sesión actual en este dispositivo',
+              onTap: _signOut,
+            ),
+          ],
+        ),
       ],
-    ),
-  );
+    );
+  }
 }
 
 class _NotificationSettings extends StatefulWidget {

@@ -126,7 +126,16 @@ void main() {
       ],
     );
 
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          inventoryRepositoryProvider.overrideWithValue(
+            MockInventoryRepository(),
+          ),
+        ],
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     await tester.pumpAndSettle();
     final restockButton = find.text('Solicitar reposición').first;
     await tester.ensureVisible(restockButton);

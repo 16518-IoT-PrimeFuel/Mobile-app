@@ -47,10 +47,11 @@ class OrderDetailPage extends ConsumerWidget {
       Row(
         children: [
           Expanded(
-            child: _SmallButton(
-              label: 'Descargar factura',
-              icon: Icons.download_outlined,
-              onTap: () {},
+            // No invoice endpoint exists in the backend yet.
+            child: const _SmallButton(
+              label: 'Factura: No disponible aún',
+              icon: Icons.receipt_long_outlined,
+              onTap: null,
             ),
           ),
           const SizedBox(width: 7),
@@ -166,17 +167,12 @@ class OrderDetailPage extends ConsumerWidget {
       const SizedBox(height: 14),
       Row(
         children: [
+          // Live tracking is hidden: the backend only lets the owning provider
+          // or the assigned driver read GET /api/deliveries/{id}/tracking.
           Expanded(
             child: _LightButton(
               label: 'Soporte',
               onTap: () => context.push('/account/help'),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _OrangeButton(
-              label: 'Seguimiento en vivo  →',
-              onPressed: () {},
             ),
           ),
         ],

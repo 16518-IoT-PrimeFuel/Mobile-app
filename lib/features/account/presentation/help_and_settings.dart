@@ -136,8 +136,6 @@ class _SettingsRow extends StatelessWidget {
     required this.color,
     required this.title,
     required this.detail,
-    this.trailing,
-    this.badge,
     this.onTap,
   });
 
@@ -145,8 +143,6 @@ class _SettingsRow extends StatelessWidget {
   final Color color;
   final String title;
   final String detail;
-  final Widget? trailing;
-  final String? badge;
   final VoidCallback? onTap;
 
   @override
@@ -167,14 +163,11 @@ class _SettingsRow extends StatelessWidget {
               ],
             ),
           ),
-          if (badge != null)
-            _StatusPill(label: badge!, color: _teal, softColor: _tealSoft),
-          trailing ??
-              const Icon(
-                Icons.chevron_right,
-                size: 16,
-                color: FullTankColors.muted,
-              ),
+          const Icon(
+            Icons.chevron_right,
+            size: 16,
+            color: FullTankColors.muted,
+          ),
         ],
       ),
     ),

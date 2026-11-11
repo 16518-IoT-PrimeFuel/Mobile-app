@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,7 +11,11 @@ void main() {
     tester,
   ) async {
     for (final variant in AccountVariant.values) {
-      await tester.pumpWidget(MaterialApp(home: AccountPage(variant: variant)));
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(home: AccountPage(variant: variant)),
+        ),
+      );
       await tester.pump();
 
       expect(
