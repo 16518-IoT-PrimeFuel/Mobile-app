@@ -184,7 +184,7 @@ class _SmallButton extends StatelessWidget {
   });
   final String label;
   final IconData icon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) => OutlinedButton.icon(
     onPressed: onTap,

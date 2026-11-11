@@ -26,6 +26,46 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
     }
   }
 
+  /// The backend export is a consumption summary CSV, not the order history,
+  /// and the app has no save/share dependency, so it is shown and copyable.
+  Future<void> _showConsumptionSummary() async {
+    final String csv;
+    try {
+      csv = await ref.read(reportsRepositoryProvider).exportCsv();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudo obtener el resumen.')),
+      );
+      return;
+    }
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Resumen de consumo'),
+        content: SingleChildScrollView(child: SelectableText(csv)),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: csv));
+              if (dialogContext.mounted) {
+                ScaffoldMessenger.of(dialogContext).showSnackBar(
+                  const SnackBar(content: Text('Resumen copiado.')),
+                );
+              }
+            },
+            child: const Text('Copiar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Cerrar'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final orders = ref.watch(ordersControllerProvider);
@@ -79,8 +119,8 @@ class _OrdersPageState extends ConsumerState<OrdersPage> {
             ),
             _HeaderIcon(
               icon: Icons.download_outlined,
-              label: 'Descargar historial',
-              onTap: () {},
+              label: 'Resumen de consumo',
+              onTap: _showConsumptionSummary,
             ),
           ],
         ),
