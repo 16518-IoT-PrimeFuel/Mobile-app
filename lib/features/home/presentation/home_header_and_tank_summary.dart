@@ -133,10 +133,36 @@ class _HomeHeader extends StatelessWidget {
 }
 
 class _TankSummaryCard extends StatelessWidget {
-  const _TankSummaryCard();
+  const _TankSummaryCard({
+    required this.tank,
+    required this.unavailable,
+    required this.preview,
+  });
+
+  final Tank? tank;
+  final bool unavailable;
+  final bool preview;
 
   @override
   Widget build(BuildContext context) {
+    final tank = this.tank;
+    if (tank == null) {
+      return _Card(
+        child: Text(
+          unavailable
+              ? 'No se pudo consultar el inventario de tanques.'
+              : 'Aún no hay tanques registrados.',
+          style: _metaStyle,
+        ),
+      );
+    }
+    final (statusLabel, statusColor, statusSoft) = switch (tank.status
+        .toUpperCase()) {
+      'CRITICAL' => ('Crítico', _red, _redSoft),
+      'WARNING' || 'LOW' => ('Bajo', _amber, _amberSoft),
+      _ => ('Normal', _green, _greenSoft),
+    };
+    final reading = tank.lastReadingAt?.toLocal();
     return Semantics(
       button: true,
       label: 'Abrir inventario del tanque principal',
@@ -147,61 +173,31 @@ class _TankSummaryCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'TANQUE PRINCIPAL · A-102 DIÉSEL',
-                          style: _labelStyle,
-                        ),
-                        SizedBox(height: 3),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.location_on_outlined,
-                              size: 15,
-                              color: FullTankColors.textSecondary,
-                            ),
-                            SizedBox(width: 4),
-                            Text('Norte · Sector 4', style: _metaStyle),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  _TinyPill(
-                    label: 'ACTIVO',
-                    color: _green,
-                    softColor: _greenSoft,
-                    dot: true,
-                  ),
-                ],
+              Text(
+                'TANQUE MÁS BAJO · ${tank.name.toUpperCase()}',
+                style: _labelStyle,
               ),
               const SizedBox(height: 21),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('NIVEL DE COMBUSTIBLE', style: _labelStyle),
-                        SizedBox(height: 1),
+                        const Text('NIVEL DE COMBUSTIBLE', style: _labelStyle),
+                        const SizedBox(height: 1),
                         Text.rich(
                           TextSpan(
-                            text: '68',
-                            style: TextStyle(
+                            text: '${tank.level}',
+                            style: const TextStyle(
                               color: FullTankColors.text,
                               fontSize: 60.9,
                               height: 1,
                               fontWeight: FontWeight.w800,
                               letterSpacing: -1.8,
                             ),
-                            children: [
+                            children: const [
                               TextSpan(
                                 text: '%',
                                 style: TextStyle(
@@ -212,12 +208,16 @@ class _TankSummaryCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 3),
-                        Text('10.200 / 15.000 L', style: _metaStyle),
+                        const SizedBox(height: 3),
+                        Text(
+                          '${_litres(tank.currentLevel)} / '
+                          '${_litres(tank.capacity)} ${tank.unit}',
+                          style: _metaStyle,
+                        ),
                       ],
                     ),
                   ),
-                  const _VerticalLevelBar(value: .68),
+                  _VerticalLevelBar(value: tank.level / 100),
                 ],
               ),
               const SizedBox(height: 16),
@@ -227,18 +227,29 @@ class _TankSummaryCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _TinyPill(
-                    label: 'Normal',
-                    color: _green,
-                    softColor: _greenSoft,
+                    label: statusLabel,
+                    color: statusColor,
+                    softColor: statusSoft,
                     dot: true,
                   ),
-                  const Row(
-                    children: [
-                      Icon(Icons.sync, size: 15, color: FullTankColors.muted),
-                      SizedBox(width: 5),
-                      Text('Actualizado hace 5 min', style: _metaStyle),
-                    ],
-                  ),
+                  if (reading != null && !preview)
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.sync,
+                          size: 15,
+                          color: FullTankColors.muted,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          'Actualizado ${reading.day.toString().padLeft(2, '0')}/'
+                          '${reading.month.toString().padLeft(2, '0')} '
+                          '${reading.hour.toString().padLeft(2, '0')}:'
+                          '${reading.minute.toString().padLeft(2, '0')}',
+                          style: _metaStyle,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ],

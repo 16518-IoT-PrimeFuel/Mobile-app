@@ -32,153 +32,237 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-class _RequesterHome extends StatelessWidget {
+class _HomeFallbackHeader extends ConsumerWidget {
+  const _HomeFallbackHeader({required this.onSignOut});
+
+  final VoidCallback onSignOut;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => _HomeHeader(
+    initials: 'FT',
+    eyebrow: homeGreeting(ref.read(homeClockProvider)()),
+    name: 'FullTank',
+    subtitle: '',
+    onSignOut: onSignOut,
+  );
+}
+
+class _HomeLoading extends StatelessWidget {
+  const _HomeLoading({required this.onSignOut});
+
+  final VoidCallback onSignOut;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    children: [
+      _HomeFallbackHeader(onSignOut: onSignOut),
+      const SizedBox(height: 80),
+      const Center(child: CircularProgressIndicator()),
+    ],
+  );
+}
+
+class _HomeError extends ConsumerWidget {
+  const _HomeError({required this.onSignOut});
+
+  final VoidCallback onSignOut;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => Column(
+    children: [
+      _HomeFallbackHeader(onSignOut: onSignOut),
+      const SizedBox(height: 60),
+      const Icon(
+        Icons.cloud_off_outlined,
+        size: 40,
+        color: FullTankColors.muted,
+      ),
+      const SizedBox(height: 12),
+      const Text(
+        'No se pudo cargar el resumen.',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+      ),
+      const SizedBox(height: 12),
+      FilledButton(
+        onPressed: () => ref.invalidate(homeSummaryProvider),
+        child: const Text('Reintentar'),
+      ),
+    ],
+  );
+}
+
+class _PreviewBanner extends StatelessWidget {
+  const _PreviewBanner();
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: double.infinity,
+    margin: const EdgeInsets.only(top: 14),
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    decoration: BoxDecoration(
+      color: _amberSoft,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: const Text(
+      'Vista previa · datos de ejemplo, no son reales',
+      style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+    ),
+  );
+}
+
+String _initials(String name) {
+  final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty);
+  final list = parts.toList();
+  final letters = list.length > 1
+      ? list.take(2).map((p) => p[0]).join()
+      : list.isEmpty
+      ? ''
+      : list.first.substring(0, list.first.length.clamp(0, 2));
+  return letters.isEmpty ? 'FT' : letters.toUpperCase();
+}
+
+class _RequesterHome extends ConsumerWidget {
   const _RequesterHome({required this.onSignOut, required this.guest});
 
   final VoidCallback onSignOut;
   final bool guest;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _HomeHeader(
-          initials: 'PE',
-          eyebrow: 'BUENOS DÍAS · DOMINGO, 6 SEP',
-          name: 'PetroAndes',
-          subtitle: 'Solicitante · Operaciones de flota',
-          onSignOut: onSignOut,
-        ),
-        const SizedBox(height: 18),
-        const _TankSummaryCard(),
-        const SizedBox(height: 18),
-        const _SectionLabel('ACCIONES RÁPIDAS'),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: _QuickAction(
-                icon: Icons.note_add_outlined,
-                label: 'Crear\npedido',
-                color: FullTankColors.primary,
-                softColor: FullTankColors.primarySoft,
-                onTap: () => context.push('/home/quick-actions'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summary = ref.watch(homeSummaryProvider);
+    return summary.when(
+      loading: () => _HomeLoading(onSignOut: onSignOut),
+      error: (_, __) => _HomeError(onSignOut: onSignOut),
+      data: (data) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _HomeHeader(
+            initials: _initials(data.companyName),
+            eyebrow: homeGreeting(data.fetchedAt),
+            name: data.companyName,
+            subtitle: 'Solicitante',
+            onSignOut: onSignOut,
+          ),
+          if (data.isPreview) const _PreviewBanner(),
+          const SizedBox(height: 18),
+          _TankSummaryCard(
+            tank: data.tank,
+            unavailable: data.tankUnavailable,
+            preview: data.isPreview,
+          ),
+          const SizedBox(height: 18),
+          const _SectionLabel('ACCIONES RÁPIDAS'),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickAction(
+                  icon: Icons.note_add_outlined,
+                  label: 'Crear\npedido',
+                  color: FullTankColors.primary,
+                  softColor: FullTankColors.primarySoft,
+                  onTap: () => context.push('/home/quick-actions'),
+                ),
               ),
-            ),
-            const SizedBox(width: 7),
-            Expanded(
-              child: _QuickAction(
-                icon: Icons.receipt_long_outlined,
-                label: 'Ver\npedidos',
-                color: FullTankColors.success,
-                softColor: FullTankColors.successSoft,
-                onTap: () => context.push('/orders/history'),
+              const SizedBox(width: 7),
+              Expanded(
+                child: _QuickAction(
+                  icon: Icons.receipt_long_outlined,
+                  label: 'Ver\npedidos',
+                  color: FullTankColors.success,
+                  softColor: FullTankColors.successSoft,
+                  onTap: () => context.push('/orders/history'),
+                ),
               ),
-            ),
-            const SizedBox(width: 7),
-            Expanded(
-              child: _QuickAction(
-                icon: Icons.show_chart,
-                label: 'Consumo',
-                color: FullTankColors.accent,
-                softColor: FullTankColors.warningSoft,
-                onTap: () => context.push('/reports/consumption'),
+              const SizedBox(width: 7),
+              Expanded(
+                child: _QuickAction(
+                  icon: Icons.show_chart,
+                  label: 'Consumo',
+                  color: FullTankColors.accent,
+                  softColor: FullTankColors.warningSoft,
+                  onTap: () => context.push('/reports/consumption'),
+                ),
               ),
-            ),
-            const SizedBox(width: 7),
-            Expanded(
-              child: _QuickAction(
-                icon: Icons.headset_mic_outlined,
-                label: 'Soporte',
-                color: _purple,
-                softColor: _purpleSoft,
-                onTap: () => context.push('/support/help'),
+              const SizedBox(width: 7),
+              Expanded(
+                child: _QuickAction(
+                  icon: Icons.headset_mic_outlined,
+                  label: 'Soporte',
+                  color: _purple,
+                  softColor: _purpleSoft,
+                  onTap: () => context.push('/support/help'),
+                ),
+              ),
+            ],
+          ),
+          if (data.activeOrder != null) ...[
+            const SizedBox(height: 18),
+            const _SectionLabel('ESTADO DEL PEDIDO'),
+            const SizedBox(height: 8),
+            _OrderStatusCard(order: data.activeOrder!),
+          ],
+          if (guest) ...[
+            const SizedBox(height: 10),
+            Center(
+              child: TextButton(
+                onPressed: onSignOut,
+                child: const Text(
+                  'Salir de vista previa',
+                  style: TextStyle(fontSize: 20.3),
+                ),
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 18),
-        const _SectionLabel('ESTADO DEL PEDIDO'),
-        const SizedBox(height: 8),
-        const _OrderStatusCard(),
-        if (guest) ...[
-          const SizedBox(height: 10),
-          Center(
-            child: TextButton(
-              onPressed: onSignOut,
-              child: const Text(
-                'Salir de vista previa',
-                style: TextStyle(fontSize: 20.3),
-              ),
-            ),
-          ),
         ],
-      ],
+      ),
     );
   }
 }
 
-class _ProviderHome extends StatelessWidget {
+class _ProviderHome extends ConsumerWidget {
   const _ProviderHome({required this.onSignOut});
 
   final VoidCallback onSignOut;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _HomeHeader(
-          initials: 'FU',
-          eyebrow: 'OPERACIONES · DOMINGO, 6 SEP',
-          name: 'FuelMex Logistics',
-          subtitle: 'Proveedor · Centro regional',
-          onSignOut: onSignOut,
-        ),
-        const SizedBox(height: 18),
-        const _SectionLabel('RESUMEN DE OPERACIONES'),
-        const SizedBox(height: 8),
-        const _SummaryGrid(),
-        const SizedBox(height: 18),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const _SectionLabel('ACCIONES PENDIENTES'),
-            _TinyPill(label: '2 URGENTES', color: _red, softColor: _redSoft),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summary = ref.watch(homeSummaryProvider);
+    return summary.when(
+      loading: () => _HomeLoading(onSignOut: onSignOut),
+      error: (_, __) => _HomeError(onSignOut: onSignOut),
+      data: (data) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _HomeHeader(
+            initials: _initials(data.companyName),
+            eyebrow: homeGreeting(data.fetchedAt),
+            name: data.companyName,
+            subtitle: 'Proveedor',
+            onSignOut: onSignOut,
+          ),
+          if (data.isPreview) const _PreviewBanner(),
+          const SizedBox(height: 18),
+          const _SectionLabel('RESUMEN DE OPERACIONES'),
+          const SizedBox(height: 8),
+          _SummaryGrid(
+            pendingOrders: data.pendingOrders,
+            totalFuelSoldLitres: data.totalFuelSoldLitres,
+          ),
+          if (data.isPreview) ...[
+            const SizedBox(height: 10),
+            Center(
+              child: TextButton(
+                onPressed: onSignOut,
+                child: const Text(
+                  'Salir de vista previa',
+                  style: TextStyle(fontSize: 20.3),
+                ),
+              ),
+            ),
           ],
-        ),
-        const SizedBox(height: 8),
-        _ActionRequiredCard(
-          color: _red,
-          priority: 'ALTA',
-          reference: '#FT-2098',
-          title: 'Aprobar pedido — AgroNorte',
-          detail: '12.000 L Diésel B5 · hace 8 min',
-          button: 'Aprobar',
-          onTap: () => context.push('/provider/orders/FT-2098'),
-        ),
-        const SizedBox(height: 8),
-        _ActionRequiredCard(
-          color: _amber,
-          priority: 'ALTA',
-          reference: '#FT-2091',
-          title: 'Asignar vehículo — Transportes Delta',
-          detail: 'Bahía 2 · programado hoy 3:00 PM',
-          button: 'Asignar',
-          onTap: () => context.push('/dispatches/assign'),
-        ),
-        const SizedBox(height: 8),
-        _ActionRequiredCard(
-          color: _amber,
-          priority: 'MEDIA',
-          reference: 'INV-8112',
-          title: 'Revisar pago — Cementos B',
-          detail: '\$248.500 MXN · pendiente de confirmación',
-          button: 'Revisar',
-          onTap: () => context.push('/orders/FT-2098/payment'),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

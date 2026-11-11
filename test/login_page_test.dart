@@ -76,8 +76,8 @@ void main() {
     await tester.tap(guestButton);
     await tester.pumpAndSettle();
 
-    expect(find.text('PetroAndes'), findsOneWidget);
-    expect(find.text('Solicitante · Operaciones de flota'), findsOneWidget);
+    expect(find.text('Empresa de ejemplo'), findsOneWidget);
+    expect(find.textContaining('Vista previa'), findsWidgets);
 
     final exitGuest = find.text('Salir de vista previa');
     await tester.ensureVisible(exitGuest);
