@@ -102,32 +102,6 @@ class _AccountIconTile extends StatelessWidget {
   );
 }
 
-class _Avatar extends StatelessWidget {
-  const _Avatar({required this.initials, required this.size});
-
-  final String initials;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    width: size,
-    height: size,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      color: FullTankColors.text,
-      borderRadius: BorderRadius.circular(size * .25),
-    ),
-    child: Text(
-      initials,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: size * .32,
-        fontWeight: FontWeight.w800,
-      ),
-    ),
-  );
-}
-
 class _StatusPill extends StatelessWidget {
   const _StatusPill({
     required this.label,
@@ -201,11 +175,6 @@ const _fieldText = TextStyle(
   color: FullTankColors.text,
   fontSize: 11.6,
   fontWeight: FontWeight.w600,
-);
-const _scoreText = TextStyle(
-  color: _teal,
-  fontSize: 13.05,
-  fontWeight: FontWeight.w800,
 );
 const _quickText = TextStyle(
   color: FullTankColors.text,
